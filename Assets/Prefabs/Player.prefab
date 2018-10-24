@@ -4734,7 +4734,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectColourManually: 0
-  colour: {r: 1, g: 0, b: 0, a: 0}
+  colour: {r: 0, g: 1, b: 0.0381248, a: 0}
+  otherMaterialToChange: {fileID: 2100000, guid: 8f32b3d74401443479c643e48c21915a,
+    type: 2}
 --- !u!114 &114880525142274480
 MonoBehaviour:
   m_ObjectHideFlags: 1
