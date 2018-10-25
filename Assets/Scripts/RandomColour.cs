@@ -6,10 +6,18 @@ public class RandomColour : MonoBehaviour {
 
     [SerializeField] private bool selectColourManually;
     [SerializeField] private Color colour;
+    [SerializeField] private Material otherMaterialToChange;
 
 	// Use this for initialization
 	void Start () {
-        gameObject.GetComponent<Renderer>().material.color = generateColour();
+        Color newColour = generateColour();
+        gameObject.GetComponent<Renderer>().material.color = newColour;
+
+        if (otherMaterialToChange)
+        {
+            print("ChangedColour");
+            otherMaterialToChange.SetColor("_Color", newColour);
+        }
     }
 
     private Color generateColour()
