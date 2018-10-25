@@ -1538,6 +1538,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4509524405213004}
   - component: {fileID: 114413717877789804}
+  - component: {fileID: 114045300042777716}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -4322,6 +4323,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   externalCamera: {fileID: 0}
   externalCameraConfigPath: externalcamera.cfg
+--- !u!114 &114045300042777716
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1977020271983006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 154
+    i1: 39
+    i2: 223
+    i3: 242
+    i4: 238
+    i5: 211
+    i6: 45
+    i7: 228
+    i8: 154
+    i9: 84
+    i10: 194
+    i11: 96
+    i12: 0
+    i13: 3
+    i14: 220
+    i15: 182
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &114079506013867852
 MonoBehaviour:
   m_ObjectHideFlags: 1
