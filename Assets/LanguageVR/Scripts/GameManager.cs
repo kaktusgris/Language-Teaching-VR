@@ -14,6 +14,10 @@ namespace NTNU.CarloMarton.VRLanguage
 {
     public class GameManager : MonoBehaviourPunCallbacks
     {
+        [Tooltip("The prefab to use for representing the player")]
+        public GameObject headPrefab;
+        public GameObject teleportPrefab;
+        public static GameManager Instance;
 
         [SerializeField] private String startScene = "TeleportTest";
 
@@ -32,14 +36,15 @@ namespace NTNU.CarloMarton.VRLanguage
         {
             Debug.LogFormat("OnPlayerEnteredRoom() {0}", other.NickName); // not seen if you're the player connecting
 
-
             if (PhotonNetwork.IsMasterClient)
             {
                 Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
 
 
                 LoadArena();
+
             }
+
         }
 
 
@@ -73,6 +78,22 @@ namespace NTNU.CarloMarton.VRLanguage
 
         #region Private Methods
 
+        private void Start()
+        {
+
+            Instance = this;
+
+            if (PlayerManager.LocalPlayerInstance == null)
+            {
+                Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
+                // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
+                PhotonNetwork.Instantiate(this.headPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
+            }
+            else
+            {
+                Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
+            }
+        }
 
         void LoadArena()
         {
@@ -84,7 +105,7 @@ namespace NTNU.CarloMarton.VRLanguage
             PhotonNetwork.LoadLevel(startScene);
         }
 
-
         #endregion
     }
+
 }

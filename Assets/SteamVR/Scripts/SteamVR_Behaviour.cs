@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using Photon.Pun;
 
 #if UNITY_2017_2_OR_NEWER
-    using UnityEngine.XR;
+using UnityEngine.XR;
 #else
 using XRSettings = UnityEngine.VR.VRSettings;
 using XRDevice = UnityEngine.VR.VRDevice;
@@ -14,7 +15,7 @@ using XRDevice = UnityEngine.VR.VRDevice;
 
 namespace Valve.VR
 {
-    public class SteamVR_Behaviour : MonoBehaviour
+    public class SteamVR_Behaviour : MonoBehaviourPun
     {
         private const string openVRDeviceName = "OpenVR";
 
@@ -205,7 +206,7 @@ namespace Valve.VR
         }
 
         protected void FixedUpdate()
-        {
+        {  
             SteamVR_Input.FixedUpdate();
         }
 
