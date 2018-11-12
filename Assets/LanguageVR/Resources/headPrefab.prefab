@@ -26,7 +26,7 @@ GameObject:
   - component: {fileID: 114067231791049662}
   - component: {fileID: 114886358791539152}
   m_Layer: 0
-  m_Name: headPrefab
+  m_Name: HeadPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -145,3 +145,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6905d29851869949a38a04a09c0b806, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  index: 0

@@ -1536,8 +1536,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4509524405213004}
-  - component: {fileID: 114392058551300536}
-  - component: {fileID: 114584979423391094}
+  - component: {fileID: 114591805988190170}
+  - component: {fileID: 114016184003681016}
+  - component: {fileID: 114348226093742532}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -4278,6 +4279,27 @@ Behaviour:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1188398279812194}
   m_Enabled: 1
+--- !u!114 &114016184003681016
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1977020271983006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  ObservedComponents:
+  - {fileID: 114348226093742532}
+  viewIdField: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!114 &114019266691620524
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4365,6 +4387,20 @@ MonoBehaviour:
   verbose: 0
   createComponents: 1
   updateDynamically: 1
+--- !u!114 &114348226093742532
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1977020271983006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
 --- !u!114 &114355356495917766
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4404,27 +4440,6 @@ MonoBehaviour:
   verbose: 0
   createComponents: 1
   updateDynamically: 1
---- !u!114 &114392058551300536
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1977020271983006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  ObservedComponents:
-  - {fileID: 114584979423391094}
-  viewIdField: 0
-  InstantiationId: 1
-  isRuntimeInstantiated: 0
 --- !u!114 &114401485802027370
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4574,7 +4589,7 @@ MonoBehaviour:
   showDebugText: 0
   spewDebugText: 0
   showDebugInteractables: 0
---- !u!114 &114584979423391094
+--- !u!114 &114591805988190170
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4582,12 +4597,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 1977020271983006}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Script: {fileID: 11500000, guid: 20ec6b646cb6fcd438fb808967cd54b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
+  trackingOriginTransform: {fileID: 4509524405213004}
+  hmdTransforms:
+  - {fileID: 4989200018268348}
+  - {fileID: 4443079317620648}
+  hands:
+  - {fileID: 114533914857090146}
+  - {fileID: 114845354002022892}
+  - {fileID: 114992325886762694}
+  headCollider: {fileID: 135680378104290856}
+  rigSteamVR: {fileID: 1865874959169436}
+  rig2DFallback: {fileID: 1654163039921230}
+  audioListener: {fileID: 4664054550386710}
+  allowToggleTo2D: 1
 --- !u!114 &114607361387183242
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4854,7 +4879,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 1.0000001, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: -0.14999998, z: -0.01999998}
+  m_ConnectedAnchor: {x: 0, y: -0.14999996, z: -0.02}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 1, z: 0}
   m_TwistLimitSpring:

@@ -10,13 +10,20 @@ public class RandomColour : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        
+    }
+
+    public void newColour()
+    {
         Color newColour = generateColour();
         gameObject.GetComponent<Renderer>().material.color = newColour;
-
         if (otherMaterialToChange)
         {
             print("ChangedColour");
             otherMaterialToChange.SetColor("_Color", newColour);
+        } else
+        {
+            Debug.LogWarning("No material to change colour on head");
         }
     }
 

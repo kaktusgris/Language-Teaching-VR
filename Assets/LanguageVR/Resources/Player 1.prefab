@@ -4329,21 +4329,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1977020271983006}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 202a6e24b48d1684398409c47161adcb, type: 3}
+  m_Script: {fileID: 11500000, guid: 20ec6b646cb6fcd438fb808967cd54b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trackingOriginTransform: {fileID: 4509524405213004}
-  hmdTransforms:
-  - {fileID: 4989200018268348}
-  - {fileID: 4443079317620648}
-  hands:
-  - {fileID: 114533914857090146}
-  - {fileID: 114845354002022892}
-  - {fileID: 114992325886762694}
-  headCollider: {fileID: 135680378104290856}
-  rigSteamVR: {fileID: 1865874959169436}
-  rig2DFallback: {fileID: 1654163039921230}
-  audioListener: {fileID: 4664054550386710}
+  trackingOriginTransform: {fileID: 0}
+  hmdTransforms: []
+  hands: []
+  headCollider: {fileID: 0}
+  rigSteamVR: {fileID: 0}
+  rig2DFallback: {fileID: 0}
+  audioListener: {fileID: 0}
   allowToggleTo2D: 1
 --- !u!114 &114190906689957872
 MonoBehaviour:

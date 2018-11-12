@@ -31,7 +31,7 @@ namespace NTNU.CarloMarton.VRLanguage
         {
             // #Important
             // used in GameManager.cs: we keep track of the localPlayer instance to prevent instantiation when levels are synchronized
-            if (photonView.IsMine)
+            if (photonView.IsMine || !PhotonNetwork.IsConnected)
             {
                 PlayerManager.LocalPlayerInstance = this.gameObject;
             }
@@ -45,7 +45,7 @@ namespace NTNU.CarloMarton.VRLanguage
         /// </summary>
         void Update()
         {
-            ProcessInputs();
+            //ProcessInputs();
         }
 
         #endregion
