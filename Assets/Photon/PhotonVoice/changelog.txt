@@ -1,0 +1,20 @@
+Photon Voice Change Log
+
+v2.1 (November 8th, 2018)
+    PUN2: v2.4.1v (14cb68f)
+    PhotonVoiceApi: revision 4876 
+    FIXED: PhotonVoiceNetwork fields can now be updated from the Unity Editor
+    ADDED: Assembly Definitions for Photon Voice 2
+    ADDED: Photon Chat as it was forgotten in initial release
+    FIXED: Photon Voice 2 can connect to self-hosted Photon Server after setting SerializtionProtocol version to 1.6 in this case
+    FIXED: NullRefException when trying to access Recorder.Logger before Recorder.Awake is called
+    FIXED: PhotonVoiceView's Recorder setup when the ViewID changes if the Recorder is not part of the prefab
+    FIXED: Errors or crashes when trying to setup local voice due to exceptions
+    CHANGED: Recorder falls back to Unity microphone if Photon microphone setup encounter an error
+
+v2.0 (October 10th, 2018)
+    PUN2: v2.2.1 (3cd5540)
+    PhotonVoiceApi: revision 4823
+    Initial release of the new major Photon Voice version 2.
+    Work-in-progress documentation: https://doc.photonengine.com/en-us/voice/v2
+    PhotonVoice reference API: https://doc-api.photonengine.com/en/voice/v2

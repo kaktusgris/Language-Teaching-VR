@@ -8,6 +8,8 @@ using UnityEngine.SceneManagement;
 
 using Photon.Pun;
 using Photon.Realtime;
+using Photon.Voice.Unity;
+using Photon.Voice.PUN;
 
 
 namespace NTNU.CarloMarton.VRLanguage
@@ -17,6 +19,7 @@ namespace NTNU.CarloMarton.VRLanguage
         [Tooltip("The prefab to use for representing the player")]
         public GameObject headPrefab;
         public GameObject teleportPrefab;
+
         public static GameManager Instance;
 
         [SerializeField] private String startScene = "TeleportTest";
@@ -29,11 +32,13 @@ namespace NTNU.CarloMarton.VRLanguage
         /// </summary>
         public override void OnLeftRoom()
         {
+
             SceneManager.LoadScene(0);
         }
 
         public override void OnPlayerEnteredRoom(Player other)
         {
+
             Debug.LogFormat("OnPlayerEnteredRoom() {0}", other.NickName); // not seen if you're the player connecting
 
             if (PhotonNetwork.IsMasterClient)
@@ -82,7 +87,7 @@ namespace NTNU.CarloMarton.VRLanguage
         {
 
             Instance = this;
-
+            
             if (PlayerManager.LocalPlayerInstance == null)
             {
                 Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
@@ -93,6 +98,9 @@ namespace NTNU.CarloMarton.VRLanguage
             {
                 Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
             }
+
+            GameObject.FindGameObjectWithTag("Voice").GetComponent<Recorder>().TransmitEnabled = true;
+            GameObject.FindGameObjectWithTag("Voice").GetComponent<Recorder>().VoiceDetection= true;
         }
 
         void LoadArena()
@@ -103,6 +111,7 @@ namespace NTNU.CarloMarton.VRLanguage
             }
             Debug.LogFormat("PhotonNetwork : Loading Level : {0}", startScene);
             PhotonNetwork.LoadLevel(startScene);
+         
         }
 
         #endregion
