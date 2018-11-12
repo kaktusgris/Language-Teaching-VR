@@ -3,19 +3,19 @@ using UnityEngine.EventSystems;
 
 using System.Collections;
 using Photon.Pun;
+using Photon.Voice.Unity;
+using Photon.Voice.PUN;
 
 namespace NTNU.CarloMarton.VRLanguage
 {
     /// <summary>
     /// Player manager.
-    /// Handles fire Input and Beams.
     /// </summary>
-    public class PlayerManager : MonoBehaviourPun
+    public class PlayerManager : MonoBehaviourPunCallbacks
     {
 
         [Tooltip("The local player instance. Use this to know if the local player is represented in the Scene")]
         public static GameObject LocalPlayerInstance;
-
 
         #region Private Fields
 
@@ -38,7 +38,9 @@ namespace NTNU.CarloMarton.VRLanguage
             // #Critical
             // we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
             DontDestroyOnLoad(this.gameObject);
+
         }
+
 
         /// <summary>
         /// MonoBehaviour method called on GameObject by Unity on every frame.

@@ -7,6 +7,10 @@ namespace NTNU.CarloMarton.VRLanguage
 {
     public class Launcher : MonoBehaviourPunCallbacks
     {
+
+        [Tooltip("The prefab for Voice")]
+        public GameObject Voice;
+
         #region Private Serializable Fields
 
         /// <summary>
@@ -56,6 +60,11 @@ namespace NTNU.CarloMarton.VRLanguage
             // #Critical
             // this makes sure we can use PhotonNetwork.LoadLevel() on the master client and all clients in the same room sync their level automatically
             PhotonNetwork.AutomaticallySyncScene = true;
+            if (GameObject.FindGameObjectWithTag("Voice") == null)
+            {
+                Instantiate(Voice, new Vector3(0, 0, 0), Quaternion.identity);
+            }
+            
         }
 
 
@@ -144,15 +153,15 @@ namespace NTNU.CarloMarton.VRLanguage
             Debug.Log("PUN Basics Tutorial/Launcher: OnJoinedRoom() called by PUN. Now this client is in a room.");
 
             // #Critical: We only load if we are the first player, else we rely on `PhotonNetwork.AutomaticallySyncScene` to sync our instance scene.
-            if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
-            {
-                Debug.Log("We load the 'TeleportTest' ");
+            //if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
+            //{
+                Debug.Log("We load the 'TeleportTest'");
 
 
                 // #Critical
-                // Load the Room Level.
+                // Load the Room Level
                 PhotonNetwork.LoadLevel("TeleportTest");
-            }
+            //}
         }
 
         #endregion

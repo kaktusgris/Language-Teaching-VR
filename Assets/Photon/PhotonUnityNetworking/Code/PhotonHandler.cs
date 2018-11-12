@@ -132,6 +132,8 @@ namespace Photon.Pun
             }
         }
 
+        public static int MaxDatagrams = 10;
+        public static bool SendAsap;
         protected void LateUpdate()
         {
             int currentMsSinceStart = (int)(Time.realtimeSinceStartup * 1000); // avoiding Environment.TickCount, which could be negative on long-running platforms
@@ -143,14 +145,17 @@ namespace Photon.Pun
             }
 
             currentMsSinceStart = (int)(Time.realtimeSinceStartup * 1000);
-            if (currentMsSinceStart > this.nextSendTickCount)
+            if (SendAsap || currentMsSinceStart > this.nextSendTickCount)
             {
+                SendAsap = false;
                 bool doSend = true;
-                while (PhotonNetwork.IsMessageQueueRunning && doSend)
+                int sendCounter = 0;
+                while (PhotonNetwork.IsMessageQueueRunning && doSend && sendCounter < MaxDatagrams)
                 {
                     // Send all outgoing commands
                     Profiler.BeginSample("SendOutgoingCommands");
                     doSend = PhotonNetwork.NetworkingClient.LoadBalancingPeer.SendOutgoingCommands();
+                    sendCounter++;
                     Profiler.EndSample();
                 }
 
