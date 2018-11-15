@@ -7,16 +7,24 @@ public class FollowVive : MonoBehaviourPun {
 
     [Tooltip("Which object is this. 0 for head. 1/2 for left/right hand")]
     //public int index = 0;
-    public BodyParts bodyPart; 
+    public BodyParts bodyPart;
+
+    private bool isMine;
 
 	// Use this for initialization
 	void Start () {
-		
-	}
+        isMine = photonView.IsMine;
+
+        // The instantiated hands are only visible for the other players
+        if (bodyPart != BodyParts.head && (isMine || !PhotonNetwork.IsConnected))
+        {
+            transform.localScale = new Vector3(0, 0, 0);
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {
-        if (photonView.IsMine || !PhotonNetwork.IsConnected)
+        if (isMine || !PhotonNetwork.IsConnected)
         {
             switch (bodyPart) {
                 case BodyParts.head: // head
