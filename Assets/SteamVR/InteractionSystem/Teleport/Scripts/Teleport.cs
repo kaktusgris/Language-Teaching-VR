@@ -174,9 +174,11 @@ namespace Valve.VR.InteractionSystem
 
 			HidePointer();
 
-			player = InteractionSystem.Player.instance;
+            //player = InteractionSystem.Player.instance;
+            player = GameObject.FindObjectOfType<InteractionSystem.Player>();
 
-			if ( player == null )
+
+            if ( player == null )
 			{
 				Debug.LogError( "Teleport: No Player instance found in map." );
 				Destroy( this.gameObject );
