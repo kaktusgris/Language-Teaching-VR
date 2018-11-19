@@ -9,8 +9,6 @@ using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
 using Photon.Voice.Unity;
-using Photon.Voice.PUN;
-
 
 namespace NTNU.CarloMarton.VRLanguage
 {

@@ -90,7 +90,8 @@ MonoBehaviour:
   updateInterval: 50
   runInBackground: 1
   statsResetInterval: 1000
-  speakerPrefab: {fileID: 0}
+  speakerPrefab: {fileID: 1163658804258660, guid: f67d7827a98d9c744aef6f55ad33ac5f,
+    type: 2}
   Settings:
     AppIdRealtime: 
     AppIdChat: 
