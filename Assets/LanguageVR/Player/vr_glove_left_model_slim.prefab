@@ -1036,7 +1036,8 @@ MonoBehaviour:
   updatePose: 1
   onlySetRotations: 0
   skeletonBlend: 1
-  mirroring: 2
+  mirroring: 0
+  photonView: {fileID: 0}
 --- !u!137 &137000013445226782
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

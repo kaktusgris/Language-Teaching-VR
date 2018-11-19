@@ -1,5 +1,6 @@
 ﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
 
+using Photon.Pun;
 using System.Collections;
 using UnityEngine;
 using Valve.VR;
@@ -451,7 +452,7 @@ namespace Valve.VR
         protected Vector3[] GetBonePositions(SteamVR_Input_Sources inputSource)
         {
             Vector3[] rawSkeleton = skeletonAction.GetBonePositions(inputSource);
-            if (mirroring == MirrorType.LeftToRight || mirroring == MirrorType.RightToLeft)
+            if (isMine() && (mirroring == MirrorType.LeftToRight || mirroring == MirrorType.RightToLeft))
             {
                 for (int boneIndex = 0; boneIndex < rawSkeleton.Length; boneIndex++)
                 {
@@ -473,7 +474,7 @@ namespace Valve.VR
         protected Quaternion[] GetBoneRotations(SteamVR_Input_Sources inputSource)
         {
             Quaternion[] rawSkeleton = skeletonAction.GetBoneRotations(inputSource);
-            if (mirroring == MirrorType.LeftToRight || mirroring == MirrorType.RightToLeft)
+            if (isMine() && (mirroring == MirrorType.LeftToRight || mirroring == MirrorType.RightToLeft))
             {
                 for (int boneIndex = 0; boneIndex < rawSkeleton.Length; boneIndex++)
                 {
@@ -522,6 +523,24 @@ namespace Valve.VR
                 boneIndex == SteamVR_Skeleton_JointIndexes.pinkyMetacarpal ||
                 boneIndex == SteamVR_Skeleton_JointIndexes.thumbMetacarpal);
         }
+
+
+        #region custom fields
+
+        [SerializeField]
+        private PhotonView photonView;
+
+        private bool isMine()
+        {
+            if (photonView)
+            {
+                return photonView.IsMine || !PhotonNetwork.IsConnected;
+            }
+            return true;
+        }
+
+        #endregion
+
     }
 
 
