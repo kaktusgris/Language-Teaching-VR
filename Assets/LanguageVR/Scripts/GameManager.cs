@@ -15,10 +15,12 @@ namespace NTNU.CarloMarton.VRLanguage
     public class GameManager : MonoBehaviourPunCallbacks
     {
         [Tooltip("The prefab to use for representing the player")]
-        public GameObject headPrefab;
-        public GameObject teleportPrefab;
+        public GameObject avatarPrefab;
+     
+        public GameObject interactablePrefab;
 
         public static GameManager Instance;
+
 
         [SerializeField] private String startScene = "TeleportTest";
 
@@ -89,8 +91,12 @@ namespace NTNU.CarloMarton.VRLanguage
             if (PlayerManager.LocalPlayerInstance == null)
             {
                 Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
+
                 // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
-                PhotonNetwork.Instantiate(this.headPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
+                GameObject avatar = PhotonNetwork.Instantiate(this.avatarPrefab.name, ViveManager.Instance.head.transform.position, ViveManager.Instance.head.transform.rotation, 0);
+                avatar.GetComponentInChildren<RandomColour>().newColour();
+
+                //PhotonNetwork.Instantiate(this.interactablePrefab.name, new Vector3(1f, 1f, 1f), Quaternion.identity, 0);
             }
             else
             {
