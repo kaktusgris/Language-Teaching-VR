@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using Photon.Voice.Unity;
 
 
 namespace NTNU.CarloMarton.VRLanguage
@@ -63,8 +64,9 @@ namespace NTNU.CarloMarton.VRLanguage
             if (GameObject.FindGameObjectWithTag("Voice") == null)
             {
                 Instantiate(Voice, new Vector3(0, 0, 0), Quaternion.identity);
+                GameObject.FindGameObjectWithTag("Voice").GetComponent<Recorder>().MicrophoneType = Recorder.MicType.Photon;
             }
-            
+
         }
 
 
