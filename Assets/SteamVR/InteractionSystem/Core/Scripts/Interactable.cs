@@ -73,7 +73,7 @@ namespace Valve.VR.InteractionSystem
 
         #region custom variables
 
-        public Rigidbody rigidbody;
+        private Rigidbody rigidbody;
         private Vector3 networkPosition;
         private Quaternion networkRotation;
 
@@ -85,6 +85,8 @@ namespace Valve.VR.InteractionSystem
 
             if (highlightMat == null)
                 Debug.LogError("Hover Highlight Material is missing. Please create a material named 'SteamVR_HoverHighlight' and place it in a Resources folder");
+
+            rigidbody = GetComponent<Rigidbody>();
             
         }
 
@@ -241,8 +243,8 @@ namespace Valve.VR.InteractionSystem
             }
 
             // This is added by Marton
-            rigidbody.position = networkPosition;
-            rigidbody.rotation = networkRotation;
+            //rigidbody.position = networkPosition;
+            //rigidbody.rotation = networkRotation;
         }
         
         private void OnAttachedToHand( Hand hand )

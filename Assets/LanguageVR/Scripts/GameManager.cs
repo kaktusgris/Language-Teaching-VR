@@ -76,6 +76,7 @@ namespace NTNU.CarloMarton.VRLanguage
         public void LeaveRoom()
         {
             PhotonNetwork.LeaveRoom();
+                       
         }
 
 
@@ -95,6 +96,7 @@ namespace NTNU.CarloMarton.VRLanguage
                 // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
                 GameObject avatar = PhotonNetwork.Instantiate(this.avatarPrefab.name, ViveManager.Instance.head.transform.position, ViveManager.Instance.head.transform.rotation, 0);
                 avatar.GetComponentInChildren<RandomColour>().newColour();
+
 
                 //PhotonNetwork.Instantiate(this.interactablePrefab.name, new Vector3(1f, 1f, 1f), Quaternion.identity, 0);
             }
