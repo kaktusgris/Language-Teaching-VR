@@ -7,6 +7,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
+using Photon.Pun;
 
 namespace Valve.VR.InteractionSystem
 {
@@ -14,8 +15,8 @@ namespace Valve.VR.InteractionSystem
 	[RequireComponent( typeof( Interactable ) )]
 	[RequireComponent( typeof( Rigidbody ) )]
     [RequireComponent( typeof(VelocityEstimator))]
-	public class Throwable : MonoBehaviour
-	{
+	public class Throwable : MonoBehaviour, IPunObservable
+    {
 		[EnumFlags]
 		[Tooltip( "The flags used to attach this object to the hand." )]
 		public Hand.AttachmentFlags attachmentFlags = Hand.AttachmentFlags.ParentToHand | Hand.AttachmentFlags.DetachFromOtherHand | Hand.AttachmentFlags.TurnOnKinematic;
@@ -56,14 +57,28 @@ namespace Valve.VR.InteractionSystem
 
         protected new Rigidbody rigidbody;
 
+        private PhotonView photonView;
+
+        private float m_Distance;
+        private float m_Angle;
+        
+        private Vector3 m_Direction;
+        private Vector3 m_NetworkPosition;
+        private Vector3 m_StoredPosition;
+
+        private Quaternion m_NetworkRotation;
+
+        public bool m_SynchronizePosition = true;
+        public bool m_SynchronizeRotation = true;
+        public bool m_SynchronizeScale = false;
+
         [HideInInspector]
         public Interactable interactable;
-
 
         //-------------------------------------------------
         protected virtual void Awake()
 		{
-			velocityEstimator = GetComponent<VelocityEstimator>();
+            velocityEstimator = GetComponent<VelocityEstimator>();
             interactable = GetComponent<Interactable>();
 
 			if ( attachEaseIn )
@@ -80,7 +95,14 @@ namespace Valve.VR.InteractionSystem
                 interactable.handFollowTransform = attachmentOffset;
             }
 
-		}
+            photonView = GetComponent<PhotonView>();
+
+            m_StoredPosition = transform.position;
+            m_NetworkPosition = Vector3.zero;
+
+            m_NetworkRotation = Quaternion.identity;
+
+        }
 
 
         //-------------------------------------------------
@@ -136,6 +158,9 @@ namespace Valve.VR.InteractionSystem
         //-------------------------------------------------
         protected virtual void OnAttachedToHand( Hand hand )
 		{
+            photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
+            rigidbody.useGravity = false;
+
             //Debug.Log("Pickup: " + hand.GetGrabStarting().ToString());
 
             hadInterpolation = this.rigidbody.interpolation;
@@ -166,6 +191,8 @@ namespace Valve.VR.InteractionSystem
         //-------------------------------------------------
         protected virtual void OnDetachedFromHand(Hand hand)
         {
+            rigidbody.useGravity = true;
+
             attached = false;
 
             onDetachFromHand.Invoke();
@@ -181,6 +208,9 @@ namespace Valve.VR.InteractionSystem
 
             rigidbody.velocity = velocity;
             rigidbody.angularVelocity = angularVelocity;
+
+            // Transfer ownership back to scene when dropped
+            // photonView.TransferOwnership(0);
         }
 
 
@@ -244,6 +274,58 @@ namespace Valve.VR.InteractionSystem
             }
         }
 
+        public void OnCollisionEnter(Collision collision)
+        {
+            //if (collision.collider.tag == "Interactable")
+            //{
+            //    print("au");
+            //    collision.collider.GetComponent<PhotonView>().TransferOwnership(PhotonNetwork.LocalPlayer);
+            //}
+        }
+
+        public void Update()
+        {
+            if (! photonView.IsMine)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, this.m_NetworkPosition, this.m_Distance * (1.0f / PhotonNetwork.SerializationRate));
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, this.m_NetworkRotation, this.m_Angle * (1.0f / PhotonNetwork.SerializationRate));
+            }
+        }
+
+        #region custom methods
+
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            if (stream.IsWriting)
+            {
+                this.m_Direction = transform.position - this.m_StoredPosition;
+                this.m_StoredPosition = transform.position;
+
+                stream.SendNext(transform.position);
+                stream.SendNext(this.m_Direction);
+                stream.SendNext(transform.rotation);
+
+                stream.SendNext(attached);
+                stream.SendNext(rigidbody.useGravity);
+            }
+            else
+            {
+                this.m_NetworkPosition = (Vector3)stream.ReceiveNext();
+                this.m_Direction = (Vector3)stream.ReceiveNext();
+
+                float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.timestamp));
+                this.m_NetworkPosition += this.m_Direction * lag;
+
+                this.m_Distance = Vector3.Distance(transform.position, this.m_NetworkPosition);
+                this.m_NetworkRotation = (Quaternion)stream.ReceiveNext();
+                this.m_Angle = Quaternion.Angle(transform.rotation, this.m_NetworkRotation);
+
+                this.attached = (bool)stream.ReceiveNext();
+                this.rigidbody.useGravity = (bool)stream.ReceiveNext();
+            }
+        }
+
+        #endregion
 
         //-------------------------------------------------
         protected virtual IEnumerator LateDetach( Hand hand )
