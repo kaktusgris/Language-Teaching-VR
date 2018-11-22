@@ -39,6 +39,22 @@ namespace NTNU.CarloMarton.VRLanguage
             // we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
             DontDestroyOnLoad(this.gameObject);
 
+
+        }
+
+        void Start()
+        {
+            if (!photonView.IsMine)
+            {
+                Destroy(GetComponentInChildren<AudioListener>());
+            }
+
+            if (photonView.IsMine)
+            {
+                gameObject.GetComponentInChildren<AudioSource>().spatialBlend = 1.0f;
+                gameObject.GetComponentInChildren<AudioSource>().rolloffMode = AudioRolloffMode.Linear;
+            }
+            
         }
 
 
@@ -47,6 +63,7 @@ namespace NTNU.CarloMarton.VRLanguage
         /// </summary>
         void Update()
         {
+            
             //ProcessInputs();
         }
 
