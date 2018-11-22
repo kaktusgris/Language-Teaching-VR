@@ -53,6 +53,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   avatarPrefab: {fileID: 1581442413074664, guid: 9a6b69359665d57459e6288b359ec269,
     type: 2}
-  interactablePrefab: {fileID: 1884007994650146, guid: 165426c1cdb0d0f4e9d7a5fac54997d6,
+  interactablePrefab: {fileID: 1416759480967228, guid: e7c0cbdd109eca044b37a94f7e693bd8,
     type: 2}
   startScene: TeleportTest

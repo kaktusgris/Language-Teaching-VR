@@ -8,12 +8,11 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
-using Photon.Pun;
 
 namespace Valve.VR.InteractionSystem
 {
 	//-------------------------------------------------------------------------
-	public class Interactable : MonoBehaviour, IPunObservable
+	public class Interactable : MonoBehaviour
     {
         [Tooltip("Activates an action set on attach and deactivates on detach")]
         public SteamVR_ActionSet activateActionSetOnAttach;
@@ -71,21 +70,12 @@ namespace Valve.VR.InteractionSystem
         public bool isHovering { get; protected set; }
         public bool wasHovering { get; protected set; }
 
-        #region custom variables
-
-        public Rigidbody rigidbody;
-        private Vector3 networkPosition;
-        private Quaternion networkRotation;
-
-        #endregion
-
         private void Start()
         {
             highlightMat = (Material)Resources.Load("SteamVR_HoverHighlight", typeof(Material));
 
             if (highlightMat == null)
                 Debug.LogError("Hover Highlight Material is missing. Please create a material named 'SteamVR_HoverHighlight' and place it in a Resources folder");
-            
         }
 
         private bool ShouldIgnoreHighlight(Component component)
@@ -239,10 +229,6 @@ namespace Valve.VR.InteractionSystem
 
                 isHovering = false;
             }
-
-            // This is added by Marton
-            rigidbody.position = networkPosition;
-            rigidbody.rotation = networkRotation;
         }
         
         private void OnAttachedToHand( Hand hand )
@@ -287,28 +273,5 @@ namespace Valve.VR.InteractionSystem
                 attachedToHand.DetachObject(this.gameObject, false);
             }
         }
-
-        #region custom methods
-
-        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-        {
-            if (stream.IsWriting)
-            {
-                stream.SendNext(rigidbody.position);
-                stream.SendNext(rigidbody.rotation);
-                stream.SendNext(rigidbody.velocity);
-            }
-            else
-            {
-                networkPosition = (Vector3)stream.ReceiveNext();
-                networkRotation = (Quaternion)stream.ReceiveNext();
-                rigidbody.velocity = (Vector3)stream.ReceiveNext();
-
-                float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.timestamp));
-                networkPosition += (rigidbody.velocity * lag);
-            }
-        }
-
-        #endregion
     }
 }
