@@ -70,12 +70,23 @@ namespace Valve.VR.InteractionSystem
         public bool isHovering { get; protected set; }
         public bool wasHovering { get; protected set; }
 
+        #region custom variables
+
+        private Rigidbody rigidbody;
+        private Vector3 networkPosition;
+        private Quaternion networkRotation;
+
+        #endregion
+
         private void Start()
         {
             highlightMat = (Material)Resources.Load("SteamVR_HoverHighlight", typeof(Material));
 
             if (highlightMat == null)
                 Debug.LogError("Hover Highlight Material is missing. Please create a material named 'SteamVR_HoverHighlight' and place it in a Resources folder");
+
+            rigidbody = GetComponent<Rigidbody>();
+
         }
 
         private bool ShouldIgnoreHighlight(Component component)
@@ -230,7 +241,7 @@ namespace Valve.VR.InteractionSystem
                 isHovering = false;
             }
         }
-        
+
         private void OnAttachedToHand( Hand hand )
         {
             if (activateActionSetOnAttach != null)
@@ -248,7 +259,7 @@ namespace Valve.VR.InteractionSystem
         {
             if (activateActionSetOnAttach != null)
             {
-                if (hand.otherHand.currentAttachedObjectInfo.HasValue == false || (hand.otherHand.currentAttachedObjectInfo.Value.interactable != null && 
+                if (hand.otherHand.currentAttachedObjectInfo.HasValue == false || (hand.otherHand.currentAttachedObjectInfo.Value.interactable != null &&
                     hand.otherHand.currentAttachedObjectInfo.Value.interactable.activateActionSetOnAttach != this.activateActionSetOnAttach))
                 {
                     activateActionSetOnAttach.Deactivate();

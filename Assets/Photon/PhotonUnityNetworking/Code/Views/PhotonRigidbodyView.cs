@@ -8,12 +8,10 @@
 // <author>developer@exitgames.com</author>
 // ----------------------------------------------------------------------------
 
+using UnityEngine;
 
 namespace Photon.Pun
 {
-    using UnityEngine;
-
-
     [RequireComponent(typeof(PhotonView))]
     [RequireComponent(typeof(Rigidbody))]
     [AddComponentMenu("Photon Networking/Photon Rigidbody View")]

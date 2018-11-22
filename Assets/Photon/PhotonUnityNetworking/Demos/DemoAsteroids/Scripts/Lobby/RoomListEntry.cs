@@ -15,11 +15,6 @@ namespace Photon.Pun.Demo.Asteroids
         {
             JoinRoomButton.onClick.AddListener(() =>
             {
-                if (PhotonNetwork.InLobby)
-                {
-                    PhotonNetwork.LeaveLobby();
-                }
-
                 PhotonNetwork.JoinRoom(roomName);
             });
         }

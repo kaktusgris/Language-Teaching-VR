@@ -215,10 +215,15 @@ namespace Photon.Voice.PUN
             this.Client.StateChanged -= OnVoiceStateChanged;
         }
 
+        protected override void OnApplicationQuit()
+        {
+            applicationIsQuitting = true;
+            base.OnApplicationQuit();
+        }
+
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            applicationIsQuitting = true;
             instantiated = false;
         }
 
@@ -369,6 +374,10 @@ namespace Photon.Voice.PUN
         // In case Voice client is connected to the wrong room switch to the correct one
         private void FollowPun()
         {
+            if (applicationIsQuitting)
+            {
+                return;
+            }
             if (PhotonNetwork.NetworkClientState == this.ClientState)
             {
                 if (PhotonNetwork.NetworkClientState == ClientState.Joined)

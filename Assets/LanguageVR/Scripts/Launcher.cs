@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using Photon.Voice.Unity;
 
 
 namespace NTNU.CarloMarton.VRLanguage
@@ -10,6 +11,8 @@ namespace NTNU.CarloMarton.VRLanguage
 
         [Tooltip("The prefab for Voice")]
         public GameObject Voice;
+
+        public string startScene;
 
         #region Private Serializable Fields
 
@@ -63,6 +66,7 @@ namespace NTNU.CarloMarton.VRLanguage
             if (GameObject.FindGameObjectWithTag("Voice") == null)
             {
                 Instantiate(Voice, new Vector3(0, 0, 0), Quaternion.identity);
+                GameObject.FindGameObjectWithTag("Voice").GetComponent<Recorder>().MicrophoneType = Recorder.MicType.Photon;
             }
             
         }
@@ -154,12 +158,12 @@ namespace NTNU.CarloMarton.VRLanguage
             // #Critical: We only load if we are the first player, else we rely on `PhotonNetwork.AutomaticallySyncScene` to sync our instance scene.
             if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
             {
-                Debug.Log("We load the 'TeleportTest'");
+                Debug.Log("We load the" + startScene);
 
 
                 // #Critical
                 // Load the Room Level
-                PhotonNetwork.LoadLevel("TeleportTest");
+                PhotonNetwork.LoadLevel(startScene);
             }
         }
 

@@ -9,8 +9,6 @@ using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
 using Photon.Voice.Unity;
-using Photon.Voice.PUN;
-
 
 namespace NTNU.CarloMarton.VRLanguage
 {
@@ -18,13 +16,11 @@ namespace NTNU.CarloMarton.VRLanguage
     {
         [Tooltip("The prefab to use for representing the player")]
         public GameObject avatarPrefab;
-     
-        public GameObject interactablePrefab;
 
         public static GameManager Instance;
 
 
-        [SerializeField] private String startScene = "TeleportTest";
+        [SerializeField] private string startScene;
 
         #region Photon Callbacks
 
@@ -78,6 +74,7 @@ namespace NTNU.CarloMarton.VRLanguage
         public void LeaveRoom()
         {
             PhotonNetwork.LeaveRoom();
+
         }
 
         public void ExitGame()
@@ -95,7 +92,7 @@ namespace NTNU.CarloMarton.VRLanguage
         {
 
             Instance = this;
-            
+
             if (PlayerManager.LocalPlayerInstance == null)
             {
                 Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
@@ -126,14 +123,8 @@ namespace NTNU.CarloMarton.VRLanguage
             }
             Debug.LogFormat("PhotonNetwork : Loading Level : {0}", startScene);
             PhotonNetwork.LoadLevel(startScene);
-         
-        }
 
-        private void instantiateObjects()
-        {
-            PhotonNetwork.Instantiate(this.interactablePrefab.name, new Vector3(1f, 1f, 1f), Quaternion.identity, 0);
         }
-
 
         #endregion
     }

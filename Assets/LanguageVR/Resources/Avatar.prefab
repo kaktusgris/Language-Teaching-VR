@@ -119,6 +119,10 @@ GameObject:
   - component: {fileID: 114739352362724058}
   - component: {fileID: 114128428636574100}
   - component: {fileID: 114720572278442550}
+  - component: {fileID: 114311952993350778}
+  - component: {fileID: 82743126104685792}
+  - component: {fileID: 114418551090334644}
+  - component: {fileID: 114550916499352182}
   m_Layer: 26
   m_Name: Body
   m_TagString: Untagged
@@ -654,11 +658,11 @@ GameObject:
   - component: {fileID: 4636465474624500}
   - component: {fileID: 114713581343649654}
   - component: {fileID: 114602634882470788}
-  - component: {fileID: 114487937645316836}
   - component: {fileID: 114008776894715532}
+  - component: {fileID: 114756078192106520}
   m_Layer: 0
   m_Name: Avatar
-  m_TagString: Untagged
+  m_TagString: Avatar
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1070,6 +1074,7 @@ GameObject:
   - component: {fileID: 23365549463339326}
   - component: {fileID: 114247955814302454}
   - component: {fileID: 114049437488786990}
+  - component: {fileID: 81894410583957498}
   m_Layer: 0
   m_Name: Head
   m_TagString: Untagged
@@ -2246,6 +2251,108 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!81 &81894410583957498
+AudioListener:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1966479420907862}
+  m_Enabled: 1
+--- !u!82 &82743126104685792
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1102694112537754}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 1
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 0
+  MinDistance: 1
+  MaxDistance: 6
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!95 &95441873427933132
 Animator:
   serializedVersion: 3
@@ -2315,7 +2422,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114247955814302454}
   viewIdField: 0
-  InstantiationId: 1
+  InstantiationId: 6
   isRuntimeInstantiated: 0
 --- !u!114 &114060760348025866
 MonoBehaviour:
@@ -2357,7 +2464,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114720572278442550}
   viewIdField: 0
-  InstantiationId: 4
+  InstantiationId: 8
   isRuntimeInstantiated: 0
 --- !u!114 &114158837969976794
 MonoBehaviour:
@@ -2389,6 +2496,23 @@ MonoBehaviour:
   otherMaterialToChange: {fileID: 2100000, guid: 8f32b3d74401443479c643e48c21915a,
     type: 2}
   photonView: {fileID: 114049437488786990}
+--- !u!114 &114311952993350778
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1102694112537754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 126494ae2a10a34499272ed97a6c9f5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  logLevel: 1
+  recorderInUse: {fileID: 0}
+  speakerInUse: {fileID: 114418551090334644}
+  AutoCreateRecorderIfNotFound: 0
+  UsePrimaryRecorder: 1
+  SetupDebugSpeaker: 1
 --- !u!114 &114383125347404520
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2409,6 +2533,19 @@ MonoBehaviour:
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
+--- !u!114 &114418551090334644
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1102694112537754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd7fea91fe63f4e1b884ef1e16a975c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  logLevel: 1
+  PlayDelayMs: 200
 --- !u!114 &114479302995098616
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2423,23 +2560,46 @@ MonoBehaviour:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
---- !u!114 &114487937645316836
+--- !u!114 &114550916499352182
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1581442413074664}
+  m_GameObject: {fileID: 1102694112537754}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 126494ae2a10a34499272ed97a6c9f5d, type: 3}
+  m_Script: {fileID: 11500000, guid: 8cc64aca77a4bc84f9a15ccd92d26878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  logLevel: 1
-  recorderInUse: {fileID: 0}
-  speakerInUse: {fileID: 0}
-  AutoCreateRecorderIfNotFound: 0
-  UsePrimaryRecorder: 1
-  SetupDebugSpeaker: 1
+  directBinaural: 1
+  interpolation: 0
+  physicsBasedAttenuation: 1
+  airAbsorption: 1
+  dipoleWeight: 0
+  dipolePower: 0
+  occlusionMode: 0
+  occlusionMethod: 0
+  sourceRadius: 1
+  directMixLevel: 1
+  reflections: 0
+  indirectBinaural: 0
+  indirectMixLevel: 1
+  simulationType: 0
+  uniqueIdentifier: 
+  avoidSilenceDuringInit: 0
+  overrideHRTFIndex: 0
+  hrtfIndex: 0
+  bakingRadius: 16
+  useAllProbeBoxes: 0
+  probeBoxes: []
+  bakedProbeNames: []
+  bakedProbeDataSizes: 
+  bakedDataSize: 0
+  bakedStatsFoldout: 0
+  bakeToggle: 0
+  bakedDataIdentifier:
+    identifier: 0
+    type: 0
 --- !u!114 &114602634882470788
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2459,7 +2619,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114008776894715532}
   viewIdField: 0
-  InstantiationId: 3
+  InstantiationId: 7
   isRuntimeInstantiated: 0
 --- !u!114 &114606885115731940
 MonoBehaviour:
@@ -2501,7 +2661,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114158837969976794}
   viewIdField: 0
-  InstantiationId: 6
+  InstantiationId: 4
   isRuntimeInstantiated: 0
 --- !u!114 &114711836892138806
 MonoBehaviour:
@@ -2571,8 +2731,21 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114961498697188434}
   viewIdField: 0
-  InstantiationId: 7
+  InstantiationId: 3
   isRuntimeInstantiated: 0
+--- !u!114 &114756078192106520
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1581442413074664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79e99846fd75c4438917229c144155a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TerrainSimplificationLevel: 0
+  exportAllChildren: 1
 --- !u!114 &114787901251572590
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2625,7 +2798,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114383125347404520}
   viewIdField: 0
-  InstantiationId: 8
+  InstantiationId: 1
   isRuntimeInstantiated: 0
 --- !u!114 &114961498697188434
 MonoBehaviour:

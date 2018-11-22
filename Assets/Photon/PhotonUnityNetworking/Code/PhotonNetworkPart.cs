@@ -877,6 +877,8 @@ namespace Photon.Pun
                 {
                     OpCleanRpcBuffer(view);
                 }
+
+                view.ViewID = 0;    // marks the PV as not being used currently. it may be returned to the pool
             }
 
             if (PhotonNetwork.LogLevel >= PunLogLevel.Full)
@@ -1579,7 +1581,7 @@ namespace Photon.Pun
                 return;
             }
             #else
-            serializeRaiseEvOptions.Receivers = (CurrentRoom.Players.Count == 1) ? ReceiverGroup.All : ReceiverGroup.Others;
+            options.Receivers = (CurrentRoom.Players.Count == 1) ? ReceiverGroup.All : ReceiverGroup.Others;
             #endif
 
 

@@ -27,7 +27,7 @@ namespace Photon.Pun.Demo.Hub
 		public GameObject OpenTutorialLinkButton;
 		public GameObject OpenDocLinkButton;
 
-        string MainDemoWebLink = "https://doc.photonengine.com/en-us/pun/v2/getting-started/pun-intro";
+        string MainDemoWebLink = "http://bit.ly/2f8OFu8";
 
 		struct DemoData
 		{
@@ -105,8 +105,8 @@ namespace Photon.Pun.Demo.Hub
 						"New Unity UI all around, for Menus and player health HUD.\n" +
 						"Full step by step tutorial available online.",
 				Scene = "PunBasics-Launcher" ,
-				TutorialLink = "https://doc.photonengine.com/en-us/pun/v2/demos-and-tutorials/pun-basics-tutorial/intro"
-                }
+				TutorialLink = "http://j.mp/2dibZIM"
+				}
 			);
 			
 			_data.Add(

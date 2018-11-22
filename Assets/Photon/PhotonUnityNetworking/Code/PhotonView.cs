@@ -273,8 +273,14 @@ namespace Photon.Pun
             if (!this.removedFromLocalViewList)
             {
                 bool wasInList = PhotonNetwork.LocalCleanPhotonView(this);
-                
-                if (wasInList && this.InstantiationId > 0 && !PhotonHandler.AppQuits && PhotonNetwork.LogLevel >= PunLogLevel.Informational)
+                bool loading = false;
+
+                // TODO: clean up! PUN2 is unity5.3 and higher
+                #if (!UNITY_5 || UNITY_5_0 || UNITY_5_1) && !UNITY_5_3_OR_NEWER
+                loading = Application.isLoadingLevel;
+                #endif
+
+                if (wasInList && !loading && this.InstantiationId > 0 && !PhotonHandler.AppQuits && PhotonNetwork.LogLevel >= PunLogLevel.Informational)
                 {
                     Debug.Log("PUN-instantiated '" + this.gameObject.name + "' got destroyed by engine. This is OK when loading levels. Otherwise use: PhotonNetwork.Destroy().");
                 }

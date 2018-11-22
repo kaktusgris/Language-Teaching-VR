@@ -16,7 +16,6 @@ namespace Photon.Pun
     using UnityEditor.Animations;
     using UnityEngine;
 
-
     [CustomEditor(typeof(PhotonAnimatorView))]
     public class PhotonAnimatorViewEditor : Editor
     {

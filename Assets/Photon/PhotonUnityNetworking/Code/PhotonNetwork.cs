@@ -64,7 +64,7 @@ namespace Photon.Pun
     public static partial class PhotonNetwork
     {
         /// <summary>Version number of PUN. Used in the AppVersion, which separates your playerbase in matchmaking.</summary>
-        public const string PunVersion = "2.5";
+        public const string PunVersion = "2.4";
 
         /// <summary>Version number of your game. Setting this updates the AppVersion, which separates your playerbase in matchmaking.</summary>
         /// <remarks>
@@ -2218,7 +2218,7 @@ namespace Photon.Pun
                 int newSubId = lastUsedViewSubId;
                 int newViewId;
                 int ownerIdOffset = ownerId * MAX_VIEW_IDS;
-                for (int i = 1; i <= MAX_VIEW_IDS; i++)
+                for (int i = 1; i < MAX_VIEW_IDS; i++)
                 {
                     newSubId = (newSubId + 1) % MAX_VIEW_IDS;
                     if (newSubId == 0)
