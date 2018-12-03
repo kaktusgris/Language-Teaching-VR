@@ -274,13 +274,21 @@ namespace Valve.VR.InteractionSystem
             }
         }
 
-        public void OnCollisionEnter(Collision collision)
+        [PunRPC]
+        public void UpdatePosition(Vector3 position, Quaternion rotation)
         {
-            //if (collision.collider.tag == "Interactable")
-            //{
-            //    print("au");
-            //    collision.collider.GetComponent<PhotonView>().TransferOwnership(PhotonNetwork.LocalPlayer);
-            //}
+            transform.position = position;
+            transform.rotation = rotation;
+        }
+        
+        public void OnCollisionStay(Collision collision)
+        {
+            if (collision.collider.tag == "Interactable")
+            {
+                //collision.collider.GetComponent<PhotonView>().RPC("UpdatePosition", PhotonTargets);
+                //Collider other = collision.collider;
+                //other.GetComponent<PhotonView>().RPC("UpdatePosition", RpcTarget.Others, other.transform.position, other.transform.rotation);
+            }
         }
 
         public void Update()
