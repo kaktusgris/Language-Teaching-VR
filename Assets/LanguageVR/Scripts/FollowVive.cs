@@ -27,15 +27,15 @@ public class FollowVive : MonoBehaviourPun {
         if (isMine || !PhotonNetwork.IsConnected)
         {
             switch (bodyPart) {
-                case BodyParts.head: // head
+                case BodyParts.head:
                     transform.position = ViveManager.Instance.head.transform.position;
                     transform.rotation = ViveManager.Instance.head.transform.rotation;
                     break;
-                case BodyParts.leftHand: // left hand
+                case BodyParts.leftHand:
                     transform.position = ViveManager.Instance.leftHand.transform.position;
                     transform.rotation = ViveManager.Instance.leftHand.transform.rotation;
                     break;
-                case BodyParts.rightHand: // right hand
+                case BodyParts.rightHand:
                     transform.position = ViveManager.Instance.rightHand.transform.position;
                     transform.rotation = ViveManager.Instance.rightHand.transform.rotation;
                     break;

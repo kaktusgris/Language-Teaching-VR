@@ -159,7 +159,7 @@ namespace Valve.VR.InteractionSystem
         protected virtual void OnAttachedToHand( Hand hand )
 		{
             photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
-            rigidbody.useGravity = false;
+            //rigidbody.useGravity = false;
 
             //Debug.Log("Pickup: " + hand.GetGrabStarting().ToString());
 
@@ -191,7 +191,7 @@ namespace Valve.VR.InteractionSystem
         //-------------------------------------------------
         protected virtual void OnDetachedFromHand(Hand hand)
         {
-            rigidbody.useGravity = true;
+            //rigidbody.useGravity = true;
 
             attached = false;
 
@@ -273,30 +273,32 @@ namespace Valve.VR.InteractionSystem
                 //StartCoroutine( LateDetach( hand ) );
             }
         }
-
-        [PunRPC]
-        public void UpdatePosition(Vector3 position, Quaternion rotation)
-        {
-            transform.position = position;
-            transform.rotation = rotation;
-        }
         
-        public void OnCollisionStay(Collision collision)
+        // Transfer ownership on other throwable objects that you touch with this throwable
+        public void OnCollisionEnter(Collision collision)
         {
-            if (collision.collider.tag == "Interactable")
+            if (this.attached)
             {
-                //collision.collider.GetComponent<PhotonView>().RPC("UpdatePosition", PhotonTargets);
-                //Collider other = collision.collider;
-                //other.GetComponent<PhotonView>().RPC("UpdatePosition", RpcTarget.Others, other.transform.position, other.transform.rotation);
+                Throwable otherThrowable = collision.collider.GetComponent<Throwable>();
+                PhotonView otherPhotonView = collision.collider.GetComponent<PhotonView>();
+                if (otherThrowable != null && otherPhotonView != null)
+                {
+                    otherPhotonView.TransferOwnership(this.photonView.Owner);
+                }
             }
         }
 
         public void Update()
         {
-            if (! photonView.IsMine)
+            if (! this.photonView.IsMine)
             {
+                rigidbody.isKinematic = true;
+                //rigidbody.useGravity = false;
                 transform.position = Vector3.MoveTowards(transform.position, this.m_NetworkPosition, this.m_Distance * (1.0f / PhotonNetwork.SerializationRate));
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, this.m_NetworkRotation, this.m_Angle * (1.0f / PhotonNetwork.SerializationRate));
+            } else
+            {
+                rigidbody.isKinematic = attached;
             }
         }
 
@@ -314,7 +316,7 @@ namespace Valve.VR.InteractionSystem
                 stream.SendNext(transform.rotation);
 
                 stream.SendNext(attached);
-                stream.SendNext(rigidbody.useGravity);
+                //stream.SendNext(rigidbody.useGravity);
             }
             else
             {
@@ -329,7 +331,7 @@ namespace Valve.VR.InteractionSystem
                 this.m_Angle = Quaternion.Angle(transform.rotation, this.m_NetworkRotation);
 
                 this.attached = (bool)stream.ReceiveNext();
-                this.rigidbody.useGravity = (bool)stream.ReceiveNext();
+                //this.rigidbody.useGravity = (bool)stream.ReceiveNext();
             }
         }
 

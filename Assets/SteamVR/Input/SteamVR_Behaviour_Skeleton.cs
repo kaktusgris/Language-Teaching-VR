@@ -452,7 +452,7 @@ namespace Valve.VR
         protected Vector3[] GetBonePositions(SteamVR_Input_Sources inputSource)
         {
             Vector3[] rawSkeleton = skeletonAction.GetBonePositions(inputSource);
-            if (mirroring == MirrorType.LeftToRight || mirroring == MirrorType.RightToLeft)
+            if (IsMine() && (mirroring == MirrorType.LeftToRight || mirroring == MirrorType.RightToLeft))
             {
                 for (int boneIndex = 0; boneIndex < rawSkeleton.Length; boneIndex++)
                 {
@@ -474,7 +474,7 @@ namespace Valve.VR
         protected Quaternion[] GetBoneRotations(SteamVR_Input_Sources inputSource)
         {
             Quaternion[] rawSkeleton = skeletonAction.GetBoneRotations(inputSource);
-            if (mirroring == MirrorType.LeftToRight || mirroring == MirrorType.RightToLeft)
+            if (IsMine() && (mirroring == MirrorType.LeftToRight || mirroring == MirrorType.RightToLeft))
             {
                 for (int boneIndex = 0; boneIndex < rawSkeleton.Length; boneIndex++)
                 {
@@ -496,7 +496,7 @@ namespace Valve.VR
 
         protected virtual void UpdatePose()
         {
-            if (skeletonAction == null)
+            if (skeletonAction == null ||!IsMine())
                 return;
 
             if (origin == null)
@@ -506,6 +506,17 @@ namespace Valve.VR
                 this.transform.position = origin.TransformPoint(skeletonAction.GetLocalPosition(inputSource));
                 this.transform.eulerAngles = origin.TransformDirection(skeletonAction.GetLocalRotation(inputSource).eulerAngles);
             }
+        }
+
+        [SerializeField]
+        private PhotonView photonView;
+        private bool IsMine()
+        {
+            if (!PhotonNetwork.IsConnected || photonView == null)
+            {
+                return true;
+            }
+            return photonView.IsMine;
         }
 
         public enum MirrorType

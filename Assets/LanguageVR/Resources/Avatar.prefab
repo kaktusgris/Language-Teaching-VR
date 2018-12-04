@@ -2444,6 +2444,7 @@ MonoBehaviour:
   onlySetRotations: 0
   skeletonBlend: 1
   mirroring: 0
+  photonView: {fileID: 114680841654611192}
 --- !u!114 &114128428636574100
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2777,6 +2778,7 @@ MonoBehaviour:
   onlySetRotations: 0
   skeletonBlend: 1
   mirroring: 0
+  photonView: {fileID: 114606885115731940}
 --- !u!114 &114880897563159146
 MonoBehaviour:
   m_ObjectHideFlags: 1
