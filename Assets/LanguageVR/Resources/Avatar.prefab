@@ -2422,7 +2422,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114247955814302454}
   viewIdField: 0
-  InstantiationId: 6
+  InstantiationId: 5
   isRuntimeInstantiated: 0
 --- !u!114 &114060760348025866
 MonoBehaviour:
@@ -2464,7 +2464,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114720572278442550}
   viewIdField: 0
-  InstantiationId: 8
+  InstantiationId: 7
   isRuntimeInstantiated: 0
 --- !u!114 &114158837969976794
 MonoBehaviour:
@@ -2619,7 +2619,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114008776894715532}
   viewIdField: 0
-  InstantiationId: 7
+  InstantiationId: 6
   isRuntimeInstantiated: 0
 --- !u!114 &114606885115731940
 MonoBehaviour:
@@ -2640,7 +2640,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114479302995098616}
   viewIdField: 0
-  InstantiationId: 5
+  InstantiationId: 4
   isRuntimeInstantiated: 0
 --- !u!114 &114680841654611192
 MonoBehaviour:
@@ -2661,7 +2661,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114158837969976794}
   viewIdField: 0
-  InstantiationId: 4
+  InstantiationId: 3
   isRuntimeInstantiated: 0
 --- !u!114 &114711836892138806
 MonoBehaviour:
@@ -2731,7 +2731,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 114961498697188434}
   viewIdField: 0
-  InstantiationId: 3
+  InstantiationId: 2
   isRuntimeInstantiated: 0
 --- !u!114 &114756078192106520
 MonoBehaviour:
@@ -2840,7 +2840,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 1060804744211858}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: 0.5
   m_Height: 2
   m_Direction: 1
