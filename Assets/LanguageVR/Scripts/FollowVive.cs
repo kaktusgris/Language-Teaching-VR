@@ -21,7 +21,7 @@ public class FollowVive : MonoBehaviourPun {
             transform.localScale = new Vector3(0, 0, 0);
         }
     }
-	
+
 	// Update is called once per frame
 	void Update () {
         if (isMine || !PhotonNetwork.IsConnected)

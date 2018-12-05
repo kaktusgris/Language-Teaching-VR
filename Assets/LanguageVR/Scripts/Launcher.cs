@@ -68,7 +68,7 @@ namespace NTNU.CarloMarton.VRLanguage
                 Instantiate(Voice, new Vector3(0, 0, 0), Quaternion.identity);
                 GameObject.FindGameObjectWithTag("Voice").GetComponent<Recorder>().MicrophoneType = Recorder.MicType.Photon;
             }
-            
+
         }
 
 
@@ -134,7 +134,7 @@ namespace NTNU.CarloMarton.VRLanguage
                 PhotonNetwork.JoinRandomRoom();
             }
         }
-        
+
 
         public override void OnDisconnected(DisconnectCause cause)
         {

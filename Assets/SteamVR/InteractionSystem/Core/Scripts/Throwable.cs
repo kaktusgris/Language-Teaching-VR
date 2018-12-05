@@ -8,7 +8,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
 using Photon.Pun;
-using TMPro;
 
 namespace Valve.VR.InteractionSystem
 {
@@ -53,7 +52,7 @@ namespace Valve.VR.InteractionSystem
 		public UnityEvent onDetachFromHand;
 
 		public bool snapAttachEaseInCompleted = false;
-        
+
         protected RigidbodyInterpolation hadInterpolation = RigidbodyInterpolation.None;
 
         protected new Rigidbody rigidbody;
@@ -64,7 +63,7 @@ namespace Valve.VR.InteractionSystem
 
         private float m_Distance;
         private float m_Angle;
-        
+
         private Vector3 m_Direction;
         private Vector3 m_NetworkPosition;
         private Vector3 m_StoredPosition;
@@ -150,7 +149,7 @@ namespace Valve.VR.InteractionSystem
         protected virtual void HandHoverUpdate( Hand hand )
         {
             GrabTypes startingGrabType = hand.GetGrabStarting();
-            
+
             if (startingGrabType != GrabTypes.None)
             {
 				hand.AttachObject( gameObject, startingGrabType, attachmentFlags, attachmentOffset );
@@ -170,9 +169,9 @@ namespace Valve.VR.InteractionSystem
 			onPickUp.Invoke();
 
 			hand.HoverLock( null );
-            
+
             rigidbody.interpolation = RigidbodyInterpolation.None;
-            
+
 		    velocityEstimator.BeginEstimatingVelocity();
 
 			attachTime = Time.time;
@@ -198,7 +197,7 @@ namespace Valve.VR.InteractionSystem
             onDetachFromHand.Invoke();
 
             hand.HoverUnlock(null);
-            
+
             rigidbody.interpolation = hadInterpolation;
 
             Vector3 velocity;
@@ -272,7 +271,7 @@ namespace Valve.VR.InteractionSystem
                 //StartCoroutine( LateDetach( hand ) );
             }
         }
-        
+
         // Transfer ownership on other throwable objects that you touch with this throwable
         public void OnCollisionEnter(Collision collision)
         {

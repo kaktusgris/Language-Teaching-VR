@@ -54,7 +54,7 @@ namespace NTNU.CarloMarton.VRLanguage
                 gameObject.GetComponentInChildren<AudioSource>().spatialBlend = 1.0f;
                 gameObject.GetComponentInChildren<AudioSource>().rolloffMode = AudioRolloffMode.Logarithmic;
             }
-            
+
         }
 
 
@@ -63,7 +63,7 @@ namespace NTNU.CarloMarton.VRLanguage
         /// </summary>
         void Update()
         {
-            
+
             //ProcessInputs();
         }
 
@@ -73,7 +73,7 @@ namespace NTNU.CarloMarton.VRLanguage
 
         void ProcessInputs()
         {
-            
+
         }
 
         #endregion

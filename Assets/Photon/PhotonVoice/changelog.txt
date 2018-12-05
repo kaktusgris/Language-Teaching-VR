@@ -2,12 +2,12 @@ Photon Voice Change Log
 
 v2.1.1 (November 21st, 2018)
     PUN2: v2.5 (4d59ede)
-    PhotonVoiceApi: revision 4876 
+    PhotonVoiceApi: revision 4876
     FIXED: Unity Editor freezing when using PUN 2 integration
 
 v2.1 (November 8th, 2018)
     PUN2: v2.4.1v (14cb68f)
-    PhotonVoiceApi: revision 4876 
+    PhotonVoiceApi: revision 4876
     FIXED: PhotonVoiceNetwork fields can now be updated from the Unity Editor
     ADDED: Assembly Definitions for Photon Voice 2
     ADDED: Photon Chat as it was forgotten in initial release

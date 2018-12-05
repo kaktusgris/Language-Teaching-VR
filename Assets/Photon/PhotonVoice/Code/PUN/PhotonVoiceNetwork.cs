@@ -8,7 +8,7 @@
 // will use the same name as PUN, but with a "_voice_" postfix.
 // It also sets a custom PUN Speaker factory to find the Speaker
 // component for a character's voice. For this to work, the voice's UserData
-// must be set to the character's PhotonView ID. 
+// must be set to the character's PhotonView ID.
 // (see "PhotonVoiceView.cs")
 // </summary>
 // <author>developer@photonengine.com</author>
@@ -24,7 +24,7 @@ namespace Photon.Voice.PUN
 
     /// <summary>
     /// This class can be used to automatically sync client states between PUN and Voice.
-    /// It also sets a custom PUN Speaker factory to find the Speaker component for a character's voice. 
+    /// It also sets a custom PUN Speaker factory to find the Speaker component for a character's voice.
     /// For this to work attach a <see cref="PhotonVoiceView"/> next to the <see cref="PhotonView"/> of your player's prefab.
     /// </summary>
     [DisallowMultipleComponent]

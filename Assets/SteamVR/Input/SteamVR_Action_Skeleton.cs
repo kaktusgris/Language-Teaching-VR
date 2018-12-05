@@ -91,7 +91,7 @@ namespace Valve.VR
             EVRInputError err = OpenVR.Input.GetSkeletalActionData(handle, ref tempSkeletonActionData, skeletonActionData_size, SteamVR_Input_Source.GetHandle(inputSource));
             if (err != EVRInputError.None)
             {
-                //Debug.LogError("GetSkeletalActionData error (" + fullPath + "): " + err.ToString() + " handle: " + handle.ToString()); 
+                //Debug.LogError("GetSkeletalActionData error (" + fullPath + "): " + err.ToString() + " handle: " + handle.ToString());
                 active[inputSource] = false;
                 return;
             }
@@ -195,7 +195,7 @@ namespace Valve.VR
         }
 
         /// <summary>
-        /// Set the range of the motion of the bones in this skeleton. Options are "With Controller" as if your hand is holding your VR controller. 
+        /// Set the range of the motion of the bones in this skeleton. Options are "With Controller" as if your hand is holding your VR controller.
         /// Or "Without Controller" as if your hand is empty.
         /// </summary>
         /// <param name="inputSource">The device you would like to get data from. Any if the action is not device specific.</param>
@@ -216,7 +216,7 @@ namespace Valve.VR
     }
 
     /// <summary>
-    /// The change in range of the motion of the bones in the skeleton. Options are "With Controller" as if your hand is holding your VR controller. 
+    /// The change in range of the motion of the bones in the skeleton. Options are "With Controller" as if your hand is holding your VR controller.
     /// Or "Without Controller" as if your hand is empty.
     /// </summary>
     public enum SkeletalMotionRangeChange
