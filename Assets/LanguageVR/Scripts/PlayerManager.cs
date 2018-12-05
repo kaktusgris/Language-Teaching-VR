@@ -52,9 +52,9 @@ namespace NTNU.CarloMarton.VRLanguage
             if (photonView.IsMine)
             {
                 gameObject.GetComponentInChildren<AudioSource>().spatialBlend = 1.0f;
-                gameObject.GetComponentInChildren<AudioSource>().rolloffMode = AudioRolloffMode.Linear;
+                gameObject.GetComponentInChildren<AudioSource>().rolloffMode = AudioRolloffMode.Logarithmic;
             }
-            
+
         }
 
 
@@ -63,7 +63,7 @@ namespace NTNU.CarloMarton.VRLanguage
         /// </summary>
         void Update()
         {
-            
+
             //ProcessInputs();
         }
 
@@ -73,7 +73,7 @@ namespace NTNU.CarloMarton.VRLanguage
 
         void ProcessInputs()
         {
-            
+
         }
 
         #endregion

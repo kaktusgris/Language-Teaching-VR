@@ -38,8 +38,8 @@ namespace Valve.VR
         public bool onlySetRotations = false;
 
         /// <summary>
-        /// How much of a blend to apply to the transform positions and rotations. 
-        /// Set to 0 for the transform orientation to be set by an animation. 
+        /// How much of a blend to apply to the transform positions and rotations.
+        /// Set to 0 for the transform orientation to be set by an animation.
         /// Set to 1 for the transform orientation to be set by the skeleton action.
         /// </summary>
         [Range(0, 1)]
@@ -183,7 +183,7 @@ namespace Valve.VR
         }
 
         /// <summary>
-        /// Resets the previously set temporary range of motion. 
+        /// Resets the previously set temporary range of motion.
         /// Will return to the range of motion defined by the rangeOfMotion field.
         /// </summary>
         /// <param name="blendOverSeconds">How long you want the blend to the standard range of motion to take (in seconds)</param>
@@ -196,8 +196,8 @@ namespace Valve.VR
         /// Permanently sets the range of motion for this component.
         /// </summary>
         /// <param name="newRangeOfMotion">
-        /// The new range of motion to be set. 
-        /// WithController being the best estimation of where fingers are wrapped around the controller (pressing buttons, etc). 
+        /// The new range of motion to be set.
+        /// WithController being the best estimation of where fingers are wrapped around the controller (pressing buttons, etc).
         /// WithoutController being a range between a flat hand and a fist.</param>
         /// <param name="blendOverSeconds">How long you want the blend to the new range of motion to take (in seconds)</param>
         public void SetRangeOfMotion(EVRSkeletalMotionRange newRangeOfMotion, float blendOverSeconds = 0.1f)
@@ -229,7 +229,7 @@ namespace Valve.VR
         /// <summary>
         /// Blend from the current skeletonBlend amount to a specified new amount.
         /// </summary>
-        /// <param name="blendToAmount">The amount of blend you want to apply. 
+        /// <param name="blendToAmount">The amount of blend you want to apply.
         /// 0 being fully set by animations, 1 being fully set by bone data from the action.</param>
         /// <param name="overTime">How long you want the blend to take (in seconds)</param>
         public void BlendTo(float blendToAmount, float overTime)
@@ -414,7 +414,7 @@ namespace Valve.VR
         }
 
         /// <summary>
-        /// Gets the transform for a bone by the joint index. Joint indexes specified in: SteamVR_Skeleton_JointIndexes 
+        /// Gets the transform for a bone by the joint index. Joint indexes specified in: SteamVR_Skeleton_JointIndexes
         /// </summary>
         /// <param name="joint">The joint index of the bone. Specified in SteamVR_Skeleton_JointIndexes</param>
         public virtual Transform GetBone(int joint)
@@ -424,7 +424,7 @@ namespace Valve.VR
 
 
         /// <summary>
-        /// Gets the position of the transform for a bone by the joint index. Joint indexes specified in: SteamVR_Skeleton_JointIndexes 
+        /// Gets the position of the transform for a bone by the joint index. Joint indexes specified in: SteamVR_Skeleton_JointIndexes
         /// </summary>
         /// <param name="joint">The joint index of the bone. Specified in SteamVR_Skeleton_JointIndexes</param>
         /// <param name="local">true to get the localspace position for the joint (position relative to this joint's parent)</param>
@@ -437,7 +437,7 @@ namespace Valve.VR
         }
 
         /// <summary>
-        /// Gets the rotation of the transform for a bone by the joint index. Joint indexes specified in: SteamVR_Skeleton_JointIndexes 
+        /// Gets the rotation of the transform for a bone by the joint index. Joint indexes specified in: SteamVR_Skeleton_JointIndexes
         /// </summary>
         /// <param name="joint">The joint index of the bone. Specified in SteamVR_Skeleton_JointIndexes</param>
         /// <param name="local">true to get the localspace rotation for the joint (rotation relative to this joint's parent)</param>
@@ -452,7 +452,7 @@ namespace Valve.VR
         protected Vector3[] GetBonePositions(SteamVR_Input_Sources inputSource)
         {
             Vector3[] rawSkeleton = skeletonAction.GetBonePositions(inputSource);
-            if (isMine() && (mirroring == MirrorType.LeftToRight || mirroring == MirrorType.RightToLeft))
+            if (IsMine() && (mirroring == MirrorType.LeftToRight || mirroring == MirrorType.RightToLeft))
             {
                 for (int boneIndex = 0; boneIndex < rawSkeleton.Length; boneIndex++)
                 {
@@ -474,7 +474,7 @@ namespace Valve.VR
         protected Quaternion[] GetBoneRotations(SteamVR_Input_Sources inputSource)
         {
             Quaternion[] rawSkeleton = skeletonAction.GetBoneRotations(inputSource);
-            if (isMine() && (mirroring == MirrorType.LeftToRight || mirroring == MirrorType.RightToLeft))
+            if (IsMine() && (mirroring == MirrorType.LeftToRight || mirroring == MirrorType.RightToLeft))
             {
                 for (int boneIndex = 0; boneIndex < rawSkeleton.Length; boneIndex++)
                 {
@@ -496,7 +496,7 @@ namespace Valve.VR
 
         protected virtual void UpdatePose()
         {
-            if (skeletonAction == null)
+            if (skeletonAction == null ||!IsMine())
                 return;
 
             if (origin == null)
@@ -506,6 +506,17 @@ namespace Valve.VR
                 this.transform.position = origin.TransformPoint(skeletonAction.GetLocalPosition(inputSource));
                 this.transform.eulerAngles = origin.TransformDirection(skeletonAction.GetLocalRotation(inputSource).eulerAngles);
             }
+        }
+
+        [SerializeField]
+        private PhotonView photonView;
+        private bool IsMine()
+        {
+            if (!PhotonNetwork.IsConnected || photonView == null)
+            {
+                return true;
+            }
+            return photonView.IsMine;
         }
 
         public enum MirrorType
@@ -523,24 +534,6 @@ namespace Valve.VR
                 boneIndex == SteamVR_Skeleton_JointIndexes.pinkyMetacarpal ||
                 boneIndex == SteamVR_Skeleton_JointIndexes.thumbMetacarpal);
         }
-
-
-        #region custom fields
-
-        [SerializeField]
-        private PhotonView photonView;
-
-        private bool isMine()
-        {
-            if (photonView)
-            {
-                return photonView.IsMine || !PhotonNetwork.IsConnected;
-            }
-            return true;
-        }
-
-        #endregion
-
     }
 
 

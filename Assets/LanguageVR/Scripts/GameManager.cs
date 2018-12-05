@@ -16,13 +16,11 @@ namespace NTNU.CarloMarton.VRLanguage
     {
         [Tooltip("The prefab to use for representing the player")]
         public GameObject avatarPrefab;
-     
-        public GameObject interactablePrefab;
 
         public static GameManager Instance;
 
 
-        [SerializeField] private String startScene = "TeleportTest";
+        [SerializeField] private string startScene;
 
         #region Photon Callbacks
 
@@ -76,7 +74,13 @@ namespace NTNU.CarloMarton.VRLanguage
         public void LeaveRoom()
         {
             PhotonNetwork.LeaveRoom();
-                       
+
+        }
+
+        public void ExitGame()
+        {
+            PhotonNetwork.Disconnect();
+            Application.Quit();
         }
 
 
@@ -88,7 +92,7 @@ namespace NTNU.CarloMarton.VRLanguage
         {
 
             Instance = this;
-            
+
             if (PlayerManager.LocalPlayerInstance == null)
             {
                 Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
@@ -96,17 +100,19 @@ namespace NTNU.CarloMarton.VRLanguage
                 // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
                 GameObject avatar = PhotonNetwork.Instantiate(this.avatarPrefab.name, ViveManager.Instance.head.transform.position, ViveManager.Instance.head.transform.rotation, 0);
                 avatar.GetComponentInChildren<RandomColour>().newColour();
-
-
-                //PhotonNetwork.Instantiate(this.interactablePrefab.name, new Vector3(1f, 1f, 1f), Quaternion.identity, 0);
             }
             else
             {
                 Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
             }
 
-            GameObject.FindGameObjectWithTag("Voice").GetComponent<Recorder>().TransmitEnabled = true;
-            GameObject.FindGameObjectWithTag("Voice").GetComponent<Recorder>().VoiceDetection= true;
+
+            // Only connect the voice components if online
+            if (PhotonNetwork.IsConnected)
+            {
+                GameObject.FindGameObjectWithTag("Voice").GetComponent<Recorder>().TransmitEnabled = true;
+                GameObject.FindGameObjectWithTag("Voice").GetComponent<Recorder>().VoiceDetection = true;
+            }
         }
 
         void LoadArena()
@@ -117,7 +123,7 @@ namespace NTNU.CarloMarton.VRLanguage
             }
             Debug.LogFormat("PhotonNetwork : Loading Level : {0}", startScene);
             PhotonNetwork.LoadLevel(startScene);
-         
+
         }
 
         #endregion
