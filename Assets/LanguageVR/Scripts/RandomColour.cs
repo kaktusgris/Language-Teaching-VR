@@ -17,7 +17,7 @@ public class RandomColour : MonoBehaviour, IPunObservable {
     private Material headMaterial;
     private Material leftHandMaterial;
     private Material rightHandMaterial;
-    private Material bodyMaterial;
+    private Material torsoMaterial;
 
     // Could not change instance material on own hands, therefore changing the material itself
     // Optimally not used, but done now as a lack of time.
@@ -45,7 +45,7 @@ public class RandomColour : MonoBehaviour, IPunObservable {
         }
         if (torso)
         {
-            bodyMaterial = torso.material;
+            torsoMaterial = torso.material;
         }
 
         UpdateColour();
@@ -66,7 +66,7 @@ public class RandomColour : MonoBehaviour, IPunObservable {
         {
             UpdateColourOnMaterial(handMat, colour);
         }
-        UpdateColourOnMaterial(bodyMaterial, colour);
+        UpdateColourOnMaterial(torsoMaterial, colour);
     }
 
     public void UpdateColourOnMaterial(Material material, Color colour)
@@ -129,6 +129,7 @@ public class RandomColour : MonoBehaviour, IPunObservable {
             UpdateColourOnMaterial(this.headMaterial, newColor);
             UpdateColourOnMaterial(this.leftHandMaterial, newColor);
             UpdateColourOnMaterial(this.rightHandMaterial, newColor);
+            UpdateColourOnMaterial(this.torsoMaterial, newColor);
         }
     }
 }
