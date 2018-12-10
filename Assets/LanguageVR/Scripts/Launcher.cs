@@ -3,6 +3,9 @@ using Photon.Pun;
 using Photon.Realtime;
 using Photon.Voice.Unity;
 
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+
 
 namespace NTNU.CarloMarton.VRLanguage
 {
@@ -26,9 +29,14 @@ namespace NTNU.CarloMarton.VRLanguage
         [Tooltip("The Ui Panel to let the user enter name, connect and play")]
         [SerializeField]
         private GameObject controlPanel;
+
         [Tooltip("The UI Label to inform the user that the connection is in progress")]
         [SerializeField]
         private GameObject progressLabel;
+
+        [Tooltip("The UI Label to infor the user that they have to choose or create a lobby")]
+        [SerializeField]
+        private GameObject noRoomLabel;
 
         #endregion
 
@@ -48,7 +56,8 @@ namespace NTNU.CarloMarton.VRLanguage
         /// </summary>
         bool isConnecting;
 
-
+        private PlayerNameInputField playerNameInputField;
+        private RoomNameInputField roomNameInputField;
         #endregion
 
 
@@ -68,7 +77,8 @@ namespace NTNU.CarloMarton.VRLanguage
                 Instantiate(Voice, new Vector3(0, 0, 0), Quaternion.identity);
                 GameObject.FindGameObjectWithTag("Voice").GetComponent<Recorder>().MicrophoneType = Recorder.MicType.Photon;
             }
-
+            playerNameInputField = GetComponentInChildren<PlayerNameInputField>();
+            roomNameInputField = controlPanel.GetComponentInChildren<RoomNameInputField>();
         }
 
 
@@ -78,14 +88,26 @@ namespace NTNU.CarloMarton.VRLanguage
         void Start()
         {
             progressLabel.SetActive(false);
+            noRoomLabel.SetActive(false);
             controlPanel.SetActive(true);
         }
 
+        private void Update()
+        {
+            if (Input.GetKey(KeyCode.Return))
+            {
+                Connect();
+            }
+            if (Input.GetKey(KeyCode.Escape))
+            {
+                Exit();
+            }
+        }
 
-        #endregion
+#endregion
 
 
-        #region Public Methods
+#region Public Methods
 
 
         /// <summary>
@@ -95,17 +117,25 @@ namespace NTNU.CarloMarton.VRLanguage
         /// </summary>
         public void Connect()
         {
+            if (!roomNameInputField.ValidRoomName())
+            {
+                noRoomLabel.SetActive(true);
+                return;
+            }
+
             // keep track of the will to join a room, because when we come back from the game we will get a callback that we are connected, so we need to know what to do then
             isConnecting = true;
 
             progressLabel.SetActive(true);
             controlPanel.SetActive(false);
+            noRoomLabel.SetActive(false);
 
             // we check if we are connected or not, we join if we are , else we initiate the connection to the server.
             if (PhotonNetwork.IsConnected)
             {
                 // #Critical we need at this point to attempt joining a Random Room. If it fails, we'll get notified in OnJoinRandomFailed() and we'll create one.
-                PhotonNetwork.JoinRandomRoom();
+                //PhotonNetwork.JoinRandomRoom();
+                PhotonNetwork.JoinRoom(roomNameInputField.GetRoomName());
             }
             else
             {
@@ -115,6 +145,16 @@ namespace NTNU.CarloMarton.VRLanguage
             }
         }
 
+        public void Exit()
+        {
+            #if UNITY_EDITOR
+            // Application.Quit() does not work in the editor so
+            // UnityEditor.EditorApplication.isPlaying need to be set to false to end the game
+            UnityEditor.EditorApplication.isPlaying = false;
+            #else
+                    Application.Quit();
+            #endif
+        }
 
         #endregion
 
@@ -131,7 +171,8 @@ namespace NTNU.CarloMarton.VRLanguage
             if (isConnecting)
             {
                 // #Critical: The first we try to do is to join a potential existing room. If there is, good, else, we'll be called back with OnJoinRandomFailed()
-                PhotonNetwork.JoinRandomRoom();
+                //PhotonNetwork.JoinRandomRoom();
+                PhotonNetwork.JoinRoom(roomNameInputField.GetRoomName());
             }
         }
 
@@ -143,12 +184,12 @@ namespace NTNU.CarloMarton.VRLanguage
             Debug.LogWarningFormat("PUN Basics Tutorial/Launcher: OnDisconnected() was called by PUN with reason {0}", cause);
         }
 
-        public override void OnJoinRandomFailed(short returnCode, string message)
+        public override void OnJoinRoomFailed(short returnCode, string message)
         {
             Debug.Log("PUN Basics Tutorial/Launcher:OnJoinRandomFailed() was called by PUN. No random room available, so we create one.\nCalling: PhotonNetwork.CreateRoom");
 
             // #Critical: we failed to join a random room, maybe none exists or they are all full. No worries, we create a new room.
-            PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = maxPlayersPerRoom });
+            PhotonNetwork.CreateRoom(roomNameInputField.GetRoomName(), new RoomOptions { MaxPlayers = maxPlayersPerRoom });
         }
 
         public override void OnJoinedRoom()
@@ -167,8 +208,7 @@ namespace NTNU.CarloMarton.VRLanguage
             }
         }
 
-        #endregion
-
+#endregion
 
     }
 }
