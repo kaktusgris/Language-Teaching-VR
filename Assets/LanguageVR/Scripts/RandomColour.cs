@@ -2,68 +2,108 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
-//using Photon;
 
 public class RandomColour : MonoBehaviour, IPunObservable {
 
     [SerializeField] private bool selectColourManually;
     [SerializeField] private Color colour;
-    [SerializeField] private Material otherMaterialToChange;
+    //[SerializeField] private Material otherMaterialToChange;
+
+    [SerializeField] private Renderer head;
+    [SerializeField] private Renderer leftHand;
+    [SerializeField] private Renderer rightHand;
+    [SerializeField] private Renderer torso;
+
+    private Material headMaterial;
+    private Material leftHandMaterial;
+    private Material rightHandMaterial;
+    private Material bodyMaterial;
+
+    // Could not change instance material on own hands, therefore changing the material itself
+    // Optimally not used, but done now as a lack of time.
+    // TODO: Change to use if handMaterial and only change instance of material
+    public Material handMat;
+
     [SerializeField] private PhotonView photonView;
 
     private Color generatedColour;
 
-	// Use this for initialization
-	void Start () {
+    public void Awake()
+    {
+        if (head)
+        {
+            // Using the robot head with four materials
+            headMaterial = head.materials[1];
+        }
+        if (leftHand)
+        {
+            leftHandMaterial = leftHand.material;
+        }
+        if (rightHand)
+        {
+            rightHandMaterial = rightHand.material;
+        }
+        if (torso)
+        {
+            bodyMaterial = torso.material;
+        }
+
+        UpdateColour();
+    }
+
+    public void UpdateColour()
+    {
+        generatedColour = GenerateColour();
+        UpdateColour(generatedColour);
+    }
+
+    public void UpdateColour(Color colour)
+    {
+        UpdateColourOnMaterial(headMaterial, colour);
         
-    }
-
-    public void newColour()
-    {
-        generatedColour = generateColour();
-        newColour(generatedColour);
-    }
-
-    public void newColour(Color colour)
-    {
-        gameObject.GetComponent<Renderer>().material.color = colour;
-        if (otherMaterialToChange)
+        // Update hands localy as they would change all hands when a new player logs in otherwise
+        if (photonView.IsMine || !PhotonNetwork.IsConnected)
         {
-            print("ChangedColour");
-            otherMaterialToChange.SetColor("_Color", colour);
+            UpdateColourOnMaterial(handMat, colour);
         }
-        else
+        UpdateColourOnMaterial(bodyMaterial, colour);
+    }
+
+    public void UpdateColourOnMaterial(Material material, Color colour)
+    {
+        if (material)
         {
-            Debug.LogWarning("No material to change colour on head");
+            material.color = colour;
         }
     }
 
-    private Color generateColour()
+    private Color GenerateColour()
     {
         if (selectColourManually)
         {
             return colour;
         } else
         {
-            return getRandomColour();
+            return GetRandomColour();
         }
     }
 
     // Returns a random colour
-    public Color getRandomColour()
+    public Color GetRandomColour()
     {
         float r = Random.value;
         float g = Random.value;
         float b = Random.value;
-        print(r + ", " + g + ", " + b);
+
         return new Color(r, g, b);
     }
 
-    public static string colorToString(Color color)
+    public static string ColorToString(Color color)
     {
         return color.r + "," + color.g + "," + color.b + "," + color.a;
     }
-    public static Color stringToColor(string colorString)
+
+    public static Color StringToColor(string colorString)
     {
         try
         {
@@ -76,14 +116,19 @@ public class RandomColour : MonoBehaviour, IPunObservable {
         }
     }
 
+    // Updates the head's colour to other users
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
         {
-            stream.SendNext(colorToString(generatedColour));
-        } else
+            stream.SendNext(ColorToString(generatedColour));
+        }
+        else
         {
-            newColour(stringToColor((string)stream.ReceiveNext()));
+            Color newColor = StringToColor((string)stream.ReceiveNext());
+            UpdateColourOnMaterial(this.headMaterial, newColor);
+            UpdateColourOnMaterial(this.leftHandMaterial, newColor);
+            UpdateColourOnMaterial(this.rightHandMaterial, newColor);
         }
     }
 }

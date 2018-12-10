@@ -99,7 +99,17 @@ namespace NTNU.CarloMarton.VRLanguage
 
                 // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
                 GameObject avatar = PhotonNetwork.Instantiate(this.avatarPrefab.name, ViveManager.Instance.head.transform.position, ViveManager.Instance.head.transform.rotation, 0);
-                avatar.GetComponentInChildren<RandomColour>().newColour();
+                if (PhotonNetwork.IsConnected)
+                {
+                    try
+                    {
+                        avatar.transform.Find("Body").transform.Find("Head").GetComponent<MeshRenderer>().enabled = false;
+                    }
+                    catch (NullReferenceException)
+                    {
+                        Debug.LogError("NullReferenceException. Probably because the head component in avatar is not named Head");
+                    }
+                }
             }
             else
             {

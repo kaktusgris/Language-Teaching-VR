@@ -2,12 +2,13 @@
 
 using Photon.Pun;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
 
 namespace Valve.VR
 {
-    public class SteamVR_Behaviour_Skeleton : MonoBehaviour
+    public class SteamVR_Behaviour_Skeleton : MonoBehaviour//, IPunObservable
     {
         /// <summary>The action this component will use to update the model. Must be a Skeleton type action.</summary>
         [SteamVR_DefaultAction("Skeleton", "default", "inputSource")]
@@ -101,6 +102,9 @@ namespace Valve.VR
         /// <summary>An array of all the finger aux transforms</summary>
         public Transform[] auxs { get; protected set; }
 
+        private Vector3[] m_bonePositions;
+        private Quaternion[] m_boneRotations;
+
         protected Coroutine blendRoutine;
         protected Coroutine rangeOfMotionBlendRoutine;
 
@@ -118,6 +122,9 @@ namespace Valve.VR
             }
         }
 
+        [SerializeField]
+        private PhotonView photonView;
+
         protected virtual void Awake()
         {
             AssignBonesArray();
@@ -127,6 +134,9 @@ namespace Valve.VR
             distals = new Transform[] { thumbDistal, indexDistal, middleDistal, ringDistal, pinkyDistal };
             tips = new Transform[] { thumbTip, indexTip, middleTip, ringTip, pinkyTip };
             auxs = new Transform[] { thumbAux, indexAux, middleAux, ringAux, pinkyAux };
+
+            m_bonePositions = GetBonePositions(inputSource, true);
+            m_boneRotations = GetBoneRotations(inputSource, true);
         }
 
         protected virtual void AssignBonesArray()
@@ -149,9 +159,14 @@ namespace Valve.VR
             UpdateSkeleton();
         }
 
-        protected virtual void UpdateSkeleton()
+        protected virtual void  UpdateSkeleton()
         {
-            if (skeletonAction == null || skeletonAction.GetActive(inputSource) == false)
+            UpdateSkeleton(false);
+        }
+
+        protected virtual void UpdateSkeleton(bool handToOtherPlayers)
+        {
+            if (!IsMine() || skeletonAction == null || skeletonAction.GetActive(inputSource) == false)
                 return;
 
             if (updatePose)
@@ -311,6 +326,11 @@ namespace Valve.VR
 
         protected IEnumerator DoRangeOfMotionBlend(EVRSkeletalMotionRange oldRangeOfMotion, EVRSkeletalMotionRange newRangeOfMotion, float overTime)
         {
+            return DoRangeOfMotionBlend(oldRangeOfMotion, newRangeOfMotion, overTime, !IsMine());
+        }
+
+        protected IEnumerator DoRangeOfMotionBlend(EVRSkeletalMotionRange oldRangeOfMotion, EVRSkeletalMotionRange newRangeOfMotion, float overTime, bool ignore)
+        {
             float startTime = Time.time;
             float endTime = startTime + overTime;
 
@@ -320,7 +340,7 @@ namespace Valve.VR
             Vector3[] newBonePositions;
             Quaternion[] newBoneRotations;
 
-            while (Time.time < endTime)
+            while (!ignore && Time.time < endTime)
             {
                 yield return null;
                 float lerp = (Time.time - startTime) / overTime;
@@ -451,7 +471,20 @@ namespace Valve.VR
 
         protected Vector3[] GetBonePositions(SteamVR_Input_Sources inputSource)
         {
+            return GetBonePositions(inputSource, true || IsMine());
+        }
+
+        private Vector3[] GetBonePositions(SteamVR_Input_Sources inputSource, bool useInput)
+        {
             Vector3[] rawSkeleton = skeletonAction.GetBonePositions(inputSource);
+            if (useInput)
+            {
+                rawSkeleton = skeletonAction.GetBonePositions(inputSource);
+            } else
+            {
+                rawSkeleton = m_bonePositions;
+            }
+
             if (IsMine() && (mirroring == MirrorType.LeftToRight || mirroring == MirrorType.RightToLeft))
             {
                 for (int boneIndex = 0; boneIndex < rawSkeleton.Length; boneIndex++)
@@ -471,9 +504,24 @@ namespace Valve.VR
         }
 
         protected Quaternion rightFlipAngle = Quaternion.AngleAxis(180, Vector3.right);
+
         protected Quaternion[] GetBoneRotations(SteamVR_Input_Sources inputSource)
         {
+            return GetBoneRotations(inputSource, true || IsMine());
+        }
+
+        protected Quaternion[] GetBoneRotations(SteamVR_Input_Sources inputSource, bool useInput)
+        {
             Quaternion[] rawSkeleton = skeletonAction.GetBoneRotations(inputSource);
+            if (useInput)
+            {
+                rawSkeleton = skeletonAction.GetBoneRotations(inputSource);
+            }
+            else
+            {
+                rawSkeleton = m_boneRotations;
+            }
+
             if (IsMine() && (mirroring == MirrorType.LeftToRight || mirroring == MirrorType.RightToLeft))
             {
                 for (int boneIndex = 0; boneIndex < rawSkeleton.Length; boneIndex++)
@@ -496,7 +544,7 @@ namespace Valve.VR
 
         protected virtual void UpdatePose()
         {
-            if (skeletonAction == null ||!IsMine())
+            if (skeletonAction == null)
                 return;
 
             if (origin == null)
@@ -508,8 +556,6 @@ namespace Valve.VR
             }
         }
 
-        [SerializeField]
-        private PhotonView photonView;
         private bool IsMine()
         {
             if (!PhotonNetwork.IsConnected || photonView == null)
@@ -534,6 +580,35 @@ namespace Valve.VR
                 boneIndex == SteamVR_Skeleton_JointIndexes.pinkyMetacarpal ||
                 boneIndex == SteamVR_Skeleton_JointIndexes.thumbMetacarpal);
         }
+
+        //public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        //{
+        //    if (stream.IsWriting)
+        //    {
+        //        foreach (Vector3 bone in GetBonePositions(inputSource))
+        //        {
+        //            stream.SendNext(bone);
+        //        }
+        //        foreach (Quaternion bone in GetBoneRotations(inputSource))
+        //        {
+        //            stream.SendNext(bone);
+        //        }
+        //        stream.SendNext(test);
+        //    }
+
+        //    if (stream.IsReading)
+        //    {
+        //        for (int i = 0; i < this.m_bonePositions.Length; i++)
+        //        {
+        //            this.m_bonePositions[i] = (Vector3)stream.ReceiveNext();
+        //        }
+        //        for (int i = 0; i < this.m_boneRotations.Length; i++)
+        //        {
+        //            this.m_boneRotations[i] = (Quaternion)stream.ReceiveNext();
+        //        }
+        //        test = (string)stream.ReceiveNext();
+        //    }
+        //}
     }
 
 

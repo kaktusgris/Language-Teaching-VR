@@ -17,11 +17,6 @@ namespace NTNU.CarloMarton.VRLanguage
         [Tooltip("The local player instance. Use this to know if the local player is represented in the Scene")]
         public static GameObject LocalPlayerInstance;
 
-        #region Private Fields
-
-
-        #endregion
-
         #region MonoBehaviour CallBacks
 
         /// <summary>
@@ -54,25 +49,6 @@ namespace NTNU.CarloMarton.VRLanguage
                 gameObject.GetComponentInChildren<AudioSource>().spatialBlend = 1.0f;
                 gameObject.GetComponentInChildren<AudioSource>().rolloffMode = AudioRolloffMode.Logarithmic;
             }
-
-        }
-
-
-        /// <summary>
-        /// MonoBehaviour method called on GameObject by Unity on every frame.
-        /// </summary>
-        void Update()
-        {
-
-            //ProcessInputs();
-        }
-
-        #endregion
-
-        #region Custom
-
-        void ProcessInputs()
-        {
 
         }
 
