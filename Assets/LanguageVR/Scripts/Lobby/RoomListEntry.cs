@@ -1,7 +1,8 @@
-﻿using UnityEngine;
+﻿using Photon.Pun;
+using UnityEngine;
 using UnityEngine.UI;
 
-namespace Photon.Pun.Demo.Asteroids
+namespace NTNU.CarloMarton.VRLanguage
 {
     public class RoomListEntry : MonoBehaviour
     {

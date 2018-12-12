@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using Photon.Pun;
+using UnityEngine;
 using UnityEngine.UI;
 
-namespace Photon.Pun.Demo.Asteroids
+namespace NTNU.CarloMarton.VRLanguage
 {
     public class LobbyTopPanel : MonoBehaviour
     {
-        private readonly string connectionStatusMessage = "    Connection Status: ";
+        private readonly string connectionStatusMessage = "    Status: ";
 
         [Header("UI References")]
         public Text ConnectionStatusText;
