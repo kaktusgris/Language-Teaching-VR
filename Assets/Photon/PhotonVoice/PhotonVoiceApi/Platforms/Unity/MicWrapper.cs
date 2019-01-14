@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Linq;
 
 namespace Photon.Voice.Unity
 {
@@ -19,6 +20,11 @@ namespace Photon.Voice.Unity
                     Error = "No microphones found (Microphone.devices is empty)";
                     logger.LogError("[PV] MicWrapper: " + Error);
                     return;
+                }
+                if (!string.IsNullOrEmpty(device) && !Microphone.devices.Contains(device))
+                {
+                    logger.LogError(string.Format("[PV] MicWrapper: \"{0}\" is not a valid Unity microphone device, falling back to default one", device));
+                    device = null;
                 }
                 int minFreq;
                 int maxFreq;

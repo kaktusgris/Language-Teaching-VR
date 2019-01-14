@@ -23,8 +23,6 @@
         private SerializedProperty primaryRecorderSp;
         private SerializedProperty statsResetInterval;
 
-        private bool showSettings;
-
         protected virtual void OnEnable()
         {
             connection = target as VoiceConnection;
@@ -63,11 +61,11 @@
                 typeof(GameObject), false);
             #if PHOTON_UNITY_NETWORKING
             EditorGUILayout.PropertyField(usePunSettingsSp);
-            showSettings = !usePunSettingsSp.boolValue && EditorGUILayout.Foldout(showSettings, new GUIContent("Settings", "Settings to be used by this voice connection"));
+            connection.ShowSettings = !usePunSettingsSp.boolValue && EditorGUILayout.Foldout(connection.ShowSettings, new GUIContent("Settings", "Settings to be used by this voice connection"));
             #else
-            showSettings = EditorGUILayout.Foldout(showSettings, new GUIContent("Settings", "Settings to be used by this voice connection"));
+            connection.ShowSettings = EditorGUILayout.Foldout(showSettings, new GUIContent("Settings", "Settings to be used by this voice connection"));
             #endif
-            if (showSettings)
+            if (connection.ShowSettings)
             {
                 EditorGUI.indentLevel++;
                 EditorGUILayout.PropertyField(settingsSp.FindPropertyRelative("AppIdVoice"));

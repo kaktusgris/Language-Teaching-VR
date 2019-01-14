@@ -304,14 +304,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddec46cf6a4c4addbf21b6be8442124, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AEC: 1
-  ReverseStreamDelayMs: 100
-  AECMobile: 0
-  HighPass: 1
-  NoiseSuppression: 1
-  AGC: 1
-  VAD: 0
-  Bypass: 0
+  logLevel: 5
+  aec: 1
+  aecMobile: 0
+  agc: 1
+  vad: 1
+  highPass: 0
+  bypass: 0
+  noiseSuppression: 0
+  reverseStreamDelayMs: 120
 --- !u!1 &24
 GameObject:
   m_ObjectHideFlags: 0
@@ -1587,6 +1588,7 @@ MonoBehaviour:
     Protocol: 0
     EnableLobbyStatistics: 0
     NetworkLogging: 1
+  ShowSettings: 0
   PrimaryRecorder: {fileID: 53}
 --- !u!114 &123
 MonoBehaviour:

@@ -80,6 +80,10 @@ namespace Photon.Voice.Unity
 
         /// <summary> Settings to be used by this voice connection</summary>
         public AppSettings Settings;
+        #if UNITY_EDITOR
+        [HideInInspector]
+        public bool ShowSettings;
+        #endif
         /// <summary> Main Recorder to be used for transmission by default</summary>
         public Recorder PrimaryRecorder;
 
@@ -125,6 +129,8 @@ namespace Photon.Voice.Unity
                     client = new LoadBalancingFrontend();
                     client.VoiceClient.OnRemoteVoiceInfoAction += OnRemoteVoiceInfo;
                     client.OpResponseReceived += OnOperationResponse;
+                    base.Client = client; // is this necessary?
+                    this.StartFallbackSendAckThread();
                 }
                 return client;
             }
@@ -238,6 +244,8 @@ namespace Photon.Voice.Unity
 
             Client.AppId = Settings.AppIdVoice;
             Client.AppVersion = Settings.AppVersion;
+
+            Client.EnableLobbyStatistics = Settings.EnableLobbyStatistics;
 
             Client.LoadBalancingPeer.DebugOut = Settings.NetworkLogging;
 
@@ -406,7 +414,7 @@ namespace Photon.Voice.Unity
             switch (opResponse.OperationCode)
             {
                 case OperationCode.GetRegions:
-                    if (Settings != null && Settings.IsBestRegion)
+                    if (Settings != null && Settings.IsBestRegion && Client.RegionHandler != null)
                     {
                         Client.RegionHandler.PingMinimumOfRegions(OnRegionsPinged, BestRegionSummaryInPreferences);
                     }

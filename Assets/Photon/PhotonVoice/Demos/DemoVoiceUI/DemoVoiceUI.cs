@@ -31,7 +31,7 @@ namespace Photon.Voice.DemoVoiceUI
         private InputField localNicknameText;
 
 		[SerializeField]
-		private VoiceAudioPreprocessor voiceAudioPreprocessor;
+		private WebRtcAudioDsp voiceAudioPreprocessor;
 
         public Transform RemoteVoicesPanel;
 
