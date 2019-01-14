@@ -268,6 +268,11 @@ namespace Valve.VR.InteractionSystem
 			gameObject.SetActive( false );
 			velocityEstimator.FinishEstimatingVelocity();
 		}
+
+        public bool getAttached()
+        {
+            return attached;
+        }
 	}
 
     public enum ReleaseStyle
