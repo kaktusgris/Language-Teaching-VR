@@ -8,49 +8,242 @@ using UnityEngine;
 
 namespace Photon.Voice.Unity
 {
-    public class VoiceAudioPreprocessor : MonoBehaviour
+    public class WebRtcAudioDsp : VoiceComponent
     {
-        [Header("Effects"), Tooltip("Echo Cancellation")]
-        public bool AEC;
-        [Tooltip("Reverse stream delay (hint for AEC)")]
-        public int ReverseStreamDelayMs = 120;
-        [Tooltip("Echo Cancellation Mobile")]
-        public bool AECMobile; // echo control mobile
-        //public bool AECMobileComfortNoise = false;
-        [Tooltip("High Pass Filter")]
-        public bool HighPass;
-        [Tooltip("Noise Suppression")]
-        public bool NoiseSuppression = true;
-        [Tooltip("Automatic Gain Control")]
-        public bool AGC = true;
-        [Tooltip("Voice Auto Detection")]
-        public bool VAD = true;
-        [Tooltip("Bypass WebRTC audio")]
-        public bool Bypass;
+        #region Private Fields
+
+        [SerializeField]
+        private bool aec = true;
+
+        [SerializeField]
+        private bool aecMobile;
+
+        [SerializeField]
+        private bool agc = true;
+
+        [SerializeField]
+        private bool vad = true;
+
+        [SerializeField]
+        private bool highPass;
+
+        [SerializeField]
+        private bool bypass;
+
+        [SerializeField]
+        private bool noiseSuppression;
+
+        [SerializeField]
+        private int reverseStreamDelayMs = 120;
 
         private int reverseChannels;
         private WebRTCAudioProcessor proc;
 
-        private bool prevAEC;
-        private bool prevAECMobile;
+        private AudioOutCapture ac;
+        private bool started;
 
-        private void setOutputListener(bool set)
+        #endregion
+
+        #region Properties
+
+        public bool AEC
         {
-            var audioListener = FindObjectOfType<AudioListener>();
+            get { return aec; }
+            set
+            {
+                if (value == aec)
+                {
+                    return;
+                }
+                if (value)
+                {
+                    aecMobile = false;
+                }
+                aec = value;
+                if (proc != null)
+                {
+                    proc.AEC = aec;
+                    proc.AECMobile = aecMobile;
+                }
+                ToggleOutputListener();
+            }
+        }
+
+        public bool AECMobile // echo control mobile
+        {
+            get { return aecMobile; }
+            set
+            {
+                if (value == aecMobile)
+                {
+                    return;
+                }
+                if (value)
+                {
+                    aec = false;
+                }
+                aec = value;
+                if (proc != null)
+                {
+                    proc.AEC = aec;
+                    proc.AECMobile = aecMobile;
+                }
+                ToggleOutputListener();
+            }
+        }
+
+        public int ReverseStreamDelayMs
+        {
+            get { return reverseStreamDelayMs; }
+            set
+            {
+                if (reverseStreamDelayMs == value)
+                {
+                    return;
+                }
+                reverseStreamDelayMs = value;
+                if (proc != null)
+                {
+                    proc.AECStreamDelayMs = ReverseStreamDelayMs;
+                } 
+            }
+        }
+
+        public bool NoiseSuppression
+        {
+            get { return noiseSuppression; }
+            set
+            {
+                if (value == noiseSuppression)
+                {
+                    return;
+                }
+                noiseSuppression = value;
+                if (proc != null)
+                {
+                    proc.NoiseSuppression = noiseSuppression;
+                }
+            }
+        }
+
+        public bool HighPass
+        {
+            get { return highPass; }
+            set
+            {
+                if (value == highPass)
+                {
+                    return;
+                }
+                highPass = value;
+                if (proc != null)
+                {
+                    proc.HighPass = highPass;
+                }
+            }
+        }
+
+        public bool Bypass
+        {
+            get { return bypass; }
+            set
+            {
+                if (value == bypass)
+                {
+                    return;
+                }
+                bypass = value;
+                if (proc != null)
+                {
+                    proc.Bypass = bypass;
+                }
+            }
+        }
+
+        public bool AGC
+        {
+            get { return agc; }
+            set
+            {
+                if (value == agc)
+                {
+                    return;
+                }
+                agc = value;
+                if (proc != null)
+                {
+                    proc.AGC = agc;
+                }
+            }
+        }
+
+        public bool VAD
+        {
+            get { return vad; }
+            set
+            {
+                if (value == vad)
+                {
+                    return;
+                }
+                vad = value;
+                if (proc != null)
+                {
+                    proc.VAD = vad;
+                }
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        protected override void Awake()
+        {
+            base.Awake();
+            AudioListener audioListener = FindObjectOfType<AudioListener>();
             if (audioListener != null)
             {
-                var ac = audioListener.gameObject.GetComponent<AudioOutCapture>();
-                if (ac != null)
+                ac = audioListener.gameObject.GetComponent<AudioOutCapture>();
+                if (ac == null)
                 {
-                    ac.OnAudioFrame -= OnAudioOutFrameFloat;
+                    ac = audioListener.gameObject.AddComponent<AudioOutCapture>();
                 }
-                if (set)
+            }
+            else if (this.Logger.IsErrorEnabled)
+            {
+                this.Logger.LogError("AudioListener component is required");
+            }
+        }
+
+        private void OnEnable()
+        {
+            ToggleOutputListener();
+        }
+
+        private void OnDisable()
+        {
+            ToggleOutputListener(false);
+        }
+
+        private void ToggleOutputListener()
+        {
+            ToggleOutputListener(aec || aecMobile);
+        }
+
+        private void ToggleOutputListener(bool on)
+        {
+            if (ac != null && started != on && proc != null)
+            {
+                if (on)
                 {
-                    if (ac == null)
-                    {
-                        ac = audioListener.gameObject.AddComponent<AudioOutCapture>();
-                    }
+                    started = true;
                     ac.OnAudioFrame += OnAudioOutFrameFloat;
+                }
+                else
+                {
+                    started = false;
+                    ac.OnAudioFrame -= OnAudioOutFrameFloat;
                 }
             }
         }
@@ -59,45 +252,19 @@ namespace Photon.Voice.Unity
         {
             if (outChannels != this.reverseChannels)
             {
-                Debug.LogErrorFormat("WebRTCAudioProcessor AEC: OnAudioOutFrame channel count {0} != intialized {1}.", outChannels, this.reverseChannels);
+                if (this.Logger.IsErrorEnabled)
+                {
+                    this.Logger.LogError("OnAudioOutFrame channel count {0} != intialized {1}.", outChannels, this.reverseChannels);
+                }
                 return;
             }
             proc.OnAudioOutFrameFloat(data);
         }
 
-        private void Update()
-        {
-            if (proc != null)
-            {
-                if (AEC && AEC != prevAEC)
-                {
-                    AECMobile = false;
-                }
-                if (AECMobile && AECMobile != prevAECMobile)
-                {
-                    AEC = false;
-                }
-                prevAEC = AEC;
-                prevAECMobile = AECMobile;
-                proc.AEC = AEC;
-                proc.AECMobile = AECMobile;
-                setOutputListener(AEC || AECMobile);
-
-                proc.AECMRoutingMode = 4;
-                proc.AECStreamDelayMs = ReverseStreamDelayMs;
-                //proc.AECMComfortNoise = AECMobileComfortNoise;
-                proc.HighPass = HighPass;
-                proc.NoiseSuppression = NoiseSuppression;
-                proc.AGC = AGC;
-                proc.VAD = VAD;
-                proc.Bypass = Bypass;
-            }
-        }
-
         // Message sent by Recorder
         private void PhotonVoiceCreated(Recorder.PhotonVoiceCreatedParams p)
         {
-            var localVoice = p.Voice;
+            LocalVoice localVoice = p.Voice;
 
             if (localVoice.Info.Channels != 1)
             {
@@ -107,27 +274,26 @@ namespace Photon.Voice.Unity
             {
                 throw new Exception("WebRTCAudioProcessor: only short audio voice supported (Set Recorder.TypeConvert option).");
             }
-            var v = localVoice as LocalVoiceAudioShort;
+            LocalVoiceAudioShort v = localVoice as LocalVoiceAudioShort;
 
-            // can't access the AudioSettings properties in InitAEC if it's called from not main thread
-            this.reverseChannels = new Dictionary<AudioSpeakerMode, int>
-            {
-                {AudioSpeakerMode.Raw, 0},
-                {AudioSpeakerMode.Mono, 1},
-                {AudioSpeakerMode.Stereo, 2},
-                {AudioSpeakerMode.Quad, 4},
-                {AudioSpeakerMode.Surround, 5},
-                {AudioSpeakerMode.Mode5point1, 6},
-                {AudioSpeakerMode.Mode7point1, 8},
-                {AudioSpeakerMode.Prologic, 0},
-            }[AudioSettings.speakerMode];
-            int playBufSize;
-            int playBufNum;
-            AudioSettings.GetDSPBufferSize(out playBufSize, out playBufNum);
-            proc = new WebRTCAudioProcessor(new VoiceLogger(this, "WebRTCAudioProcessor"), localVoice.Info.FrameSize, localVoice.Info.SamplingRate, 
+            this.reverseChannels = (int) AudioSettings.speakerMode;
+            proc = new WebRTCAudioProcessor(this.Logger, localVoice.Info.FrameSize, localVoice.Info.SamplingRate,
                 localVoice.Info.Channels, AudioSettings.outputSampleRate, this.reverseChannels);
+            proc.AEC = AEC;
+            proc.AECMobile = AECMobile;
+            proc.AECMRoutingMode = 4;
+            proc.AECStreamDelayMs = ReverseStreamDelayMs;
+            proc.HighPass = HighPass;
+            proc.NoiseSuppression = NoiseSuppression;
+            proc.AGC = AGC;
+            proc.VAD = VAD;
+            proc.Bypass = Bypass;
             v.AddPostProcessor(proc);
-            //Debug.Log("WebRTCAudioDSP initialized.");
+            ToggleOutputListener();
+            if (this.Logger.IsInfoEnabled)
+            {
+                this.Logger.LogInfo("Initialized");
+            }
         }
 
         private void PhotonVoiceRemoved()
@@ -142,12 +308,15 @@ namespace Photon.Voice.Unity
 
         private void Reset()
         {
+            ToggleOutputListener(false);
             if (proc != null)
             {
-                setOutputListener(false);
                 proc.Dispose();
                 proc = null;
             }
         }
+
+        #endregion
+
     }
 }

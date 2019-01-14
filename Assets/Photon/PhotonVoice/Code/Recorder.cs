@@ -36,10 +36,14 @@ namespace Photon.Voice.Unity
 
         private LocalVoice voice = LocalVoiceAudioDummy.Dummy;
 
+        #if UNITY_EDITOR
         [SerializeField]
+        #endif
         private string unityMicrophoneDevice;
 
+        #if UNITY_EDITOR
         [SerializeField]
+        #endif
         private int photonMicrophoneDeviceId = -1;
 
         private IAudioDesc inputSource;
@@ -295,14 +299,25 @@ namespace Photon.Voice.Unity
         /// <summary>Set or get Unity microphone device used for streaming.</summary>
         public string UnityMicrophoneDevice
         {
-            get { return this.unityMicrophoneDevice; }
+            get
+            {
+                if (!string.IsNullOrEmpty(this.unityMicrophoneDevice) && !Microphone.devices.Contains(this.unityMicrophoneDevice))
+                {
+                    if (this.Logger.IsInfoEnabled)
+                    {
+                        this.Logger.LogInfo("\"{0}\" is not a valid Unity microphone device, switching to default (null)", this.unityMicrophoneDevice);
+                    }
+                    this.unityMicrophoneDevice = null;
+                }
+                return this.unityMicrophoneDevice;
+            }
             set
             {
-                if (value != null && !Microphone.devices.Contains(value))
+                if (!string.IsNullOrEmpty(value) && !Microphone.devices.Contains(value))
                 {
                     if (this.Logger.IsErrorEnabled)
                     {
-                        this.Logger.LogError("{0} is not a valid microphone device", value);
+                        this.Logger.LogError("\"{0}\" is not a valid Unity microphone device", value);
                     }
                     return;
                 }
@@ -323,7 +338,26 @@ namespace Photon.Voice.Unity
         /// <summary>Set or get photon microphone device used for streaming.</summary>
         public int PhotonMicrophoneDeviceId
         {
-            get { return this.photonMicrophoneDeviceId; }
+            get
+            {
+                if (!PhotonMicrophoneEnumerator.IsSupported)
+                {
+                    if (this.Logger.IsInfoEnabled)
+                    {
+                        this.Logger.LogInfo("Photon microphone device IDs are not supported on this platform");
+                    }
+                    this.photonMicrophoneDeviceId = -1;
+                }
+                else if (!PhotonMicrophoneEnumerator.IDIsValid(this.photonMicrophoneDeviceId))
+                {
+                    if (this.Logger.IsInfoEnabled)
+                    {
+                        this.Logger.LogInfo("\"{0}\" is not a valid Photon microphone device, switching to default (-1)", this.photonMicrophoneDeviceId);
+                    }
+                    this.photonMicrophoneDeviceId = -1;
+                }
+                return this.photonMicrophoneDeviceId;
+            }
             set
             {
                 if (!PhotonMicrophoneEnumerator.IsSupported)
@@ -338,7 +372,7 @@ namespace Photon.Voice.Unity
                 {
                     if (this.Logger.IsErrorEnabled)
                     {
-                        this.Logger.LogError("{0} is not a valid Photon microphone device", value);
+                        this.Logger.LogError("\"{0}\" is not a valid Photon microphone device", value);
                     }
                     return;
                 }
@@ -665,13 +699,7 @@ namespace Photon.Voice.Unity
                         var hwMicDev = this.PhotonMicrophoneDeviceId;
                         if (this.Logger.IsInfoEnabled)
                         {
-                            this.Logger.LogInfo("Setting recorder's source to Photon microphone device {0}", hwMicDev);
-                        }
-                        #elif UNITY_IOS
-                        var hwMicDev = -1;
-                        if (this.Logger.IsInfoEnabled)
-                        {
-                            this.Logger.LogInfo("Setting recorder's source to Photon microphone device");
+                            this.Logger.LogInfo("Setting recorder's source to Photon microphone device [{0}] \"{1}\"", hwMicDev, PhotonMicrophoneEnumerator.NameAtIndex(hwMicDev));
                         }
                         #else
                         if (this.Logger.IsInfoEnabled)
@@ -685,12 +713,19 @@ namespace Photon.Voice.Unity
                             this.Logger.LogInfo("Setting recorder's source to WindowsAudioInPusher");
                         }
                         inputSource = new Windows.WindowsAudioInPusher(hwMicDev, this.Logger);
-                        #elif (UNITY_IOS || UNITY_STANDALONE_OSX) && !UNITY_EDITOR || UNITY_EDITOR_OSX
+                        #elif UNITY_IOS && !UNITY_EDITOR
+                        IOS.AudioSessionParameters audioSessionParameters = IOS.AudioSessionParametersPresets.Game;
                         if (this.Logger.IsInfoEnabled)
                         {
-                            this.Logger.LogInfo("Setting recorder's source to AppleAudioInPusher");
+                            this.Logger.LogInfo("Setting recorder's source to IOS.AudioInPusher with session {0}", audioSessionParameters);
                         }
-                        inputSource = new Apple.AppleAudioInPusher(hwMicDev, this.Logger);
+                        inputSource = new IOS.AudioInPusher(audioSessionParameters, this.Logger);
+                        #elif UNITY_STANDALONE_OSX && !UNITY_EDITOR || UNITY_EDITOR_OSX
+                        if (this.Logger.IsInfoEnabled)
+                        {
+                            this.Logger.LogInfo("Setting recorder's source to MacOS.AudioInPusher");
+                        }
+                        inputSource = new MacOS.AudioInPusher(hwMicDev, this.Logger);
                         #elif UNITY_ANDROID && !UNITY_EDITOR
                         if (this.Logger.IsInfoEnabled)
                         {
@@ -778,7 +813,7 @@ namespace Photon.Voice.Unity
 
         protected virtual void SendPhotonVoiceCreatedMessage()
         {
-            gameObject.SendMessage("PhotonVoiceCreated", new PhotonVoiceCreatedParams { Voice = this.voice, AudioSource = this.inputSource }, SendMessageOptions.DontRequireReceiver);
+            gameObject.SendMessage("PhotonVoiceCreated", new PhotonVoiceCreatedParams { Voice = this.voice, AudioDesc = this.inputSource }, SendMessageOptions.DontRequireReceiver);
         }
 
         private void OnDestroy()
@@ -829,7 +864,7 @@ namespace Photon.Voice.Unity
         public class PhotonVoiceCreatedParams
         {
             public LocalVoice Voice { get; internal set; }
-            public IAudioDesc AudioSource { get; internal set; }
+            public IAudioDesc AudioDesc { get; internal set; }
         }
     }
 }
