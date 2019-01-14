@@ -160,6 +160,12 @@ namespace Valve.VR.InteractionSystem
         //-------------------------------------------------
         protected virtual void OnAttachedToHand( Hand hand )
 		{
+
+            GameObject playerAvatar = GameObject.Find("GameManager").GetComponent<NTNU.CarloMarton.VRLanguage.GameManager>().avatar;
+            PlayerDictionary dictionary = playerAvatar.GetComponent<PlayerDictionary>();
+            dictionary.addItemToDictionary("TEST", this.gameObject);
+            dictionary.printLists();
+
             photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
 
             hadInterpolation = this.rigidbody.interpolation;
