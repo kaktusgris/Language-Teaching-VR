@@ -37,4 +37,33 @@ public class PlayerDictionary : MonoBehaviour {
         }
     }
 
+    public GameObject getGameObject(string word)
+    {
+        if (!wordsList.Contains(word))
+        {
+            return null;
+        }
+
+        int index = wordsList.IndexOf(word);
+        return worldObjects[index];
+    }
+
+    public void removeItem(string word)
+    {
+        if (!wordsList.Contains(word))
+        {
+            print("That item has not been added to the dictionary.");
+            return;
+        }
+
+        int index = wordsList.IndexOf(word);
+        wordsList.RemoveAt(index);
+        worldObjects.RemoveAt(index);
+    }
+
+    public bool isAdded(string word)
+    {
+        return wordsList.Contains(word);
+    }
+
 }
