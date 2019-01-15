@@ -679,6 +679,7 @@ GameObject:
   - component: {fileID: 114008776894715532}
   - component: {fileID: 114756078192106520}
   - component: {fileID: 114866208350004392}
+  - component: {fileID: 114004362352402650}
   m_Layer: 0
   m_Name: Avatar
   m_TagString: Avatar
@@ -2742,6 +2743,17 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &114004362352402650
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1581442413074664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 272319131f9e79d43a3bead6fc1b7deb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114008776894715532
 MonoBehaviour:
   m_ObjectHideFlags: 1
