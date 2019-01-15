@@ -1,5 +1,16 @@
 Photon Voice Change Log
 
+v2.2 (December 20th, 2018)
+    PUN2: v2.6v (eeaa6a7)
+    PhotonVoiceApi: revision 4948
+    FIXED: self-hosted Photon Server support (Photon Voice client UserId if no set, will use the same UserId as PUN if available or a new GUID)
+    ADDED: Nintendo Switch support (requires separate add-on)
+    FIXED: 'late Speaker linking' (if a remote voice info event is received before PUN prefab instantiation, could happen during scene switching) 
+    FIXED: AudioSource.spatialBlend is set to 1.0f only when Speaker/AudioSource are created automatically by PhotonVoiceView
+    FIXED: log level filtering
+    FIXED: VAD threshold calibration persists between Recorder sessions
+    FIXED: PS4 integration after update to PhotonVoice2 (still require separate add-on)
+
 v2.1.3 (December 7th, 2018)
     PUN2: v2.5 (4d59ede)
     PhotonVoiceApi: revision 4915

@@ -228,6 +228,14 @@ namespace Photon.Voice.Unity
                 {
                     return;
                 }
+                if (value < 0f || value > 1f)
+                {
+                    if (this.Logger.IsErrorEnabled)
+                    {
+                        this.Logger.LogError("Value out of range: VAD Threshold needs to be between [0..1], requested value: {0}", value);
+                    }
+                    return;
+                }
                 this.voiceDetectionThreshold = value;
                 if (this.VoiceDetector != null)
                 {
@@ -824,6 +832,10 @@ namespace Photon.Voice.Unity
 
         private void RemoveVoice(bool sendUnityMsg)
         {
+            if (this.VoiceDetector != null)
+            {
+                this.voiceDetectionThreshold = this.VoiceDetector.Threshold;
+            }
             if (this.voice != LocalVoiceAudioDummy.Dummy)
             {
                 this.voice.RemoveSelf();

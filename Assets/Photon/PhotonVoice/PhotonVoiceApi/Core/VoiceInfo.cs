@@ -105,13 +105,12 @@ namespace Photon.Voice
     /// <summary>Information about a remote voice (incoming stream).</summary>
     public class RemoteVoiceInfo
     {
-        internal RemoteVoiceInfo(int channelId, int playerId, byte voiceId, VoiceInfo info, object localUserObject)
+        internal RemoteVoiceInfo(int channelId, int playerId, byte voiceId, VoiceInfo info)
         {
             this.ChannelId = channelId;
             this.PlayerId = playerId;
             this.VoiceId = voiceId;
             this.Info = info;
-            this.LocalUserObject = localUserObject;
         }
         /// <summary>Remote voice info.</summary>
         public VoiceInfo Info { get; private set; }
@@ -121,7 +120,5 @@ namespace Photon.Voice
         public int PlayerId { get; private set; }
         /// <summary>Voice ID (unique in the room).</summary>
         public byte VoiceId { get; private set; }
-        /// <summary>Object set by user when remote voice created.</summary>
-        public object LocalUserObject { get; private set; }
     }
 }

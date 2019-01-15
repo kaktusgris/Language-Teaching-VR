@@ -56,6 +56,7 @@ namespace Photon.Voice.Unity
 
         public void LogError(string fmt, params object[] args)
         {
+            if (!this.IsErrorEnabled) return;
             fmt = string.Format("[{0}] {1}", Tag, fmt);
             if (context == null)
             {
@@ -69,6 +70,7 @@ namespace Photon.Voice.Unity
 
         public void LogWarning(string fmt, params object[] args)
         {
+            if (!this.IsWarningEnabled) return;
             fmt = string.Format("[{0}] {1}", Tag, fmt);
             if (context == null)
             {
@@ -82,6 +84,7 @@ namespace Photon.Voice.Unity
 
         public void LogInfo(string fmt, params object[] args)
         {
+            if (!this.IsInfoEnabled) return;
             fmt = string.Format("[{0}] {1}", Tag, fmt);
             if (context == null)
             {
@@ -95,6 +98,7 @@ namespace Photon.Voice.Unity
 
         public void LogDebug(string fmt, params object[] args)
         {
+            if (!this.IsDebugEnabled) return;
             LogInfo(fmt, args);
         }
 

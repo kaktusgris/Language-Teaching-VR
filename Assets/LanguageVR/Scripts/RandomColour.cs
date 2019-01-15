@@ -5,9 +5,10 @@ using Photon.Pun;
 
 public class RandomColour : MonoBehaviour, IPunObservable {
 
-    [SerializeField] private bool selectColourManually;
-    [SerializeField] private Color colour;
-    //[SerializeField] private Material otherMaterialToChange;
+    private Color colour { get; set; }
+
+    [Tooltip ("Select if the random colour should be totally random or chosen from a list of colours (wich will result in different colours for each user)")]
+    [SerializeField] private bool randomFromList = true;
 
     [SerializeField] private Renderer head;
     [SerializeField] private Renderer leftHand;
@@ -19,6 +20,8 @@ public class RandomColour : MonoBehaviour, IPunObservable {
     private Material rightHandMaterial;
     private Material torsoMaterial;
 
+    private List<Color> colours { get; set; }
+
     // Could not change instance material on own hands, therefore changing the material itself
     // Optimally not used, but done now as a lack of time.
     // TODO: Change to use if handMaterial and only change instance of material
@@ -26,7 +29,9 @@ public class RandomColour : MonoBehaviour, IPunObservable {
 
     [SerializeField] private PhotonView photonView;
 
+    private System.Random rng = new System.Random();
     private Color generatedColour;
+
 
     public void Awake()
     {
@@ -48,17 +53,21 @@ public class RandomColour : MonoBehaviour, IPunObservable {
             torsoMaterial = torso.material;
         }
 
+        //SetColours();
+
         UpdateColour();
     }
 
     public void UpdateColour()
     {
-        generatedColour = GenerateColour();
+        //generatedColour = randomFromList ? GetSemiRandomColour() : GetRandomColour();
+        generatedColour = GetRandomColour();
         UpdateColour(generatedColour);
     }
 
     public void UpdateColour(Color colour)
     {
+        this.colour = colour;
         UpdateColourOnMaterial(headMaterial, colour);
         
         // Update hands localy as they would change all hands when a new player logs in otherwise
@@ -77,17 +86,6 @@ public class RandomColour : MonoBehaviour, IPunObservable {
         }
     }
 
-    private Color GenerateColour()
-    {
-        if (selectColourManually)
-        {
-            return colour;
-        } else
-        {
-            return GetRandomColour();
-        }
-    }
-
     // Returns a random colour
     public Color GetRandomColour()
     {
@@ -97,6 +95,38 @@ public class RandomColour : MonoBehaviour, IPunObservable {
 
         return new Color(r, g, b);
     }
+
+    /*
+    // Returns a random colour from a set of colours
+    public Color GetSemiRandomColour()
+    {
+        int i = rng.Next(colours.Count);
+        print(colours.Count);
+        print(i);
+        return colours[i];
+    }
+
+    private void SetColours()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            colours = new List<Color>() { Color.blue, Color.red };//, Color.yellow, Color.green };
+            //foreach (RandomColour rc in FindObjectsOfType<RandomColour>())
+            //{
+            //    Color occupiedColour = rc.colour;
+            //    colours.Remove(occupiedColour);
+            //}
+            this.colours = colours;
+        }
+        else
+        {
+            foreach (RandomColour rc in FindObjectsOfType<RandomColour>())
+            {
+                if (rc.photonView.)
+            }
+        }
+    }
+    */
 
     public static string ColorToString(Color color)
     {

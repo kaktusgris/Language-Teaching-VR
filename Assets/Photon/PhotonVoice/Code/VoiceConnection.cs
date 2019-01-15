@@ -9,6 +9,7 @@
 // ----------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using ExitGames.Client.Photon;
 using Photon.Realtime;
 using UnityEngine;
@@ -74,6 +75,9 @@ namespace Photon.Voice.Unity
 
         private bool cleanedup;
 
+        //protected Dictionary<RemoteVoiceInfo, RemoteVoiceOptions> cachedRemoteVoices = new Dictionary<RemoteVoiceInfo, RemoteVoiceOptions>();
+        protected List<RemoteVoiceLink> cachedRemoteVoices = new List<RemoteVoiceLink>();
+
         #endregion
 
         #region Public Fields
@@ -91,6 +95,16 @@ namespace Photon.Voice.Unity
         public Func<int, byte, object, Speaker> SpeakerFactory;
         /// <summary> Fires when a speaker has been linked to a remote audio stream</summary>
         public event Action<Speaker> SpeakerLinked;
+        /// <summary> Fires when a remote voice stream is added</summary>
+        public event Action<RemoteVoiceLink> RemoteVoiceAdded;
+        
+        #if UNITY_PS4
+        /// <summary>PS4 user ID of the local user</summary>
+        /// <remarks>Pass the userID of the PS4 controller that is used by the local user.This value is used by Photon Voice when sending output to the headphones of as PS4 controller.
+        /// If you don't provide a user ID, then Photon Voice uses the user ID of the user at index 0 in the list of local users
+        /// and in case that multiple controllers are attached, the audio output might be sent to the headphones of a different controller then intended.</remarks>
+        public int PS4UserID = 0;                       // set from your games code
+        #endif
 
         #endregion
 
@@ -129,13 +143,14 @@ namespace Photon.Voice.Unity
                     client = new LoadBalancingFrontend();
                     client.VoiceClient.OnRemoteVoiceInfoAction += OnRemoteVoiceInfo;
                     client.OpResponseReceived += OnOperationResponse;
+                    client.StateChanged += OnClientStateChanged;
                     base.Client = client; // is this necessary?
                     this.StartFallbackSendAckThread();
                 }
                 return client;
             }
         }
-
+        
         /// <summary>Returns underlying Photon Voice client.</summary>
         public VoiceClient VoiceClient { get { return Client.VoiceClient; } }
 
@@ -212,10 +227,9 @@ namespace Photon.Voice.Unity
                 return false;
             }
 
-            bool selfHosted = !string.IsNullOrEmpty(Settings.Server);
             if (Settings.Protocol == ConnectionProtocol.Tcp)
             {
-                if (!selfHosted)
+                if (!Settings.IsMasterServerAddress)
                 {
                     if (this.Logger.IsWarningEnabled)
                     {
@@ -236,27 +250,39 @@ namespace Photon.Voice.Unity
                 }
                 Client.LoadBalancingPeer.TransportProtocol = ConnectionProtocol.Udp;
             }
-
-            if (selfHosted)
-            {
-                Client.LoadBalancingPeer.SerializationProtocolType = SerializationProtocol.GpBinaryV16;
-            }
-
-            Client.AppId = Settings.AppIdVoice;
-            Client.AppVersion = Settings.AppVersion;
-
+            
             Client.EnableLobbyStatistics = Settings.EnableLobbyStatistics;
 
             Client.LoadBalancingPeer.DebugOut = Settings.NetworkLogging;
 
             if (Settings.IsMasterServerAddress)
             {
+                Client.LoadBalancingPeer.SerializationProtocolType = SerializationProtocol.GpBinaryV16;
+
+                if (string.IsNullOrEmpty(Client.UserId))
+                {
+                    #if PHOTON_UNITY_NETWORKING
+                    if (!string.IsNullOrEmpty(Pun.PhotonNetwork.NetworkingClient.UserId))
+                    {
+                        Client.UserId = Pun.PhotonNetwork.NetworkingClient.UserId;
+                    }
+                    else
+                    {
+                        Client.UserId = Guid.NewGuid().ToString();
+                    }
+                    #else
+                    Client.UserId = Guid.NewGuid().ToString();
+                    #endif
+                }
+
                 Client.IsUsingNameServer = false;
                 Client.MasterServerAddress = Settings.Port == 0 ? Settings.Server : string.Format("{0}:{1}", Settings.Server, Settings.Port);
 
                 return Client.Connect();
             }
 
+            Client.AppId = Settings.AppIdVoice;
+            Client.AppVersion = Settings.AppVersion;
 
             if (!Settings.IsDefaultNameServer)
             {
@@ -390,22 +416,33 @@ namespace Photon.Voice.Unity
             {
                 this.Logger.LogInfo("OnRemoteVoiceInfo channel {0} player {1} voice #{2} userData {3}", channelId, playerId, voiceId, voiceInfo.UserData);
             }
-
+            for (int i = 0; i < cachedRemoteVoices.Count; i++)
+            {
+                RemoteVoiceLink remoteVoiceLink = cachedRemoteVoices[i];
+                if (remoteVoiceLink.PlayerId == playerId && remoteVoiceLink.VoiceId == voiceId)
+                {
+                    if (this.Logger.IsWarningEnabled)
+                    {
+                        this.Logger.LogWarning("Duplicate remote voice info event channel {0} player {1} voice #{2} userData {3}", channelId, playerId, voiceId, voiceInfo.UserData);
+                    }
+                    return;
+                }
+            }
+            RemoteVoiceLink remoteVoice = new RemoteVoiceLink(voiceInfo, playerId, voiceId, channelId, ref options);
+            cachedRemoteVoices.Add(remoteVoice);
+            if (RemoteVoiceAdded != null)
+            {
+                RemoteVoiceAdded(remoteVoice);
+            }
+            cachedRemoteVoices.Add(remoteVoice);
+            remoteVoice.RemoteVoiceRemoved += delegate
+            {
+                cachedRemoteVoices.Remove(remoteVoice);
+            };
             if (SpeakerFactory != null)
             {
                 Speaker speaker = SpeakerFactory(playerId, voiceId, voiceInfo.UserData);
-                if (speaker != null)
-                {
-                    speaker.OnRemoteVoiceInfo(voiceInfo, ref options);
-                    if (speaker.Actor == null && this.Client.CurrentRoom != null)
-                    {
-                        speaker.Actor = this.Client.CurrentRoom.GetPlayer(playerId);
-                    }
-                    if (SpeakerLinked != null)
-                    {
-                        SpeakerLinked.Invoke(speaker);
-                    }
-                }
+                LinkSpeaker(speaker, remoteVoice);
             }
         }
 
@@ -419,6 +456,19 @@ namespace Photon.Voice.Unity
                         Client.RegionHandler.PingMinimumOfRegions(OnRegionsPinged, BestRegionSummaryInPreferences);
                     }
                     break;
+            }
+        }
+
+        private void OnClientStateChanged(ClientState fromState, ClientState toState)
+        {
+            switch (toState)
+            {
+                //case ClientState.Disconnected:
+                //case ClientState.ConnectedToMasterserver:
+                case ClientState.ConnectedToGameserver:
+                //case ClientState.Joined:
+                    ClearRemoteVoicesCache();
+                break;
             }
         }
 
@@ -498,6 +548,7 @@ namespace Photon.Voice.Unity
             if (clientStillExists)
             {
                 this.client.OpResponseReceived -= OnOperationResponse;
+                this.client.StateChanged -= OnClientStateChanged;
                 this.client.Disconnect();
                 if (this.client.LoadBalancingPeer != null)
                 {
@@ -508,6 +559,39 @@ namespace Photon.Voice.Unity
             }
             SupportClass.StopAllBackgroundCalls();
             this.cleanedup = true;
+        }
+
+        protected void LinkSpeaker(Speaker speaker, RemoteVoiceLink remoteVoice)
+        {
+            if (speaker != null)
+            {
+                speaker.OnRemoteVoiceInfo(remoteVoice);
+                if (speaker.Actor == null && this.Client.CurrentRoom != null)
+                {
+                    speaker.Actor = this.Client.CurrentRoom.GetPlayer(remoteVoice.PlayerId);
+                }
+                if (this.Logger.IsInfoEnabled)
+                {
+                    this.Logger.LogInfo("Speaker linked with remote voice {0}/{1}", remoteVoice.PlayerId, remoteVoice.VoiceId);
+                }
+                if (SpeakerLinked != null)
+                {
+                    SpeakerLinked(speaker);
+                }
+            }
+            else if (this.Logger.IsWarningEnabled)
+            {
+                this.Logger.LogWarning("Speaker is null. Remote voice {0}/{1} not linked.", remoteVoice.PlayerId, remoteVoice.VoiceId);
+            }
+        }
+
+        private void ClearRemoteVoicesCache()
+        {
+            if (this.Logger.IsInfoEnabled)
+            {
+                this.Logger.LogInfo("{0} cached remote voices info cleared", cachedRemoteVoices.Count);
+            }
+            cachedRemoteVoices.Clear();
         }
 
         #endregion

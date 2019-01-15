@@ -123,6 +123,10 @@ namespace Photon.Voice.PUN
             if (photonView.ViewID > 0)
             {
                 Setup();
+                if (IsSpeaker)
+                {
+                    PhotonVoiceNetwork.Instance.CheckLateLinking(this, photonView.ViewID);
+                }
             }
         }
 
@@ -244,6 +248,10 @@ namespace Photon.Voice.PUN
                     else
                     {
                         speakerInUse = this.gameObject.AddComponent<Speaker>();
+                        // get AudioSource and set spatialBlend
+                        AudioSource audioSource = speakerInUse.GetComponentInChildren<AudioSource>();
+                        audioSource.spatialBlend = 1.0f;
+                        return true;
                     }
                 }
             }
@@ -260,7 +268,6 @@ namespace Photon.Voice.PUN
                 }
                 return false;
             }
-            // get AudioSource and set spatialBlend
             AudioSource audioSource = speaker.GetComponentInChildren<AudioSource>();
             if (audioSource == null)
             {
@@ -270,7 +277,6 @@ namespace Photon.Voice.PUN
                 }
                 return false;
             }
-            audioSource.spatialBlend = 1.0f;
             return true;
         }
 
