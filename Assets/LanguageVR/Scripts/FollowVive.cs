@@ -5,8 +5,6 @@ using Photon.Pun;
 
 public class FollowVive : MonoBehaviourPun {
 
-    [Tooltip("Which object is this. 0 for head. 1/2 for left/right hand")]
-    //public int index = 0;
     public BodyParts bodyPart;
 
     private bool isMine;

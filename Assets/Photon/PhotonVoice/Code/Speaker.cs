@@ -24,6 +24,8 @@ namespace Photon.Voice.Unity
 
         private IAudioOut audioOutput;
 
+        private RemoteVoiceLink remoteVoiceLink;
+
         #endregion
 
         #region Public Fields
@@ -82,11 +84,12 @@ namespace Photon.Voice.Unity
             #endif
         }
 
-        internal void OnRemoteVoiceInfo(VoiceInfo voiceInfo, ref RemoteVoiceOptions options)
+        internal void OnRemoteVoiceInfo(RemoteVoiceLink stream)
         {
-            options.OnDecodedFrameFloatAction += this.OnAudioFrame;
-            options.OnRemoteVoiceRemoveAction += this.OnRemoteVoiceRemove;
-
+            this.remoteVoiceLink = stream;
+            this.remoteVoiceLink.FloatFrameDecoded += this.OnAudioFrame;
+            this.remoteVoiceLink.RemoteVoiceRemoved += this.OnRemoteVoiceRemove;
+            VoiceInfo voiceInfo = stream.Info;
             this.audioOutput.Start(voiceInfo.SamplingRate, voiceInfo.Channels, voiceInfo.FrameDurationSamples, this.PlayDelayMs);
         }
 
@@ -95,6 +98,9 @@ namespace Photon.Voice.Unity
             if (this.audioOutput != null) this.audioOutput.Stop();
             this.Actor = null;
             if (this.OnRemoteVoiceRemoveAction != null) this.OnRemoteVoiceRemoveAction(this);
+            this.remoteVoiceLink.RemoteVoiceRemoved -= this.OnRemoteVoiceRemove;
+            this.remoteVoiceLink.FloatFrameDecoded -= this.OnAudioFrame;
+            this.remoteVoiceLink = null;
         }
 
         internal void OnAudioFrame(float[] frame)

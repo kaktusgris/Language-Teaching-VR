@@ -58,8 +58,6 @@ namespace Photon.Voice
         public bool Reliable { get; set; }
         /// <summary>Send data encrypted.</summary>
         public bool Encrypt { get; set; }
-        /// <summary>Optional user object attached to LocalVoice.</summary>
-        public object LocalUserObject { get; set; }
         /// <summary>Optional user object attached to LocalVoice. its Service() will be called at each VoiceClient.Service() call.</summary>
         public IServiceable LocalUserServiceable { get; set; }
         /// <summary>

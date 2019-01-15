@@ -119,7 +119,7 @@ namespace Photon.Voice
                     {
                         foreach (var voice in playerVoices.Value)
                         {
-                            yield return new RemoteVoiceInfo(channelVoices.Key, playerVoices.Key, voice.Key, voice.Value.Info, voice.Value.options.LocalUserObject);
+                            yield return new RemoteVoiceInfo(channelVoices.Key, playerVoices.Key, voice.Key, voice.Value.Info);
                         }
                     }
                 }
@@ -263,7 +263,7 @@ namespace Photon.Voice
             {
                 if (forceShort)
                 {
-                    frontend.LogInfo("PUNVoice: Creating local voice with source samples type conversion from float to short.");
+                    frontend.LogInfo("[PV] Creating local voice with source samples type conversion from float to short.");
                     var localVoice = CreateLocalVoiceAudio<short>(voiceInfo, channelId, encoder);
                     localVoice.LocalUserServiceable = new Voice.BufferReaderPushAdapterAsyncPoolFloatToShort(localVoice, source as Voice.IAudioReader<float>);
                     return localVoice;
@@ -283,7 +283,7 @@ namespace Photon.Voice
             }
             else
             {
-                frontend.LogError("PUNVoice: PhotonVoiceRecorder createLocalVoiceAudio does not support Voice.IAudioReader of type {0}", source.GetType());
+                frontend.LogError("[PV] CreateLocalVoiceAudioFromSource does not support Voice.IAudioDesc of type {0}", source.GetType());
                 return Voice.LocalVoiceAudioDummy.Dummy;
             }
         }

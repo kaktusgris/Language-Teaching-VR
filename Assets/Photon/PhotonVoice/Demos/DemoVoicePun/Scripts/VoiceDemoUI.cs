@@ -279,15 +279,14 @@ namespace ExitGames.Demos.DemoPunVoice
                     }
                 }
             }
-            /* FIXME PS4
-            #if !UNITY_EDITOR && UNITY_PS4
-                        UserProfiles.LocalUsers localUsers = new UserProfiles.LocalUsers();
-                        UserProfiles.GetLocalUsers(localUsers);
-                        int userID = localUsers.LocalUsersIds[0].UserId.Id;
 
-                        Photon.Voice.PUNVoice.VoiceSettings.Instance.PS4UserID = userID;
+            #if !UNITY_EDITOR && UNITY_PS4
+            UserProfiles.LocalUsers localUsers = new UserProfiles.LocalUsers();
+            UserProfiles.GetLocalUsers(localUsers);
+            int userID = localUsers.LocalUsersIds[0].UserId.Id;
+
+            punVoiceNetwork.PS4UserID = userID;
             #endif
-            */
         }
 
         private void PunSwitchOnClick()

@@ -325,14 +325,7 @@ namespace Photon.Voice.PUN
                     {
                         this.Logger.LogInfo("PUN joined room, now connecting Voice client");
                     }
-                    AppSettings settings = null;
-                    #if PHOTON_UNITY_NETWORKING
-                    if (usePunSettings)
-                    {
-                        settings = PhotonNetwork.PhotonServerSettings.AppSettings;
-                    }
-                    #endif
-                    if (!this.ConnectUsingSettings(settings))
+                    if (!this.ConnectUsingSettings())
                     {
                         if (this.Logger.IsErrorEnabled)
                         {
@@ -411,6 +404,31 @@ namespace Photon.Voice.PUN
                     this.Logger.LogInfo("PUN left room, disconnecting Voice");
                 }
                 this.Client.Disconnect();
+            }
+        }
+
+        internal void CheckLateLinking(PhotonVoiceView photonVoiceView, int viewId)
+        {
+            if (photonVoiceView != null && viewId > 0)
+            {
+                for (int i = 0; i < cachedRemoteVoices.Count; i++)
+                {
+                    RemoteVoiceLink remoteVoice = cachedRemoteVoices[i];
+                    if (remoteVoice.Info.UserData is int)
+                    {
+                        int photonViewId = (int)remoteVoice.Info.UserData;
+                        if (viewId == photonViewId)
+                        {
+                            Speaker speaker = photonVoiceView.SpeakerInUse;
+                            if (this.Logger.IsInfoEnabled)
+                            {
+                                this.Logger.LogInfo("Speaker 'late-linking' for the PhotonView with ID {0} with remote voice {1}/{2}.", viewId, remoteVoice.PlayerId, remoteVoice.VoiceId);
+                            }
+                            LinkSpeaker(speaker, remoteVoice);
+                            break;
+                        }
+                    }
+                }
             }
         }
 
