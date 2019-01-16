@@ -43,6 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee5e0380213c87c4b93d2bc52253868a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  instantiatePrefab: 0
   name: 
   physicalObject: {fileID: 0}
   audioClip: {fileID: 0}
