@@ -160,17 +160,6 @@ namespace Valve.VR.InteractionSystem
         //-------------------------------------------------
         protected virtual void OnAttachedToHand(Hand hand)
         {
-            //Add this gameobject to dictionary when it is picked up by the player.
-            GameObject playerAvatar = GameObject.Find("GameManager").GetComponent<NTNU.CarloMarton.VRLanguage.GameManager>().instantiatedAvatar;
-            PlayerDictionary dictionary = playerAvatar.GetComponent<PlayerDictionary>();
-            //dictionary.removeItem("TEST");
-            dictionary.addItemToDictionary("TEST", this.gameObject);
-            //dictionary.isAdded("TEST");
-            dictionary.printLists();
-            //print(dictionary.getGameObject("TEST"));
-            //dictionary.removeItem("TEST");
-            //print(dictionary.getGameObject("TEST"));
-            //dictionary.printLists();
 
             photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
 
@@ -198,6 +187,18 @@ namespace Valve.VR.InteractionSystem
             timeLastInteraction = Time.time;
 
             snapAttachEaseInCompleted = false;
+
+            //Add this gameobject to dictionary when it is picked up by the player.
+            GameObject playerAvatar = GameObject.Find("GameManager").GetComponent<NTNU.CarloMarton.VRLanguage.GameManager>().avatarPrefab;
+            PlayerDictionary dictionary = playerAvatar.GetComponent<PlayerDictionary>();
+            //dictionary.removeItem("TEST");
+            dictionary.addItemToDictionary("TEST", this.gameObject);
+            //dictionary.isAdded("TEST");
+            dictionary.printLists();
+            //print(dictionary.getGameObject("TEST"));
+            //dictionary.removeItem("TEST");
+            //print(dictionary.getGameObject("TEST"));
+            //dictionary.printLists();
         }
 
 

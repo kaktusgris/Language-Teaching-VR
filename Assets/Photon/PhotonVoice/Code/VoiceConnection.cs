@@ -416,6 +416,7 @@ namespace Photon.Voice.Unity
             {
                 this.Logger.LogInfo("OnRemoteVoiceInfo channel {0} player {1} voice #{2} userData {3}", channelId, playerId, voiceId, voiceInfo.UserData);
             }
+            bool duplicate = false;
             for (int i = 0; i < cachedRemoteVoices.Count; i++)
             {
                 RemoteVoiceLink remoteVoiceLink = cachedRemoteVoices[i];
@@ -425,7 +426,8 @@ namespace Photon.Voice.Unity
                     {
                         this.Logger.LogWarning("Duplicate remote voice info event channel {0} player {1} voice #{2} userData {3}", channelId, playerId, voiceId, voiceInfo.UserData);
                     }
-                    return;
+                    duplicate = true;
+                    cachedRemoteVoices.RemoveAt(i);
                 }
             }
             RemoteVoiceLink remoteVoice = new RemoteVoiceLink(voiceInfo, playerId, voiceId, channelId, ref options);
@@ -437,11 +439,26 @@ namespace Photon.Voice.Unity
             cachedRemoteVoices.Add(remoteVoice);
             remoteVoice.RemoteVoiceRemoved += delegate
             {
-                cachedRemoteVoices.Remove(remoteVoice);
+                if (this.Logger.IsInfoEnabled)
+                {
+                    this.Logger.LogInfo("RemoteVoiceRemoved channel {0} player {1} voice #{2} userData {3}", channelId, playerId, voiceId, voiceInfo.UserData);
+                }
+                if (!cachedRemoteVoices.Remove(remoteVoice) && this.Logger.IsWarningEnabled)
+                {
+                    this.Logger.LogWarning("Cached remote voice info not removed for channel {0} player {1} voice #{2} userData {3}", channelId, playerId, voiceId, voiceInfo.UserData);
+                }
             };
             if (SpeakerFactory != null)
             {
                 Speaker speaker = SpeakerFactory(playerId, voiceId, voiceInfo.UserData);
+                if (speaker != null && duplicate && speaker.IsLinked)
+                {
+                    if (this.Logger.IsWarningEnabled)
+                    {
+                        this.Logger.LogWarning("Overriding speaker link for channel {0} player {1} voice #{2} userData {3}", channelId, playerId, voiceId, voiceInfo.UserData);
+                    }
+                    speaker.OnRemoteVoiceRemove();
+                }
                 LinkSpeaker(speaker, remoteVoice);
             }
         }
@@ -463,11 +480,10 @@ namespace Photon.Voice.Unity
         {
             switch (toState)
             {
-                //case ClientState.Disconnected:
-                //case ClientState.ConnectedToMasterserver:
-                case ClientState.ConnectedToGameserver:
-                //case ClientState.Joined:
-                    ClearRemoteVoicesCache();
+                case ClientState.Disconnected:
+                case ClientState.DisconnectingFromGameserver:
+                case ClientState.ConnectingToMasterserver:
+                    this.ClearRemoteVoicesCache();
                 break;
             }
         }
@@ -565,6 +581,15 @@ namespace Photon.Voice.Unity
         {
             if (speaker != null)
             {
+                if (speaker.IsLinked)
+                {
+                    if (this.Logger.IsWarningEnabled)
+                    {
+                        this.Logger.LogWarning("Speaker already linked. Remote voice {0}/{1} not linked.",
+                            remoteVoice.PlayerId, remoteVoice.VoiceId);
+                    }
+                    return;
+                }
                 speaker.OnRemoteVoiceInfo(remoteVoice);
                 if (speaker.Actor == null && this.Client.CurrentRoom != null)
                 {
@@ -587,11 +612,14 @@ namespace Photon.Voice.Unity
 
         private void ClearRemoteVoicesCache()
         {
-            if (this.Logger.IsInfoEnabled)
+            if (cachedRemoteVoices.Count > 0)
             {
-                this.Logger.LogInfo("{0} cached remote voices info cleared", cachedRemoteVoices.Count);
+                if (this.Logger.IsInfoEnabled)
+                {
+                    this.Logger.LogInfo("{0} cached remote voices info cleared", cachedRemoteVoices.Count);
+                }
+                cachedRemoteVoices.Clear();
             }
-            cachedRemoteVoices.Clear();
         }
 
         #endregion

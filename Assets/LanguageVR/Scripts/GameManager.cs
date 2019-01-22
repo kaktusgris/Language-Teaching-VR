@@ -15,7 +15,7 @@ namespace NTNU.CarloMarton.VRLanguage
     public class GameManager : MonoBehaviourPunCallbacks
     {
         [Tooltip("The prefab to use for representing the player")]
-        public GameObject avatar;
+        public GameObject avatarPrefab;
 
         public static GameManager Instance;
 
@@ -99,7 +99,7 @@ namespace NTNU.CarloMarton.VRLanguage
                 Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
 
                 // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
-                instantiatedAvatar = PhotonNetwork.Instantiate(this.avatar.name, ViveManager.Instance.head.transform.position, ViveManager.Instance.head.transform.rotation, 0);
+                instantiatedAvatar = PhotonNetwork.Instantiate(this.avatarPrefab.name, ViveManager.Instance.head.transform.position, ViveManager.Instance.head.transform.rotation, 0);
 
                 // Make the local head invisible as to not see the inside of your own head
                 try

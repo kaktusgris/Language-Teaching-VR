@@ -100,7 +100,7 @@ public class InteractableObject : MonoBehaviour
 
     private void InstantiateText()
     {
-        instantiatedTextObject = Instantiate(new GameObject("Text"));
+        instantiatedTextObject = new GameObject("Text");
         instantiatedTextObject.transform.parent = instantiatedObject.transform;
         instantiatedObject.transform.localPosition = Vector3.zero;
 
