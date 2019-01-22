@@ -5,7 +5,7 @@ using Valve.VR;
 using Valve.VR.InteractionSystem;
 using Photon.Pun;
 
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 public class InteractableObject : MonoBehaviour
 {
     [Tooltip("Click to instantiate the prefab in scene. Sometimes the old is not removed, manually delete it then")]
@@ -14,31 +14,52 @@ public class InteractableObject : MonoBehaviour
     [Tooltip ("The word to appear over the object")]
     [SerializeField] private new string name;
 
+    // Changing font not working (out of the box)
+    //[Tooltip ("Font of name displayed in scene")]
+    //[SerializeField] private Font font;
+
     [Tooltip ("The GameObject to be instantiated in the scene")]
     [SerializeField] private GameObject physicalObject;
 
     [Tooltip ("The audioclip associated with this object")]
     [SerializeField] private AudioClip audioClip;
 
-    GameObject instantiatedObject;
+    private GameObject instantiatedObject;
+    private GameObject instantiatedTextObject;
+    private TextMesh textMesh;
 
-    AudioSource audio;
+    private AudioSource audioSource;
 
     //public SteamVR_Input_Sources handType; // 1
     //public SteamVR_Action_Boolean menuButtonAction; // 2
 
     void Awake()
     {
-        audio = GetComponent<AudioSource>();
+        print(physicalObject.name + "(Clone)");
+        instantiatedObject = transform.Find(physicalObject.name + "(Clone)").gameObject;
+        instantiatedTextObject = instantiatedObject.transform.Find("Text(Clone)").gameObject;
+
+        audioSource = GetComponent<AudioSource>();
+        textMesh = GetComponentInChildren<TextMesh>();
     }
 
     void Update()
     {
-        //if (menuButtonAction.GetStateDown(SteamVR_Input_Sources.Any))
-        //{
-        //    audio.clip = audioClip;
-        //    audio.Play();
-        //}
+        Throwable throwable = instantiatedObject.GetComponent<Throwable>();
+        if (throwable.IsAttached() && !instantiatedTextObject.activeSelf && throwable.IsMine())
+        {
+            instantiatedTextObject.SetActive(true);
+        }
+        else if (!throwable.IsAttached() && instantiatedTextObject.activeSelf)
+        {
+            instantiatedTextObject.SetActive(false);
+        }
+
+        if (instantiatedTextObject.activeSelf)
+        {
+            Transform headTransform = ViveManager.Instance.head.transform;
+            instantiatedTextObject.transform.rotation = Quaternion.LookRotation(instantiatedTextObject.transform.position - headTransform.position);
+        }
     }
 
     private void OnValidate()
@@ -46,11 +67,12 @@ public class InteractableObject : MonoBehaviour
         if (instantiatePrefab)
         {
             InstantiatePhysicalObject();
+            InstantiateText();
             instantiatePrefab = false;
         }
     }
 
-    // Updates the instansiation of a gameobject
+    // Instansiates the given gameobject
     private void InstantiatePhysicalObject()
     {
         // Destroy previous object if a new one is selected
@@ -66,17 +88,30 @@ public class InteractableObject : MonoBehaviour
 
         instantiatedObject.AddComponent<Rigidbody>();
         instantiatedObject.AddComponent<BoxCollider>();
-        instantiatedObject.AddComponent<Throwable>();
+        Throwable throwable = instantiatedObject.AddComponent<Throwable>();
         instantiatedObject.AddComponent<Interactable>();
         instantiatedObject.AddComponent<VelocityEstimator>();
-        instantiatedObject.AddComponent<PhotonView>();
-
-        PhotonView photonView = instantiatedObject.GetComponent<PhotonView>();
-        Throwable throwable = instantiatedObject.GetComponent<Throwable>();
+        PhotonView photonView = instantiatedObject.AddComponent<PhotonView>();
 
         photonView.ObservedComponents.Add(throwable);
         photonView.OwnershipTransfer = OwnershipOption.Takeover;
         photonView.Synchronization = ViewSynchronization.UnreliableOnChange;
+    }
+
+    private void InstantiateText()
+    {
+        instantiatedTextObject = Instantiate(new GameObject("Text"));
+        instantiatedTextObject.transform.parent = instantiatedObject.transform;
+        instantiatedObject.transform.localPosition = Vector3.zero;
+
+        textMesh = instantiatedTextObject.AddComponent<TextMesh>();
+
+        textMesh.text = name;
+        textMesh.transform.localPosition = Vector3.zero;
+        textMesh.transform.localScale = Vector3.one * 0.01f;
+        textMesh.fontSize = 50;
+        textMesh.anchor = TextAnchor.MiddleCenter;
+        //textMesh.font = font;
     }
 
     // Can only destroy gameobjects in OnValidate using a coroutine

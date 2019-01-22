@@ -335,6 +335,16 @@ namespace Valve.VR.InteractionSystem
 
         #region custom methods
 
+        public bool IsMine()
+        {
+            return photonView.IsMine || !PhotonNetwork.IsConnected;
+        }
+
+        public bool IsAttached()
+        {
+            return attached;
+        }
+
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
             if (stream.IsWriting)
