@@ -189,7 +189,7 @@ namespace Valve.VR.InteractionSystem
             snapAttachEaseInCompleted = false;
 
             //Add this gameobject to dictionary when it is picked up by the player.
-            GameObject playerAvatar = GameObject.Find("GameManager").GetComponent<NTNU.CarloMarton.VRLanguage.GameManager>().avatar;
+            GameObject playerAvatar = GameObject.Find("GameManager").GetComponent<NTNU.CarloMarton.VRLanguage.GameManager>().avatarPrefab;
             PlayerDictionary dictionary = playerAvatar.GetComponent<PlayerDictionary>();
             //dictionary.removeItem("TEST");
             dictionary.addItemToDictionary("TEST", this.gameObject);

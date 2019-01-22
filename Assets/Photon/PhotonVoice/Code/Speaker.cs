@@ -26,6 +26,8 @@ namespace Photon.Voice.Unity
 
         private RemoteVoiceLink remoteVoiceLink;
 
+        private bool started;
+
         #endregion
 
         #region Public Fields
@@ -33,14 +35,14 @@ namespace Photon.Voice.Unity
         ///<summary>Remote audio stream playback delay to compensate packets latency variations. Try 100 - 200 if sound is choppy.</summary> 
         public int PlayDelayMs = 200;
 
-        #if UNITY_PS4
+#if UNITY_PS4
         /// <summary>Set the PS4 User ID to determine on which controller to play audio.</summary> 
         /// <remarks>
         /// Note: at the moment, only the first Speaker can successfully set the User ID. 
         /// Subsequently initialized Speakers will play their audio on the controller set with the first Speaker initialized.
         /// </remarks>
         public int PS4UserID = 0;
-        #endif
+#endif
 
         #endregion
 
@@ -67,6 +69,14 @@ namespace Photon.Voice.Unity
         /// <remarks>Photon Voice calls this Actor, to avoid a name-clash with the Player class in Voice.</remarks>
         public Realtime.Player Actor { get; protected internal set; }
 
+        /// <summary>
+        /// Whether or not this Speaker has been linked to a remote voice stream.
+        /// </summary>
+        public bool IsLinked
+        {
+            get { return this.remoteVoiceLink != null; }
+        }
+
         #endregion
 
         #region Private Methods
@@ -74,33 +84,60 @@ namespace Photon.Voice.Unity
         protected override void Awake()
         {
             base.Awake();
-            Func<IAudioOut> factory = () => new AudioStreamPlayer(new VoiceLogger(this, "AudioStreamPlayer", this.LogLevel),  
+            Func<IAudioOut> factory = () => new AudioStreamPlayer(new VoiceLogger(this, "AudioStreamPlayer", this.LogLevel),
                 new UnityAudioOut(this.GetComponent<AudioSource>()), "PhotonVoiceSpeaker:", this.Logger.IsInfoEnabled);
 
-            #if !UNITY_EDITOR && UNITY_PS4
+#if !UNITY_EDITOR && UNITY_PS4
             this.audioOutput = new Photon.Voice.PS4.PS4AudioOut(PS4UserID, factory);
-            #else
+#else
             this.audioOutput = factory();
-            #endif
+#endif
+            this.StartPlaying();
         }
 
         internal void OnRemoteVoiceInfo(RemoteVoiceLink stream)
         {
+            if (stream == null)
+            {
+                if (this.Logger.IsErrorEnabled)
+                {
+                    this.Logger.LogError("RemoteVoiceLink is null, cancelled linking");
+                }
+                return;
+            }
+            if (this.IsLinked)
+            {
+                if (this.Logger.IsWarningEnabled)
+                {
+                    this.Logger.LogWarning("Speaker already linked to {0}/{1}, cancelled linking to {2}/{3}",
+                        this.remoteVoiceLink.PlayerId, this.remoteVoiceLink.VoiceId, stream.PlayerId, stream.PlayerId);
+                }
+                return;
+            }
             this.remoteVoiceLink = stream;
-            this.remoteVoiceLink.FloatFrameDecoded += this.OnAudioFrame;
             this.remoteVoiceLink.RemoteVoiceRemoved += this.OnRemoteVoiceRemove;
-            VoiceInfo voiceInfo = stream.Info;
-            this.audioOutput.Start(voiceInfo.SamplingRate, voiceInfo.Channels, voiceInfo.FrameDurationSamples, this.PlayDelayMs);
+            this.StartPlaying();
         }
 
         internal void OnRemoteVoiceRemove()
         {
-            if (this.audioOutput != null) this.audioOutput.Stop();
+            bool wasStarted = this.started;
+            if (this.audioOutput != null)
+            {
+                this.audioOutput.Stop();
+                this.started = false;
+            }
             this.Actor = null;
-            if (this.OnRemoteVoiceRemoveAction != null) this.OnRemoteVoiceRemoveAction(this);
-            this.remoteVoiceLink.RemoteVoiceRemoved -= this.OnRemoteVoiceRemove;
-            this.remoteVoiceLink.FloatFrameDecoded -= this.OnAudioFrame;
-            this.remoteVoiceLink = null;
+            if (this.OnRemoteVoiceRemoveAction != null) { this.OnRemoteVoiceRemoveAction(this); }
+            if (this.remoteVoiceLink != null)
+            {
+                this.remoteVoiceLink.RemoteVoiceRemoved -= this.OnRemoteVoiceRemove;
+                if (wasStarted)
+                {
+                    this.remoteVoiceLink.FloatFrameDecoded -= this.OnAudioFrame;
+                }
+                this.remoteVoiceLink = null;
+            }
         }
 
         internal void OnAudioFrame(float[] frame)
@@ -111,6 +148,17 @@ namespace Photon.Voice.Unity
         private void Update()
         {
             this.audioOutput.Service();
+        }
+
+        private void StartPlaying()
+        {
+            if (!this.started && this.audioOutput != null && this.IsLinked)
+            {
+                VoiceInfo voiceInfo = this.remoteVoiceLink.Info;
+                this.audioOutput.Start(voiceInfo.SamplingRate, voiceInfo.Channels, voiceInfo.FrameDurationSamples, this.PlayDelayMs);
+                this.remoteVoiceLink.FloatFrameDecoded += this.OnAudioFrame;
+                this.started = true;
+            }
         }
 
         #endregion
