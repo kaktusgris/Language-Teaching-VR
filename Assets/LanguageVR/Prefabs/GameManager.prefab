@@ -44,6 +44,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   avatar: {fileID: 0}
-  avatarPrefab: {fileID: 1581442413074664, guid: 1b51142c5a4db674bb164c81e77c48ba,
-    type: 3}
+  avatarPrefab: {fileID: 320, guid: 1b51142c5a4db674bb164c81e77c48ba, type: 3}
   startScene: Forest

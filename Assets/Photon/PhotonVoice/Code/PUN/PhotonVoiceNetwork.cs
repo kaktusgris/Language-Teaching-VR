@@ -409,7 +409,7 @@ namespace Photon.Voice.PUN
 
         internal void CheckLateLinking(PhotonVoiceView photonVoiceView, int viewId)
         {
-            if (photonVoiceView != null && viewId > 0)
+            if (this.Client.InRoom && photonVoiceView != null && viewId > 0)
             {
                 for (int i = 0; i < cachedRemoteVoices.Count; i++)
                 {
