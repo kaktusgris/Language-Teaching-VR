@@ -126,8 +126,7 @@ namespace Photon.Pun
         [FormerlySerializedAs("ownershipTransfer")]
         public OwnershipOption OwnershipTransfer = OwnershipOption.Fixed;
 
-        public List<Component> ObservedComponents;
-
+        public List<Component> ObservedComponents = new List<Component>();
 
         [SerializeField]
         private int viewIdField = 0;

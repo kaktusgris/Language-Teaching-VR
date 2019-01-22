@@ -160,7 +160,7 @@ namespace Valve.VR.InteractionSystem
         //-------------------------------------------------
         protected virtual void OnAttachedToHand(Hand hand)
         {
-            
+
             photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
 
             hadInterpolation = this.rigidbody.interpolation;
@@ -335,6 +335,16 @@ namespace Valve.VR.InteractionSystem
         }
 
         #region custom methods
+
+        public bool IsMine()
+        {
+            return photonView.IsMine || !PhotonNetwork.IsConnected;
+        }
+
+        public bool IsAttached()
+        {
+            return attached;
+        }
 
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {

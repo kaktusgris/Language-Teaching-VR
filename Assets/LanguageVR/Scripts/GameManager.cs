@@ -19,6 +19,7 @@ namespace NTNU.CarloMarton.VRLanguage
 
         public static GameManager Instance;
 
+        [NonSerialized] public GameObject instantiatedAvatar;
 
         [SerializeField] private string startScene;
 
@@ -98,17 +99,16 @@ namespace NTNU.CarloMarton.VRLanguage
                 Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
 
                 // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
-                GameObject avatar = PhotonNetwork.Instantiate(this.avatarPrefab.name, ViveManager.Instance.head.transform.position, ViveManager.Instance.head.transform.rotation, 0);
-                if (PhotonNetwork.IsConnected)
+                instantiatedAvatar = PhotonNetwork.Instantiate(this.avatarPrefab.name, ViveManager.Instance.head.transform.position, ViveManager.Instance.head.transform.rotation, 0);
+
+                // Make the local head invisible as to not see the inside of your own head
+                try
                 {
-                    try
-                    {
-                        avatar.transform.Find("Body").transform.Find("Head").GetComponent<MeshRenderer>().enabled = false;
-                    }
-                    catch (NullReferenceException)
-                    {
-                        Debug.LogError("NullReferenceException. Probably because the head component in avatar is not named Head");
-                    }
+                    instantiatedAvatar.transform.Find("Body").transform.Find("Head").GetComponent<MeshRenderer>().enabled = false;
+                }
+                catch (NullReferenceException)
+                {
+                    Debug.LogError("NullReferenceException. Probably because the head component in avatar is not named Head");
                 }
             }
             else
