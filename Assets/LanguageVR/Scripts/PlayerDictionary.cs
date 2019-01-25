@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class PlayerDictionary : MonoBehaviour {
 
-    private List<string> wordsList;
+    public InGameMenu inGameMenu;
+
+    public List<string> wordsList;
     private List<GameObject> worldObjects;
 
 	// Use this for initialization
@@ -12,20 +14,20 @@ public class PlayerDictionary : MonoBehaviour {
         wordsList = new List<string>();
         worldObjects = new List<GameObject>();
         print("Dictionary initialized");
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+        printLists();
 	}
 
     public void addItemToDictionary(string word, GameObject item)
     {
-        if (!wordsList.Contains(word))
+        printLists();
+        if (wordsList.Count == 0 || !wordsList.Contains(word))
         {
+            print("inside");
             wordsList.Add(word);
 
-            worldObjects.Add(item);            
+            worldObjects.Add(item);
+
+            inGameMenu.AddTextBlock(word);
         }
     }
 
@@ -37,7 +39,7 @@ public class PlayerDictionary : MonoBehaviour {
         }
     }
 
-    public GameObject getGameObject(string word)
+    public GameObject getInteractable(string word)
     {
         if (!wordsList.Contains(word))
         {
