@@ -321,7 +321,7 @@ namespace Valve.VR.InteractionSystem
 
         public void Update()
         {
-            if (!this.photonView.IsMine)
+            if (!IsMine())
             {
                 rigidbody.isKinematic = true;
 
