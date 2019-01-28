@@ -21,6 +21,8 @@ public class MenuLaser : MonoBehaviour
     {
         lr = GetComponent<LineRenderer>();
         laser = new Ray();
+        lr.startColor = Color.green;
+        lr.endColor = Color.green;
     }
 
     public SteamVR_Input_Sources handType;
@@ -34,6 +36,11 @@ public class MenuLaser : MonoBehaviour
     public bool getArrowUp()
     {
         return changeAction.GetLastStateUp(handType);
+    }
+
+    void toggleLaser(bool toggleMode)
+    {
+        lr.enabled = toggleMode;
     }
 
     // Update is called once per frame
@@ -56,11 +63,12 @@ public class MenuLaser : MonoBehaviour
                 buttonColor = raycastHit.collider.gameObject.GetComponent<Button>().colors;
                 buttonColor.normalColor = clickedColor;
                 raycastHit.collider.gameObject.GetComponent<Button>().colors = buttonColor;
+                toggleLaser(false);
             }
         }
 
         //When laser goes away from a button
-        if (getArrowUp())
+        if (!getArrowDown())
         {
             arrowPress = false;
             if (clickedObject != null)
@@ -69,6 +77,8 @@ public class MenuLaser : MonoBehaviour
                 clickedObject.gameObject.GetComponent<Button>().colors = buttonColor;
                 clickedObject = null;
             }
+
+            toggleLaser(true);
         }
 
 
@@ -95,7 +105,7 @@ public class MenuLaser : MonoBehaviour
             }
             else
             {
-                lr.SetPosition(1, laser.origin + laser.direction * 100f);
+                lr.SetPosition(1, laser.origin + laser.direction * 3f);
                 if (clickedObject != null)
                 {
                     buttonColor.normalColor = standByColor;
@@ -104,5 +114,7 @@ public class MenuLaser : MonoBehaviour
             }
 
         }
+
+       
     }
 }
