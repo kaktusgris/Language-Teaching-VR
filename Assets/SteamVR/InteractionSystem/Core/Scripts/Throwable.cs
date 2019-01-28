@@ -192,7 +192,7 @@ namespace Valve.VR.InteractionSystem
             GameObject playerAvatar = GameObject.Find("GameManager").GetComponent<NTNU.CarloMarton.VRLanguage.GameManager>().avatarPrefab;
             PlayerDictionary dictionary = playerAvatar.GetComponent<PlayerDictionary>();
             //dictionary.removeItem("TEST");
-            dictionary.addItemToDictionary("TEST", this.gameObject);
+            dictionary.addItemToDictionary(Random.value.ToString(), this.gameObject);
             //dictionary.isAdded("TEST");
             dictionary.printLists();
             //print(dictionary.getGameObject("TEST"));
