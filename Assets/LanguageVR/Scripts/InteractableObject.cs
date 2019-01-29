@@ -33,7 +33,7 @@ public class InteractableObject : MonoBehaviour
     void Awake()
     {
         instantiatedObject = transform.Find(physicalObject.name + "(Clone)").gameObject;
-        instantiatedTextObject = instantiatedObject.transform.Find("Text(Clone)").gameObject;
+        instantiatedTextObject = instantiatedObject.transform.Find("Text").gameObject;        
 
         audioSource = GetComponent<AudioSource>();
         textMesh = GetComponentInChildren<TextMesh>();
@@ -80,10 +80,27 @@ public class InteractableObject : MonoBehaviour
         instantiatedObject = Instantiate(physicalObject);
         instantiatedObject.transform.parent = this.transform;
         instantiatedObject.transform.localPosition = Vector3.zero;
-        instantiatedObject.GetComponent<MeshCollider>().enabled = false;
+        if(instantiatedObject.GetComponent<MeshCollider>() != null)
+        {
+            instantiatedObject.GetComponent<MeshCollider>().enabled = false;
+        }
 
         instantiatedObject.AddComponent<Rigidbody>();
-        instantiatedObject.AddComponent<BoxCollider>();
+        Debug.Log(instantiatedObject.GetComponentsInChildren<MeshRenderer>().Length);
+        if (instantiatedObject.GetComponentsInChildren<MeshRenderer>().Length > 0) {
+            foreach (MeshRenderer child in instantiatedObject.GetComponentsInChildren<MeshRenderer>())
+            {
+                
+                if(child.transform.parent.gameObject.GetComponent<MeshRenderer>() == null)
+                {
+                    child.gameObject.AddComponent<BoxCollider>();
+                }
+            }
+        } else if(instantiatedObject.GetComponent<BoxCollider>() == null)
+        {
+            instantiatedObject.AddComponent<BoxCollider>();
+        }
+
         Throwable throwable = instantiatedObject.AddComponent<Throwable>();
         instantiatedObject.AddComponent<Interactable>();
         instantiatedObject.AddComponent<VelocityEstimator>();
@@ -105,7 +122,7 @@ public class InteractableObject : MonoBehaviour
         textMesh.text = name;
         textMesh.transform.localPosition = Vector3.zero;
         textMesh.transform.localScale = Vector3.one * 0.01f;
-        textMesh.fontSize = 50;
+        textMesh.fontSize = 100;
         textMesh.anchor = TextAnchor.MiddleCenter;
         //textMesh.font = font;
     }
