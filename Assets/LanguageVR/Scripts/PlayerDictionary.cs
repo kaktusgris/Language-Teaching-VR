@@ -6,66 +6,53 @@ public class PlayerDictionary : MonoBehaviour {
 
     public InGameMenu inGameMenu;
 
-    public List<string> wordsList;
-    private List<GameObject> worldObjects;
+    private Dictionary<string, GameObject> wordDictionary;
 
 	// Use this for initialization
 	void Start () {
-        wordsList = new List<string>();
-        worldObjects = new List<GameObject>();
+        wordDictionary = new Dictionary<string, GameObject>();
         print("Dictionary initialized");
-        printLists();
 	}
 
     public void addItemToDictionary(string word, GameObject item)
     {
-        printLists();
-        if (wordsList.Count == 0 || !wordsList.Contains(word))
+        if (!isAdded(word))
         {
-            print("inside");
-            wordsList.Add(word);
-
-            worldObjects.Add(item);
-
+            wordDictionary.Add(word, item);
             inGameMenu.AddTextBlock(word);
         }
     }
 
-    public void printLists()
+    public void printDictionary()
     {
-        for (int i = 0; i < wordsList.Count; i++)
+        foreach (string key in wordDictionary.Keys)
         {
-            print(wordsList[i] + ", " + worldObjects[i]);
+            print(key + ", " + wordDictionary[key]);
         }
     }
 
     public GameObject getInteractable(string word)
     {
-        if (!wordsList.Contains(word))
+        if (!isAdded(word))
         {
             return null;
         }
-
-        int index = wordsList.IndexOf(word);
-        return worldObjects[index];
+        return wordDictionary[word];
     }
 
     public void removeItem(string word)
     {
-        if (!wordsList.Contains(word))
+        if (!isAdded(word))
         {
             print("That item has not been added to the dictionary.");
             return;
         }
-
-        int index = wordsList.IndexOf(word);
-        wordsList.RemoveAt(index);
-        worldObjects.RemoveAt(index);
+        wordDictionary.Remove(word);
     }
 
     public bool isAdded(string word)
     {
-        return wordsList.Contains(word);
+        return wordDictionary.ContainsKey(word);
     }
 
 }

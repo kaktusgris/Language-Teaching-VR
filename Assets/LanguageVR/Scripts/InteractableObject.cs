@@ -30,12 +30,8 @@ public class InteractableObject : MonoBehaviour
 
     private AudioSource audioSource;
 
-    //public SteamVR_Input_Sources handType; // 1
-    //public SteamVR_Action_Boolean menuButtonAction; // 2
-
     void Awake()
     {
-        print(physicalObject.name + "(Clone)");
         instantiatedObject = transform.Find(physicalObject.name + "(Clone)").gameObject;
         instantiatedTextObject = instantiatedObject.transform.Find("Text(Clone)").gameObject;
 

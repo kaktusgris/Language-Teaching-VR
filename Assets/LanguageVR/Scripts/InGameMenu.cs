@@ -20,7 +20,6 @@ public class InGameMenu : MonoBehaviour
 
     List<string> chatEvents;
     private float nextMessage;
-    private int myNumber = 0;
 
     private void Awake()
     {
@@ -124,6 +123,7 @@ public class InGameMenu : MonoBehaviour
         //    AddInteractableObject(chatEvents[myNumber]);
         //    myNumber++;
         //    nextMessage = Time.time + 1f;
-        //}
+        //}
+
     }
 }

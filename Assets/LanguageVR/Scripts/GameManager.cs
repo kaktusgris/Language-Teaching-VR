@@ -84,6 +84,10 @@ namespace NTNU.CarloMarton.VRLanguage
             Application.Quit();
         }
 
+        public GameObject GetPlayer()
+        {
+            return instantiatedAvatar;
+        }
 
         #endregion
 
