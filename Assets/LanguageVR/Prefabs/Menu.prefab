@@ -587,6 +587,7 @@ GameObject:
   - component: {fileID: 1988739007851362166}
   - component: {fileID: 6084396296158755960}
   - component: {fileID: 9188779025342599495}
+  - component: {fileID: 3163089511007090875}
   m_Layer: 5
   m_Name: Menu
   m_TagString: Untagged
@@ -712,6 +713,19 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+--- !u!65 &3163089511007090875
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304351060418611331}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 400, y: 500, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1952347053976726429
 GameObject:
   m_ObjectHideFlags: 0
@@ -868,7 +882,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 0.99999994}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1312,16 +1326,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4372074228756914546}
     m_Modifications:
-    - target: {fileID: 1511298223660246780, guid: 4fc36d3106da2c04db3d73512e31bd4a,
-        type: 3}
-      propertyPath: m_Name
-      value: MenuTextPrefab
-      objectReference: {fileID: 0}
-    - target: {fileID: 1511298223660246780, guid: 4fc36d3106da2c04db3d73512e31bd4a,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4595165310723179615, guid: 4fc36d3106da2c04db3d73512e31bd4a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1426,6 +1430,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1511298223660246780, guid: 4fc36d3106da2c04db3d73512e31bd4a,
+        type: 3}
+      propertyPath: m_Name
+      value: MenuTextPrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 1511298223660246780, guid: 4fc36d3106da2c04db3d73512e31bd4a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4fc36d3106da2c04db3d73512e31bd4a, type: 3}
