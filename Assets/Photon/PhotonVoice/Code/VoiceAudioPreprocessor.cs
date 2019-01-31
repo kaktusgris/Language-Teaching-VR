@@ -3,11 +3,11 @@
 #endif
 
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Photon.Voice.Unity
 {
+    [RequireComponent(typeof(Recorder))]
     public class WebRtcAudioDsp : VoiceComponent
     {
         #region Private Fields
@@ -254,7 +254,7 @@ namespace Photon.Voice.Unity
             {
                 if (this.Logger.IsErrorEnabled)
                 {
-                    this.Logger.LogError("OnAudioOutFrame channel count {0} != intialized {1}.", outChannels, this.reverseChannels);
+                    this.Logger.LogError("OnAudioOutFrame channel count {0} != initialized {1}.", outChannels, this.reverseChannels);
                 }
                 return;
             }
@@ -317,6 +317,5 @@ namespace Photon.Voice.Unity
         }
 
         #endregion
-
     }
 }

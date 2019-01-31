@@ -19,7 +19,7 @@ namespace Photon.Voice.PUN
 
     /// <summary>
     /// Component that should be attached to a networked PUN prefab that has <see cref="PhotonView"/>. 
-    /// It will bind remote <see cref="Recorder"/> with local <see cref="Speaker"/> of the same networked perfab. 
+    /// It will bind remote <see cref="Recorder"/> with local <see cref="Speaker"/> of the same networked prefab. 
     /// This component makes automatic voice stream routing easy for players' characters/avatars.
     /// </summary>
     [AddComponentMenu("Photon Voice/Photon Voice View")]
@@ -123,7 +123,7 @@ namespace Photon.Voice.PUN
             if (photonView.ViewID > 0)
             {
                 Setup();
-                if (IsSpeaker)
+                if (IsSpeaker && !this.SpeakerInUse.IsLinked)
                 {
                     PhotonVoiceNetwork.Instance.CheckLateLinking(this, photonView.ViewID);
                 }
@@ -193,7 +193,7 @@ namespace Photon.Voice.PUN
             {
                 if (this.Logger.IsWarningEnabled)
                 {
-                    this.Logger.LogWarning("Recorder setup cannot be done before assinging a valid ViewID to the PhotonView attached to the same GameObject as the PhotonVoiceView");
+                    this.Logger.LogWarning("Recorder setup cannot be done before assigning a valid ViewID to the PhotonView attached to the same GameObject as the PhotonVoiceView");
                 }
                 return false;
             }
