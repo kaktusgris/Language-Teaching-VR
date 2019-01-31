@@ -14,13 +14,15 @@ public class PlayerDictionary : MonoBehaviour {
         print("Dictionary initialized");
 	}
 
-    public void addItemToDictionary(string word, GameObject item)
+    public bool addItemToDictionary(string word, GameObject item)
     {
         if (!isAdded(word))
         {
             wordDictionary.Add(word, item);
             inGameMenu.AddTextBlock(word);
+            return true;
         }
+        return false;
     }
 
     public void printDictionary()

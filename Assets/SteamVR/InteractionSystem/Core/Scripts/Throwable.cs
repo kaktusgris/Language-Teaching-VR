@@ -192,7 +192,11 @@ namespace Valve.VR.InteractionSystem
             GameObject playerAvatar = GameObject.Find("GameManager").GetComponent<NTNU.CarloMarton.VRLanguage.GameManager>().GetPlayer();
             PlayerDictionary dictionary = playerAvatar.GetComponent<PlayerDictionary>();
             string txt = this.gameObject.GetComponentInChildren<TextMesh>(true).text;
-            dictionary.addItemToDictionary(txt, this.gameObject);
+            if (dictionary.addItemToDictionary(txt, this.gameObject) && gameObject.GetComponent<AudioSource>())
+            {
+                gameObject.GetComponent<AudioSource>().Play();
+            }
+
         }
 
 

@@ -98,6 +98,11 @@ public class InteractableObject : MonoBehaviour
             }
         }
 
+        AudioSource instantiatedAudioSource = instantiatedObject.AddComponent<AudioSource>();
+        instantiatedAudioSource.clip = audioClip;
+        instantiatedAudioSource.playOnAwake = false;
+        
+
         Throwable throwable = instantiatedObject.AddComponent<Throwable>();
         instantiatedObject.AddComponent<Interactable>();
         instantiatedObject.AddComponent<VelocityEstimator>();

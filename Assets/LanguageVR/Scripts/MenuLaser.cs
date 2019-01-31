@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
 using UnityEngine.UI;
+using NTNU.CarloMarton.VRLanguage;
 
 public class MenuLaser : MonoBehaviour
 {
@@ -122,6 +123,15 @@ public class MenuLaser : MonoBehaviour
 
     private void ObjectClicked(GameObject go)
     {
-        print(go.GetComponent<Text>().text);
+        string objectName = go.GetComponent<Text>().text;
+        PlayerDictionary dict = GameObject.Find("GameManager").GetComponent<GameManager>().GetPlayer().GetComponent<PlayerDictionary>();
+        GameObject interactable = dict.getInteractable(objectName);
+
+        print(objectName);
+        if (interactable.GetComponent<AudioSource>())
+        {
+            AudioSource source = interactable.GetComponent<AudioSource>();
+            source.Play();
+        }
     }
 }
