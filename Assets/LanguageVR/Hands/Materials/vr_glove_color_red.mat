@@ -83,7 +83,7 @@ Material:
     - _VScale: 1
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.42530233, g: 0.6511442, b: 0.15387656, a: 1}
+    - _Color: {r: 0.5771355, g: 0.9871869, b: 0.48708755, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _N: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}

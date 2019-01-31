@@ -57,11 +57,11 @@ public class MenuLaser : MonoBehaviour
                 clickedObject = raycastHit.collider.gameObject;
                 if (clickedObject.GetComponent<Button>())
                 {
-                    print("Ok");
                     pinchPressed = true;
                     SetButtonColor(clickedObject.GetComponent<Button>(), standByColor);
                     toggleLaser(false);
-                    print(clickedObject.GetComponent<Text>().text);
+
+                    ObjectClicked(clickedObject);
                 }
             }
         }
@@ -89,19 +89,19 @@ public class MenuLaser : MonoBehaviour
 
             if (Physics.Raycast(laser, out raycastHit, Mathf.Infinity, 1 << LayerMask.NameToLayer("InWorldUI"), QueryTriggerInteraction.Ignore))
             {
-                if (clickedObject != null && raycastHit.collider.gameObject != clickedObject)
+                if (clickedObject != null && clickedObject.GetComponent<Button>() && raycastHit.collider.gameObject != clickedObject)
                 {
                     SetButtonColor(clickedObject.GetComponent<Button>(), standByColor);
-                    raycastHit.collider.gameObject.GetComponent<Button>().colors = buttonColor;
+                    //raycastHit.collider.gameObject.GetComponent<Button>().colors = buttonColor;
                 }
                 lr.SetPosition(1, raycastHit.point);
 
                 clickedObject = raycastHit.collider.gameObject;
                 if (clickedObject.GetComponent<Button>())
                 {
-                    buttonColor = clickedObject.GetComponent<Button>().colors;
+                    //buttonColor = clickedObject.GetComponent<Button>().colors;
                     SetButtonColor(clickedObject.GetComponent<Button>(), hoverColor);
-                    clickedObject.GetComponent<Button>().colors = buttonColor;
+                    //clickedObject.GetComponent<Button>().colors = buttonColor;
                 }
 
             }
@@ -111,7 +111,7 @@ public class MenuLaser : MonoBehaviour
                 if (clickedObject != null && clickedObject.GetComponent<Button>())
                 {
                     SetButtonColor(clickedObject.GetComponent<Button>(), standByColor);
-                    clickedObject.GetComponent<Button>().colors = buttonColor;
+                    //clickedObject.GetComponent<Button>().colors = buttonColor;
                 }
             }
 
@@ -122,5 +122,10 @@ public class MenuLaser : MonoBehaviour
         buttonColor.normalColor = color;
         buttonColor.colorMultiplier = 5;
         button.colors = buttonColor;
+    }
+
+    private void ObjectClicked(GameObject go)
+    {
+        print(go.GetComponent<Text>().text);
     }
 }

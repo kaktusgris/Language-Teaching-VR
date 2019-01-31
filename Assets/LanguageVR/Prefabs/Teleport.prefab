@@ -500,7 +500,7 @@ MonoBehaviour:
   teleportAction: {fileID: 11400000, guid: 12786b8d48c60774a8d58b14e692ac3a, type: 2}
   traceLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 311
   floorFixupTraceLayerMask:
     serializedVersion: 2
     m_Bits: 0
