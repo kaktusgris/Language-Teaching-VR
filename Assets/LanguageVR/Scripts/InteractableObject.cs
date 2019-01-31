@@ -80,25 +80,22 @@ public class InteractableObject : MonoBehaviour
         instantiatedObject = Instantiate(physicalObject);
         instantiatedObject.transform.parent = this.transform;
         instantiatedObject.transform.localPosition = Vector3.zero;
-        if(instantiatedObject.GetComponent<MeshCollider>() != null)
-        {
-            instantiatedObject.GetComponent<MeshCollider>().enabled = false;
-        }
-
         instantiatedObject.AddComponent<Rigidbody>();
-        Debug.Log(instantiatedObject.GetComponentsInChildren<MeshRenderer>().Length);
-        if (instantiatedObject.GetComponentsInChildren<MeshRenderer>().Length > 0) {
-            foreach (MeshRenderer child in instantiatedObject.GetComponentsInChildren<MeshRenderer>())
-            {
-                
-                if(child.transform.parent.gameObject.GetComponent<MeshRenderer>() == null)
-                {
-                    child.gameObject.AddComponent<BoxCollider>();
-                }
-            }
-        } else if(instantiatedObject.GetComponent<BoxCollider>() == null)
+
+        int numberOfChildren = instantiatedObject.transform.childCount;
+        if (numberOfChildren == 0)
         {
-            instantiatedObject.AddComponent<BoxCollider>();
+            instantiatedObject.AddComponent<MeshCollider>();
+            instantiatedObject.GetComponent<MeshCollider>().convex = true;
+        }
+        else
+        {
+            for (int i = 0; i < numberOfChildren; i++)
+            {
+                GameObject child = instantiatedObject.transform.GetChild(i).gameObject;
+                child.AddComponent<MeshCollider>();
+                child.GetComponent<MeshCollider>().convex = true;
+            }
         }
 
         Throwable throwable = instantiatedObject.AddComponent<Throwable>();
