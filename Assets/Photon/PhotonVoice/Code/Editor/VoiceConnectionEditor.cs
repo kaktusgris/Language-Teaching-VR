@@ -63,7 +63,7 @@
             EditorGUILayout.PropertyField(usePunSettingsSp);
             connection.ShowSettings = !usePunSettingsSp.boolValue && EditorGUILayout.Foldout(connection.ShowSettings, new GUIContent("Settings", "Settings to be used by this voice connection"));
             #else
-            connection.ShowSettings = EditorGUILayout.Foldout(showSettings, new GUIContent("Settings", "Settings to be used by this voice connection"));
+            connection.ShowSettings = EditorGUILayout.Foldout(connection.ShowSettings, new GUIContent("Settings", "Settings to be used by this voice connection"));
             #endif
             if (connection.ShowSettings)
             {

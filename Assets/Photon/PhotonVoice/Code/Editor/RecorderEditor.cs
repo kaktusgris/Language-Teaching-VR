@@ -59,8 +59,8 @@
             {
                 if (recorder.IsInitialized)
                 {
-                    EditorGUILayout.HelpBox("Recorder requires re-initialization. Call Recorder.Reinit().", MessageType.Warning);
-                    if (GUILayout.Button("Reinit"))
+                    EditorGUILayout.HelpBox("Recorder requires re-initialization. Call Recorder.ReInit().", MessageType.Warning);
+                    if (GUILayout.Button("ReInit"))
                     {
                         recorder.ReInit();
                     }
@@ -73,15 +73,12 @@
             VoiceLogger.ExposeLogLevel(serializedObject, recorder);
             EditorGUI.BeginChangeCheck();
             recorder.TransmitEnabled = EditorGUILayout.Toggle(new GUIContent("Transmit Enabled", "If true, audio transmission is enabled."), recorder.TransmitEnabled);
-            if (recorder.IsCurrentlyTransmitting)
+            var amplitude = recorder.LevelMeter.CurrentPeakAmp;
+            if (amplitude > 1) 
             {
-                var amplitude = recorder.LevelMeter.CurrentPeakAmp;
-                if (amplitude > 1) 
-                {
-                    amplitude /= 32768;
-                }
-                EditorGUILayout.Slider("Level", amplitude, 0, 1);
+                amplitude /= 32768;
             }
+            EditorGUILayout.Slider("Level", amplitude, 0, 1);
             recorder.Encrypt = EditorGUILayout.Toggle(new GUIContent("Encrypt", "If true, voice stream is sent encrypted."), recorder.Encrypt);
             recorder.AudioGroup = (byte)EditorGUILayout.IntField(new GUIContent("Audio Group", "Target interest group that will receive transmitted audio."), recorder.AudioGroup);
             if (recorder.AudioGroup == 0)

@@ -628,7 +628,7 @@ namespace Photon.Voice.Unity
                     forceShort = true;
                     if (this.Logger.IsInfoEnabled)
                     {
-                        this.Logger.LogInfo("Type Convertion set to Short. Audio samples will be converted if source samples type differs.");
+                        this.Logger.LogInfo("Type Conversion set to Short. Audio samples will be converted if source samples type differs.");
                     }
                     break;
             }
@@ -644,7 +644,7 @@ namespace Photon.Voice.Unity
             {
                 if (this.Logger.IsWarningEnabled)
                 {
-                    this.Logger.LogWarning("Recorder is not initializEd. Call Recorder.Init(VoiceClient, Object) instead.");
+                    this.Logger.LogWarning("Recorder is not initialized. Call Recorder.Init(VoiceClient, Object) instead.");
                 }
                 return;
             }

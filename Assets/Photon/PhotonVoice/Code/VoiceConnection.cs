@@ -25,6 +25,8 @@ namespace Photon.Voice.Unity
     {
         #region Private Fields
 
+        private VoiceLogger logger;
+
         [SerializeField]
         private DebugLevel logLevel = DebugLevel.ERROR;
 
@@ -50,7 +52,7 @@ namespace Photon.Voice.Unity
 
         private int nextSendTickCount;
 
-        // Used in the main thread, OnRegionsPinged is called in a separet thread and so we can't use some of the Unity methods ( like saing in playerPrefs)
+        // Used in the main thread, OnRegionsPinged is called in a separate thread and so we can't use some of the Unity methods (like saying in playerPrefs)
         private RegionHandler cachedRegionHandler;
 
         #if !UNITY_ANDROID && !UNITY_IOS
@@ -73,9 +75,8 @@ namespace Photon.Voice.Unity
         [SerializeField]
         private GameObject speakerPrefab;
 
-        private bool cleanedup;
+        private bool cleanedUp;
 
-        //protected Dictionary<RemoteVoiceInfo, RemoteVoiceOptions> cachedRemoteVoices = new Dictionary<RemoteVoiceInfo, RemoteVoiceOptions>();
         protected List<RemoteVoiceLink> cachedRemoteVoices = new List<RemoteVoiceLink>();
 
         #endregion
@@ -110,7 +111,18 @@ namespace Photon.Voice.Unity
 
         #region Properties
         /// <summary> Logger used by this component</summary>
-        public VoiceLogger Logger { get; protected set; }
+        public VoiceLogger Logger
+        {
+            get
+            {
+                if (logger == null)
+                {
+                    logger = new VoiceLogger(this, string.Format("{0}.{1}", name, this.GetType().Name), logLevel);
+                }
+                return logger;
+            }
+            protected set { logger = value; }
+        }
         /// <summary> Log level for this component</summary>
         public DebugLevel LogLevel
         {
@@ -143,7 +155,7 @@ namespace Photon.Voice.Unity
                     client = new LoadBalancingFrontend();
                     client.VoiceClient.OnRemoteVoiceInfoAction += OnRemoteVoiceInfo;
                     client.OpResponseReceived += OnOperationResponse;
-                    client.StateChanged += OnClientStateChanged;
+                    client.StateChanged += OnVoiceStateChanged;
                     base.Client = client; // is this necessary?
                     this.StartFallbackSendAckThread();
                 }
@@ -304,7 +316,6 @@ namespace Photon.Voice.Unity
         protected override void Awake()
         {
             base.Awake();
-            Logger = new VoiceLogger(this, string.Format("{0}.{1}", name, this.GetType().Name), logLevel);
             if (this.SpeakerFactory == null)
             {
                 this.SpeakerFactory = SimpleSpeakerFactory;
@@ -369,8 +380,7 @@ namespace Photon.Voice.Unity
 
         protected override void OnDestroy()
         {
-            CleanUp();
-            base.OnDestroy();
+            this.CleanUp();
         }
 
         internal virtual Speaker SimpleSpeakerFactory(int playerId, byte voiceId, object userData)
@@ -428,6 +438,7 @@ namespace Photon.Voice.Unity
                     }
                     duplicate = true;
                     cachedRemoteVoices.RemoveAt(i);
+                    break;
                 }
             }
             RemoteVoiceLink remoteVoice = new RemoteVoiceLink(voiceInfo, playerId, voiceId, channelId, ref options);
@@ -436,7 +447,6 @@ namespace Photon.Voice.Unity
             {
                 RemoteVoiceAdded(remoteVoice);
             }
-            cachedRemoteVoices.Add(remoteVoice);
             remoteVoice.RemoteVoiceRemoved += delegate
             {
                 if (this.Logger.IsInfoEnabled)
@@ -476,15 +486,15 @@ namespace Photon.Voice.Unity
             }
         }
 
-        private void OnClientStateChanged(ClientState fromState, ClientState toState)
+        protected virtual void OnVoiceStateChanged(ClientState fromState, ClientState toState)
         {
-            switch (toState)
+            if (this.Logger.IsDebugEnabled)
             {
-                case ClientState.Disconnected:
-                case ClientState.DisconnectingFromGameserver:
-                case ClientState.ConnectingToMasterserver:
-                    this.ClearRemoteVoicesCache();
-                break;
+                this.Logger.LogDebug("OnVoiceStateChanged from {0} to {1}", fromState, toState);
+            }
+            if (fromState == ClientState.Joined)
+            {
+                this.ClearRemoteVoicesCache();
             }
         }
 
@@ -521,13 +531,8 @@ namespace Photon.Voice.Unity
 
         protected override void OnApplicationQuit()
         {
-            CleanUp();
-            base.OnApplicationQuit();
-        }
-
-        private void OnDisable()
-        {
-            CleanUp();
+            this.CleanUp();
+            SupportClass.StopAllBackgroundCalls();
         }
 
         protected void CalcStatistics()
@@ -554,9 +559,9 @@ namespace Photon.Voice.Unity
             bool clientStillExists = this.client != null;
             if (this.Logger.IsDebugEnabled)
             {
-                this.Logger.LogInfo("Client exists? {0}, already cleaned up? {1}", clientStillExists, this.cleanedup);
+                this.Logger.LogInfo("Client exists? {0}, already cleaned up? {1}", clientStillExists, this.cleanedUp);
             }
-            if (this.cleanedup)
+            if (this.cleanedUp)
             {
                 return;
             }
@@ -564,7 +569,7 @@ namespace Photon.Voice.Unity
             if (clientStillExists)
             {
                 this.client.OpResponseReceived -= OnOperationResponse;
-                this.client.StateChanged -= OnClientStateChanged;
+                this.client.StateChanged -= OnVoiceStateChanged;
                 this.client.Disconnect();
                 if (this.client.LoadBalancingPeer != null)
                 {
@@ -573,8 +578,7 @@ namespace Photon.Voice.Unity
                 }
                 this.client.Dispose();
             }
-            SupportClass.StopAllBackgroundCalls();
-            this.cleanedup = true;
+            this.cleanedUp = true;
         }
 
         protected void LinkSpeaker(Speaker speaker, RemoteVoiceLink remoteVoice)
