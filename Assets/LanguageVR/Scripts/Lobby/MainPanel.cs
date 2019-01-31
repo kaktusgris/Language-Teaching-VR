@@ -4,6 +4,7 @@ using Photon.Realtime;
 using Photon.Voice.Unity;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace NTNU.CarloMarton.VRLanguage

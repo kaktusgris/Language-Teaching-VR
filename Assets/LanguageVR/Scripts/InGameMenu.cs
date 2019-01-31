@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,6 +33,12 @@ public class InGameMenu : MonoBehaviour
 
     private void ToggleMenu(SteamVR_Input_Sources hand)
     {
+        // Don't do anything if it is not your own menu
+        if (!gameObject.GetComponent<PhotonView>().IsMine && PhotonNetwork.IsConnected)
+        {
+            return;
+        }
+
         // Only deactivate the menu if the same button is pressed twice, swap hand if not
         if (menu.activeInHierarchy && hand.Equals(currentHandParent))
         {
@@ -43,17 +50,17 @@ public class InGameMenu : MonoBehaviour
         {
             if (hand == SteamVR_Input_Sources.LeftHand)
             {
-                menu.transform.SetParent(leftHand.transform);
                 currentHandParent = SteamVR_Input_Sources.LeftHand;
-                SetEnablelaserOnHand(handPrefabR, true);
-                SetEnablelaserOnHand(handPrefabL, false);
+                menu.transform.SetParent(rightHand.transform);
+                SetEnablelaserOnHand(handPrefabL, true);
+                SetEnablelaserOnHand(handPrefabR, false);
             }
             else if (hand == SteamVR_Input_Sources.RightHand)
             {
-                menu.transform.SetParent(rightHand.transform);
                 currentHandParent = SteamVR_Input_Sources.RightHand;
-                SetEnablelaserOnHand(handPrefabL, true);
-                SetEnablelaserOnHand(handPrefabR, false);
+                menu.transform.SetParent(leftHand.transform);
+                SetEnablelaserOnHand(handPrefabR, true);
+                SetEnablelaserOnHand(handPrefabL, false);
             }
             else
             {
@@ -68,10 +75,13 @@ public class InGameMenu : MonoBehaviour
 
     private void SetEnablelaserOnHand(GameObject hand, bool enabled)
     {
-        LineRenderer lr = hand.GetComponent<LineRenderer>();
-        MenuLaser menuLaser = hand.GetComponent<MenuLaser>();
-        lr.enabled = enabled;
-        menuLaser.enabled = enabled;
+        if (gameObject.GetComponent<PhotonView>().IsMine || !PhotonNetwork.IsConnected)
+        {
+            LineRenderer lr = hand.GetComponent<LineRenderer>();
+            MenuLaser menuLaser = hand.GetComponent<MenuLaser>();
+            lr.enabled = enabled;
+            menuLaser.enabled = enabled;
+        }
     }
 
     public void AddTextBlock(string text)

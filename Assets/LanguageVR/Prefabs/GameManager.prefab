@@ -43,5 +43,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd3e848a015cb0d4f805a26d7f29ab51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  avatarPrefab: {fileID: 327, guid: 1b51142c5a4db674bb164c81e77c48ba, type: 3}
+  avatarPrefab: {fileID: 331, guid: 1b51142c5a4db674bb164c81e77c48ba, type: 3}
   startScene: Forest

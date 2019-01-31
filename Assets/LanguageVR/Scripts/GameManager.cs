@@ -31,40 +31,39 @@ namespace NTNU.CarloMarton.VRLanguage
         /// </summary>
         public override void OnLeftRoom()
         {
-
             SceneManager.LoadScene(0);
         }
 
-        public override void OnPlayerEnteredRoom(Player other)
-        {
+        //public override void OnPlayerEnteredRoom(Player other)
+        //{
 
-            Debug.LogFormat("OnPlayerEnteredRoom() {0}", other.NickName); // not seen if you're the player connecting
+        //    Debug.LogFormat("OnPlayerEnteredRoom() {0}", other.NickName); // not seen if you're the player connecting
 
-            if (PhotonNetwork.IsMasterClient)
-            {
-                Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
-
-
-                LoadArena();
-
-            }
-
-        }
+        //    if (other.IsMasterClient)
+        //    {
+        //        Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
 
 
-        public override void OnPlayerLeftRoom(Player other)
-        {
-            Debug.LogFormat("OnPlayerLeftRoom() {0}", other.NickName); // seen when other disconnects
+        //        LoadArena();
+
+        //    }
+
+        //}
 
 
-            if (PhotonNetwork.IsMasterClient)
-            {
-                Debug.LogFormat("OnPlayerLeftRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
+        //public override void OnPlayerLeftRoom(Player other)
+        //{
+        //    Debug.LogFormat("OnPlayerLeftRoom() {0}", other.NickName); // seen when other disconnects
 
 
-                LoadArena();
-            }
-        }
+        //    if (other.IsMasterClient)
+        //    {
+        //        Debug.LogFormat("OnPlayerLeftRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
+
+
+        //        //LoadArena();
+        //    }
+        //}
 
         #endregion
 
@@ -75,7 +74,6 @@ namespace NTNU.CarloMarton.VRLanguage
         public void LeaveRoom()
         {
             PhotonNetwork.LeaveRoom();
-
         }
 
         public void ExitGame()
@@ -95,7 +93,6 @@ namespace NTNU.CarloMarton.VRLanguage
 
         private void Start()
         {
-
             Instance = this;
 
             if (PlayerManager.LocalPlayerInstance == null)
@@ -135,8 +132,11 @@ namespace NTNU.CarloMarton.VRLanguage
             {
                 Debug.LogError("PhotonNetwork : Trying to Load a level but we are not the master Client");
             }
-            Debug.LogFormat("PhotonNetwork : Loading Level : {0}", startScene);
-            PhotonNetwork.LoadLevel(startScene);
+            else
+            {
+                Debug.LogFormat("PhotonNetwork : Loading Level : {0}", startScene);
+                PhotonNetwork.LoadLevel(startScene);
+            }
 
         }
 
