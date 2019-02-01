@@ -31,39 +31,7 @@ namespace NTNU.CarloMarton.VRLanguage
         /// </summary>
         public override void OnLeftRoom()
         {
-
             SceneManager.LoadScene(0);
-        }
-
-        public override void OnPlayerEnteredRoom(Player other)
-        {
-
-            Debug.LogFormat("OnPlayerEnteredRoom() {0}", other.NickName); // not seen if you're the player connecting
-
-            if (PhotonNetwork.IsMasterClient)
-            {
-                Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
-
-
-                LoadArena();
-
-            }
-
-        }
-
-
-        public override void OnPlayerLeftRoom(Player other)
-        {
-            Debug.LogFormat("OnPlayerLeftRoom() {0}", other.NickName); // seen when other disconnects
-
-
-            if (PhotonNetwork.IsMasterClient)
-            {
-                Debug.LogFormat("OnPlayerLeftRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
-
-
-                LoadArena();
-            }
         }
 
         #endregion
@@ -75,7 +43,6 @@ namespace NTNU.CarloMarton.VRLanguage
         public void LeaveRoom()
         {
             PhotonNetwork.LeaveRoom();
-
         }
 
         public void ExitGame()
@@ -84,6 +51,10 @@ namespace NTNU.CarloMarton.VRLanguage
             Application.Quit();
         }
 
+        public GameObject GetPlayer()
+        {
+            return instantiatedAvatar;
+        }
 
         #endregion
 
@@ -91,7 +62,6 @@ namespace NTNU.CarloMarton.VRLanguage
 
         private void Start()
         {
-
             Instance = this;
 
             if (PlayerManager.LocalPlayerInstance == null)
@@ -104,7 +74,9 @@ namespace NTNU.CarloMarton.VRLanguage
                 // Make the local head invisible as to not see the inside of your own head
                 try
                 {
-                    instantiatedAvatar.transform.Find("Body").transform.Find("Head").GetComponent<MeshRenderer>().enabled = false;
+                    Transform head = instantiatedAvatar.transform.Find("Body").transform.Find("Head");
+                    head.GetComponent<MeshRenderer>().enabled = false;
+                    head.Find("NameTag").GetComponent<MeshRenderer>().enabled = false;
                 }
                 catch (NullReferenceException)
                 {
@@ -131,8 +103,11 @@ namespace NTNU.CarloMarton.VRLanguage
             {
                 Debug.LogError("PhotonNetwork : Trying to Load a level but we are not the master Client");
             }
-            Debug.LogFormat("PhotonNetwork : Loading Level : {0}", startScene);
-            PhotonNetwork.LoadLevel(startScene);
+            else
+            {
+                Debug.LogFormat("PhotonNetwork : Loading Level : {0}", startScene);
+                PhotonNetwork.LoadLevel(startScene);
+            }
 
         }
 

@@ -4,6 +4,7 @@ using Photon.Realtime;
 using Photon.Voice.Unity;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace NTNU.CarloMarton.VRLanguage
@@ -48,6 +49,8 @@ namespace NTNU.CarloMarton.VRLanguage
         private Dictionary<int, GameObject> playerListEntries;
 
         public string sceneToLoadString = "Forest";
+
+        public Text roomNameText;
 
         string gameVersion = "1";
             
@@ -113,6 +116,8 @@ namespace NTNU.CarloMarton.VRLanguage
         public override void OnJoinedRoom()
         {
             SetActivePanel(InsideRoomPanel.name);
+
+            roomNameText.text = PhotonNetwork.CurrentRoom.Name;
 
             if (playerListEntries == null)
             {

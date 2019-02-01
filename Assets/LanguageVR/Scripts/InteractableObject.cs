@@ -30,12 +30,8 @@ public class InteractableObject : MonoBehaviour
 
     private AudioSource audioSource;
 
-    //public SteamVR_Input_Sources handType; // 1
-    //public SteamVR_Action_Boolean menuButtonAction; // 2
-
     void Awake()
     {
-        print(physicalObject.name + "(Clone)");
         instantiatedObject = transform.Find(physicalObject.name + "(Clone)").gameObject;
         instantiatedTextObject = instantiatedObject.transform.Find("Text").gameObject;        
 
@@ -84,26 +80,34 @@ public class InteractableObject : MonoBehaviour
         instantiatedObject = Instantiate(physicalObject);
         instantiatedObject.transform.parent = this.transform;
         instantiatedObject.transform.localPosition = Vector3.zero;
-        if(instantiatedObject.GetComponent<MeshCollider>() != null)
+        instantiatedObject.AddComponent<Rigidbody>();
+
+        int numberOfChildren = instantiatedObject.transform.childCount;
+        if (numberOfChildren == 0)
         {
-            instantiatedObject.GetComponent<MeshCollider>().enabled = false;
+            if (!instantiatedObject.GetComponent<MeshCollider>())
+            {
+                instantiatedObject.AddComponent<MeshCollider>();
+            }
+            instantiatedObject.GetComponent<MeshCollider>().convex = true;
+        }
+        else
+        {
+            for (int i = 0; i < numberOfChildren; i++)
+            {
+                GameObject child = instantiatedObject.transform.GetChild(i).gameObject;
+                if (!child.GetComponent<MeshCollider>())
+                {
+                    child.AddComponent<MeshCollider>();
+                }
+                child.GetComponent<MeshCollider>().convex = true;
+            }
         }
 
-        instantiatedObject.AddComponent<Rigidbody>();
-        Debug.Log(instantiatedObject.GetComponentsInChildren<MeshRenderer>().Length);
-        if (instantiatedObject.GetComponentsInChildren<MeshRenderer>().Length > 0) {
-            foreach (MeshRenderer child in instantiatedObject.GetComponentsInChildren<MeshRenderer>())
-            {
-                
-                if(child.transform.parent.gameObject.GetComponent<MeshRenderer>() == null)
-                {
-                    child.gameObject.AddComponent<BoxCollider>();
-                }
-            }
-        } else if(instantiatedObject.GetComponent<BoxCollider>() == null)
-        {
-            instantiatedObject.AddComponent<BoxCollider>();
-        }
+        AudioSource instantiatedAudioSource = instantiatedObject.AddComponent<AudioSource>();
+        instantiatedAudioSource.clip = audioClip;
+        instantiatedAudioSource.playOnAwake = false;
+        
 
         Throwable throwable = instantiatedObject.AddComponent<Throwable>();
         instantiatedObject.AddComponent<Interactable>();

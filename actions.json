@@ -1,80 +1,51 @@
 {
   "actions": [
     {
-      "name": "/actions/default/in/InteractUI",
+      "name": "/actions/language/in/OpenMenu",
       "type": "boolean"
     },
     {
-      "name": "/actions/default/in/Teleport",
+      "name": "/actions/language/in/InteractUI",
       "type": "boolean"
     },
     {
-      "name": "/actions/default/in/GrabPinch",
+      "name": "/actions/language/in/Teleport",
       "type": "boolean"
     },
     {
-      "name": "/actions/default/in/GrabGrip",
+      "name": "/actions/language/in/GrabPinch",
       "type": "boolean"
     },
     {
-      "name": "/actions/default/in/Pose",
+      "name": "/actions/language/in/GrabGrip",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/language/in/Squeeze",
+      "type": "vector1"
+    },
+    {
+      "name": "/actions/language/in/Pose",
       "type": "pose"
     },
     {
-      "name": "/actions/default/in/SkeletonLeftHand",
+      "name": "/actions/language/in/SkeletonLeftHand",
       "type": "skeleton",
       "skeleton": "/skeleton/hand/left"
     },
     {
-      "name": "/actions/default/in/SkeletonRightHand",
+      "name": "/actions/language/in/SkeletonRightHand",
       "type": "skeleton",
       "skeleton": "/skeleton/hand/right"
     },
     {
-      "name": "/actions/default/in/Squeeze",
-      "type": "vector1",
-      "requirement": "optional"
-    },
-    {
-      "name": "/actions/default/out/Haptic",
+      "name": "/actions/language/out/Haptic",
       "type": "vibration"
-    },
-    {
-      "name": "/actions/platformer/in/Move",
-      "type": "vector2"
-    },
-    {
-      "name": "/actions/platformer/in/Jump",
-      "type": "boolean"
-    },
-    {
-      "name": "/actions/buggy/in/Steering",
-      "type": "vector2"
-    },
-    {
-      "name": "/actions/buggy/in/Throttle",
-      "type": "vector1"
-    },
-    {
-      "name": "/actions/buggy/in/Brake",
-      "type": "boolean"
-    },
-    {
-      "name": "/actions/buggy/in/Reset",
-      "type": "boolean"
     }
   ],
   "action_sets": [
     {
-      "name": "/actions/default",
-      "usage": "single"
-    },
-    {
-      "name": "/actions/platformer",
-      "usage": "single"
-    },
-    {
-      "name": "/actions/buggy",
+      "name": "/actions/language",
       "usage": "single"
     }
   ],
@@ -112,7 +83,14 @@
       "/actions/buggybuddy/in/Brake": "Brake",
       "/actions/buggybuddy/in/Reset": "Reset",
       "/actions/platformer/in/Move": "Move",
-      "/actions/platformer/in/Jump": "Jump"
+      "/actions/platformer/in/Jump": "Jump",
+      "/actions/language/in/OpenMenu": "Open Menu",
+      "/actions/language/in/InteractUI": "Interact UI",
+      "/actions/language/in/GrabPinch": "Grab Pinch",
+      "/actions/language/in/Grab Grip": "Grab Grip",
+      "/actions/language/in/SkeletonLeftHand": "Skeleton Left Hand",
+      "/actions/language/in/SkeletonRightHand": "Skeleton Right hand",
+      "/actions/language/in/GrabGrip": "Grab Grip"
     }
   ]
 }
