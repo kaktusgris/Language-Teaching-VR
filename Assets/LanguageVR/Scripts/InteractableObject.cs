@@ -85,7 +85,10 @@ public class InteractableObject : MonoBehaviour
         int numberOfChildren = instantiatedObject.transform.childCount;
         if (numberOfChildren == 0)
         {
-            instantiatedObject.AddComponent<MeshCollider>();
+            if (!instantiatedObject.GetComponent<MeshCollider>())
+            {
+                instantiatedObject.AddComponent<MeshCollider>();
+            }
             instantiatedObject.GetComponent<MeshCollider>().convex = true;
         }
         else
@@ -93,7 +96,10 @@ public class InteractableObject : MonoBehaviour
             for (int i = 0; i < numberOfChildren; i++)
             {
                 GameObject child = instantiatedObject.transform.GetChild(i).gameObject;
-                child.AddComponent<MeshCollider>();
+                if (!child.GetComponent<MeshCollider>())
+                {
+                    child.AddComponent<MeshCollider>();
+                }
                 child.GetComponent<MeshCollider>().convex = true;
             }
         }

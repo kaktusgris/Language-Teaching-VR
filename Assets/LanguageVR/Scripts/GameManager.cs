@@ -34,37 +34,6 @@ namespace NTNU.CarloMarton.VRLanguage
             SceneManager.LoadScene(0);
         }
 
-        //public override void OnPlayerEnteredRoom(Player other)
-        //{
-
-        //    Debug.LogFormat("OnPlayerEnteredRoom() {0}", other.NickName); // not seen if you're the player connecting
-
-        //    if (other.IsMasterClient)
-        //    {
-        //        Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
-
-
-        //        LoadArena();
-
-        //    }
-
-        //}
-
-
-        //public override void OnPlayerLeftRoom(Player other)
-        //{
-        //    Debug.LogFormat("OnPlayerLeftRoom() {0}", other.NickName); // seen when other disconnects
-
-
-        //    if (other.IsMasterClient)
-        //    {
-        //        Debug.LogFormat("OnPlayerLeftRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
-
-
-        //        //LoadArena();
-        //    }
-        //}
-
         #endregion
 
 
@@ -105,7 +74,9 @@ namespace NTNU.CarloMarton.VRLanguage
                 // Make the local head invisible as to not see the inside of your own head
                 try
                 {
-                    instantiatedAvatar.transform.Find("Body").transform.Find("Head").GetComponent<MeshRenderer>().enabled = false;
+                    Transform head = instantiatedAvatar.transform.Find("Body").transform.Find("Head");
+                    head.GetComponent<MeshRenderer>().enabled = false;
+                    head.Find("NameTag").GetComponent<MeshRenderer>().enabled = false;
                 }
                 catch (NullReferenceException)
                 {

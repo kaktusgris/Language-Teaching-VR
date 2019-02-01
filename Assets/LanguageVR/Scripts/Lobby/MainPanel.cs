@@ -50,6 +50,8 @@ namespace NTNU.CarloMarton.VRLanguage
 
         public string sceneToLoadString = "Forest";
 
+        public Text roomNameText;
+
         string gameVersion = "1";
             
         #region UNITY
@@ -114,6 +116,8 @@ namespace NTNU.CarloMarton.VRLanguage
         public override void OnJoinedRoom()
         {
             SetActivePanel(InsideRoomPanel.name);
+
+            roomNameText.text = PhotonNetwork.CurrentRoom.Name;
 
             if (playerListEntries == null)
             {
