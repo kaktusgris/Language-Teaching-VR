@@ -1,5 +1,10 @@
 Photon Voice Change Log
 
+v2.3 (January 25th, 2019)
+    PUN2: v2.6 (578494a)
+    PhotonVoiceApi: revision 4948
+    FIXED: Speaker linking issues (debug echo toggling, disconnect & reconnect)
+
 v2.2 (December 20th, 2018)
     PUN2: v2.6v (eeaa6a7)
     PhotonVoiceApi: revision 4948

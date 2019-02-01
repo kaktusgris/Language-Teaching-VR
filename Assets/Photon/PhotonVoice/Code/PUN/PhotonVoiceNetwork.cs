@@ -201,9 +201,7 @@ namespace Photon.Voice.PUN
 
         private void OnEnable()
         {
-            // TODO: decide if this method is better than the callbacks interfaces
             PhotonNetwork.NetworkingClient.StateChanged += OnPunStateChanged;
-            this.Client.StateChanged += OnVoiceStateChanged;
             FollowPun(); // in case this is enabled or activated late
             clientCalledConnectAndJoin = false;
             clientCalledDisconnect = false;
@@ -212,7 +210,6 @@ namespace Photon.Voice.PUN
         private void OnDisable()
         {
             PhotonNetwork.NetworkingClient.StateChanged -= OnPunStateChanged;
-            this.Client.StateChanged -= OnVoiceStateChanged;
         }
 
         protected override void OnApplicationQuit()
@@ -233,32 +230,27 @@ namespace Photon.Voice.PUN
             {
                 this.Logger.LogDebug("OnPunStateChanged from {0} to {1}", fromState, toState);
             }
-            switch (toState)
-            {
-                case ClientState.Joined:
-                case ClientState.Disconnected:
-                case ClientState.ConnectedToMasterserver: // no need to also include JoinedLobby state as it comes after
-                    FollowPun();
-                    break;
-            }
+            this.FollowPun(toState);
         }
 
-        private void OnVoiceStateChanged(ClientState fromState, ClientState toState)
+        protected override void OnVoiceStateChanged(ClientState fromState, ClientState toState)
         {
-            if (this.Logger.IsDebugEnabled)
+            base.OnVoiceStateChanged(fromState, toState);
+            if (!this.clientCalledDisconnect && toState == ClientState.Disconnected && this.Client.DisconnectedCause == DisconnectCause.DisconnectByClientLogic)
             {
-                this.Logger.LogDebug("OnVoiceStateChanged from {0} to {1}", fromState, toState);
+                this.clientCalledDisconnect = true;
             }
+            this.FollowPun(toState);
+        }
+
+        private void FollowPun(ClientState toState)
+        {
             switch (toState)
             {
                 case ClientState.Joined:
                 case ClientState.Disconnected:
                 case ClientState.ConnectedToMasterserver:
-                    if (!clientCalledDisconnect && this.Client.DisconnectedCause == DisconnectCause.DisconnectByClientLogic)
-                    {
-                        clientCalledDisconnect = true;
-                    }
-                    FollowPun();
+                    this.FollowPun();
                     break;
             }
         }

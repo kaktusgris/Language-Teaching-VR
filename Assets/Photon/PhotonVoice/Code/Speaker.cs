@@ -35,14 +35,14 @@ namespace Photon.Voice.Unity
         ///<summary>Remote audio stream playback delay to compensate packets latency variations. Try 100 - 200 if sound is choppy.</summary> 
         public int PlayDelayMs = 200;
 
-#if UNITY_PS4
+        #if UNITY_PS4
         /// <summary>Set the PS4 User ID to determine on which controller to play audio.</summary> 
         /// <remarks>
         /// Note: at the moment, only the first Speaker can successfully set the User ID. 
         /// Subsequently initialized Speakers will play their audio on the controller set with the first Speaker initialized.
         /// </remarks>
         public int PS4UserID = 0;
-#endif
+        #endif
 
         #endregion
 
@@ -84,14 +84,14 @@ namespace Photon.Voice.Unity
         protected override void Awake()
         {
             base.Awake();
-            Func<IAudioOut> factory = () => new AudioStreamPlayer(new VoiceLogger(this, "AudioStreamPlayer", this.LogLevel),
+            Func<IAudioOut> factory = () => new AudioStreamPlayer(new VoiceLogger(this, "AudioStreamPlayer", this.LogLevel),  
                 new UnityAudioOut(this.GetComponent<AudioSource>()), "PhotonVoiceSpeaker:", this.Logger.IsInfoEnabled);
 
-#if !UNITY_EDITOR && UNITY_PS4
+            #if !UNITY_EDITOR && UNITY_PS4
             this.audioOutput = new Photon.Voice.PS4.PS4AudioOut(PS4UserID, factory);
-#else
+            #else
             this.audioOutput = factory();
-#endif
+            #endif
             this.StartPlaying();
         }
 
