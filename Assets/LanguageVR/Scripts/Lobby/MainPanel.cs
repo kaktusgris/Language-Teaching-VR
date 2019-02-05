@@ -63,7 +63,7 @@ namespace NTNU.CarloMarton.VRLanguage
             if (GameObject.FindGameObjectWithTag("Voice") == null)
             {
                 Instantiate(Voice, new Vector3(0, 0, 0), Quaternion.identity);
-                GameObject.FindGameObjectWithTag("Voice").GetComponent<Recorder>().MicrophoneType = Recorder.MicType.Photon;
+                GameObject.FindGameObjectWithTag("Voice").GetComponent<Recorder>().MicrophoneType = Recorder.MicType.Unity;
             }
 
             cachedRoomList = new Dictionary<string, RoomInfo>();
