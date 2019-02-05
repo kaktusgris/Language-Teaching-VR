@@ -94,6 +94,7 @@ public class InGameMenu : MonoBehaviour
     {
         if (menuButtonAction.GetStateDown(handType))
         {
+            print(PhotonNetwork.LocalPlayer.CustomProperties["adminMode"]);
             if (menuButtonAction.GetStateDown(SteamVR_Input_Sources.LeftHand))
             {
                 ToggleMenu(SteamVR_Input_Sources.LeftHand);

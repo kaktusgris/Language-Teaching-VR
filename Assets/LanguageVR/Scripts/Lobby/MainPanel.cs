@@ -19,6 +19,8 @@ namespace NTNU.CarloMarton.VRLanguage
         public GameObject LoginPanel;
 
         public InputField PlayerNameInput;
+        public InputField AdminPasswordInput;
+        public string adminPassword;
 
         [Header("Selection Panel")]
         public GameObject SelectionPanel;
@@ -47,6 +49,8 @@ namespace NTNU.CarloMarton.VRLanguage
         private Dictionary<string, RoomInfo> cachedRoomList;
         private Dictionary<string, GameObject> roomListEntries;
         private Dictionary<int, GameObject> playerListEntries;
+
+        private bool adminMode = false;
 
         public string sceneToLoadString = "Forest";
 
@@ -210,6 +214,11 @@ namespace NTNU.CarloMarton.VRLanguage
             StartGameButton.gameObject.SetActive(CheckPlayersReady());
         }
 
+        public void OnAdminToggleClicked(bool toggleValue)
+        {
+            AdminPasswordInput.gameObject.SetActive(toggleValue);
+        }
+
         #endregion
 
         #region UI CALLBACKS
@@ -253,19 +262,36 @@ namespace NTNU.CarloMarton.VRLanguage
             PhotonNetwork.LeaveRoom();
         }
 
+        public void OnLoginButtonClicked(string playerName)
+        {
+            PlayerNameInput.text = playerName;
+            OnLoginButtonClicked();
+        }
+
         public void OnLoginButtonClicked()
         {
             string playerName = PlayerNameInput.text;
 
-            if (!playerName.Equals(""))
+            if (playerName.Equals(""))
             {
-                PhotonNetwork.LocalPlayer.NickName = playerName;
-                PhotonNetwork.GameVersion = gameVersion;
-                PhotonNetwork.ConnectUsingSettings();
+                LoginPanel.transform.Find("IncorrectNameLabel").gameObject.SetActive(true);
+            }
+            else if (LoginPanel.GetComponentInChildren<Toggle>().isOn && !AdminPasswordInput.text.Equals(adminPassword))
+            {
+                LoginPanel.transform.Find("IncorrectPasswordLabel").gameObject.SetActive(true);
             }
             else
             {
-                LoginPanel.transform.Find("IncorrectNameLabel").gameObject.SetActive(true);
+                PhotonNetwork.LocalPlayer.NickName = playerName;
+                PhotonNetwork.GameVersion = gameVersion;
+
+                adminMode = AdminPasswordInput.text.Equals(adminPassword) && LoginPanel.GetComponentInChildren<Toggle>().isOn;
+
+                Hashtable hash = new Hashtable();
+                hash.Add("adminMode", adminMode);
+                PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+
+                PhotonNetwork.ConnectUsingSettings();
             }
         }
 

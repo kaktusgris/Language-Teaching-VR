@@ -11,7 +11,7 @@ namespace NTNU.CarloMarton.VRLanguage
     /// <summary>
     /// Player manager.
     /// </summary>
-    /// 
+    ///
     public class PlayerManager : MonoBehaviourPunCallbacks, IPunObservable
     {
 
@@ -45,9 +45,9 @@ namespace NTNU.CarloMarton.VRLanguage
         void Start()
         {
             voiceIndicator.GetComponent<MeshRenderer>().enabled = false;
-            
-            if (!photonView.IsMine && PhotonNetwork.IsConnected)
+            if (!photonView.IsMine && PhotonNetwork.IsConnected && photonView.Owner != null)
             {
+                print("Audio listener destroyed");
                 Destroy(GetComponentInChildren<AudioListener>());
             }
 
@@ -62,7 +62,7 @@ namespace NTNU.CarloMarton.VRLanguage
 
         void Update()
         {
-            if (photonView.IsMine || !PhotonNetwork.IsConnected) { 
+            if (photonView.IsMine || !PhotonNetwork.IsConnected) {
 
                 if (GameObject.Find("Voice(Clone)").GetComponent<Recorder>().VoiceDetector.Detected)
                 {
