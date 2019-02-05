@@ -3961,23 +3961,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: e0276d08607698f4c9369a95eaaa6dba, type: 3}
-    - target: {fileID: 4075174856181302531, guid: 511c8a9ceba805e488c7f1424d45b71f,
-        type: 3}
-      propertyPath: m_Text
-      value: text
-      objectReference: {fileID: 0}
-    - target: {fileID: 4075174856181302531, guid: 511c8a9ceba805e488c7f1424d45b71f,
-        type: 3}
-      propertyPath: m_Anchor
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 4075174856181302531, guid: 511c8a9ceba805e488c7f1424d45b71f,
-        type: 3}
-      propertyPath: m_Font
-      value: 
-      objectReference: {fileID: 12800000, guid: e0276d08607698f4c9369a95eaaa6dba,
-        type: 3}
+      objectReference: {fileID: 2100000, guid: 253eb4f81b3a5264099f294bfc0fbb8c, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 511c8a9ceba805e488c7f1424d45b71f, type: 3}
 --- !u!114 &4729545722322025568 stripped
