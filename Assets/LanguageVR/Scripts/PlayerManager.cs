@@ -39,8 +39,9 @@ namespace NTNU.CarloMarton.VRLanguage
 
         void Start()
         {
-            if (!photonView.IsMine && PhotonNetwork.IsConnected)
+            if (!photonView.IsMine && PhotonNetwork.IsConnected && photonView.Owner != null)
             {
+                print("Audio listener destroyed");
                 Destroy(GetComponentInChildren<AudioListener>());
             }
 

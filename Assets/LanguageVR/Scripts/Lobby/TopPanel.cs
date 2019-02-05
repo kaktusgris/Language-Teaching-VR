@@ -10,12 +10,18 @@ namespace NTNU.CarloMarton.VRLanguage
 
         [Header("UI References")]
         public Text ConnectionStatusText;
+        public Text RoleStatusText;
 
         #region UNITY
 
         public void Update()
         {
             ConnectionStatusText.text = connectionStatusMessage + PhotonNetwork.NetworkClientState;
+        }
+
+        public void UpdateRoleText()
+        {
+            RoleStatusText.text = (bool)PhotonNetwork.LocalPlayer.CustomProperties["adminMode"] ? "Lærer" : "Student";
         }
 
         #endregion
