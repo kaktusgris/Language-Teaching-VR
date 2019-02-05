@@ -77,6 +77,7 @@ namespace NTNU.CarloMarton.VRLanguage
                     Transform head = instantiatedAvatar.transform.Find("Body").transform.Find("Head");
                     head.GetComponent<MeshRenderer>().enabled = false;
                     head.Find("NameTag").GetComponent<MeshRenderer>().enabled = false;
+                    head.Find("VoiceIndicator").GetComponent<MeshRenderer>().enabled = false;
                 }
                 catch (NullReferenceException)
                 {
@@ -88,12 +89,13 @@ namespace NTNU.CarloMarton.VRLanguage
                 Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
             }
 
+            Recorder voiceRecorder = GameObject.FindGameObjectWithTag("Voice").GetComponent<Recorder>();
 
             // Only connect the voice components if online
             if (PhotonNetwork.IsConnected)
             {
-                GameObject.FindGameObjectWithTag("Voice").GetComponent<Recorder>().TransmitEnabled = true;
-                GameObject.FindGameObjectWithTag("Voice").GetComponent<Recorder>().VoiceDetection = true;
+                voiceRecorder.TransmitEnabled = true;
+                GameObject.FindGameObjectWithTag("Voice").GetComponent<Photon.Voice.PUN.PhotonVoiceNetwork>().SpeakerPrefab = instantiatedAvatar;
             }
         }
 

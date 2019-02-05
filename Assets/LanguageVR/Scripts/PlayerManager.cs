@@ -11,8 +11,12 @@ namespace NTNU.CarloMarton.VRLanguage
     /// <summary>
     /// Player manager.
     /// </summary>
-    public class PlayerManager : MonoBehaviourPunCallbacks
+    /// 
+    public class PlayerManager : MonoBehaviourPunCallbacks, IPunObservable
     {
+
+        public GameObject voiceIndicator;
+        private bool voiceDetected = false;
 
         [Tooltip("The local player instance. Use this to know if the local player is represented in the Scene")]
         public static GameObject LocalPlayerInstance;
@@ -29,6 +33,7 @@ namespace NTNU.CarloMarton.VRLanguage
             if (photonView.IsMine || !PhotonNetwork.IsConnected)
             {
                 PlayerManager.LocalPlayerInstance = this.gameObject;
+                GameObject.Find("Voice(Clone)").GetComponent<Recorder>().VoiceDetectorCalibrate(200);
             }
             // #Critical
             // we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
@@ -39,6 +44,8 @@ namespace NTNU.CarloMarton.VRLanguage
 
         void Start()
         {
+            voiceIndicator.GetComponent<MeshRenderer>().enabled = false;
+            
             if (!photonView.IsMine && PhotonNetwork.IsConnected)
             {
                 Destroy(GetComponentInChildren<AudioListener>());
@@ -47,11 +54,38 @@ namespace NTNU.CarloMarton.VRLanguage
             if (photonView.IsMine)
             {
                 gameObject.GetComponentInChildren<AudioSource>().spatialBlend = 1.0f;
-                gameObject.GetComponentInChildren<AudioSource>().rolloffMode = AudioRolloffMode.Logarithmic;
             }
 
         }
 
         #endregion
+
+        void Update()
+        {
+            if (photonView.IsMine || !PhotonNetwork.IsConnected) { 
+
+                if (GameObject.Find("Voice(Clone)").GetComponent<Recorder>().VoiceDetector.Detected)
+                {
+                    voiceDetected = true;
+                } else
+                {
+                    voiceDetected = false;
+                }
+            }
+
+
+        }
+
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            if (stream.IsWriting)
+            {
+                stream.SendNext(voiceDetected);
+            }
+            else
+            {
+                voiceIndicator.GetComponent<MeshRenderer>().enabled = (bool) stream.ReceiveNext();
+            }
+        }
     }
 }
