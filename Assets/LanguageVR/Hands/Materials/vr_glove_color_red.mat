@@ -81,9 +81,10 @@ Material:
     - _UScale: 1
     - _UVSec: 0
     - _VScale: 1
+    - _WireThickness: 100
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.64098006, g: 0.16978098, b: 0.67839533, a: 1}
+    - _Color: {r: 0.7714616, g: 0.31094292, b: 0.25486007, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _N: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}

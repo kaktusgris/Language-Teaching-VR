@@ -1,4 +1,5 @@
-﻿using Photon.Pun;
+﻿using NTNU.CarloMarton.VRLanguage;
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,6 +19,7 @@ public class InGameMenu : MonoBehaviour
     private GameObject handPrefabL;
     private GameObject handPrefabR;
 
+    public GameObject invisibilityButton;
     public RectTransform myPanel;
     public GameObject menuTextPrefab;
 
@@ -29,6 +31,8 @@ public class InGameMenu : MonoBehaviour
 
         handPrefabL = transform.Find("HandPrefabL").gameObject;
         handPrefabR = transform.Find("HandPrefabR").gameObject;
+
+        invisibilityButton.SetActive((bool)PhotonNetwork.LocalPlayer.CustomProperties["admin"]);
     }
 
     private void ToggleMenu(SteamVR_Input_Sources hand)
@@ -94,7 +98,6 @@ public class InGameMenu : MonoBehaviour
     {
         if (menuButtonAction.GetStateDown(handType))
         {
-            print(PhotonNetwork.LocalPlayer.CustomProperties["adminMode"]);
             if (menuButtonAction.GetStateDown(SteamVR_Input_Sources.LeftHand))
             {
                 ToggleMenu(SteamVR_Input_Sources.LeftHand);

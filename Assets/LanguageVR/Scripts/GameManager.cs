@@ -89,11 +89,11 @@ namespace NTNU.CarloMarton.VRLanguage
                 Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
             }
 
-            Recorder voiceRecorder = GameObject.FindGameObjectWithTag("Voice").GetComponent<Recorder>();
 
             // Only connect the voice components if online
             if (PhotonNetwork.IsConnected)
             {
+                Recorder voiceRecorder = GameObject.FindGameObjectWithTag("Voice").GetComponent<Recorder>();
                 voiceRecorder.TransmitEnabled = true;
                 GameObject.FindGameObjectWithTag("Voice").GetComponent<Photon.Voice.PUN.PhotonVoiceNetwork>().SpeakerPrefab = instantiatedAvatar;
             }

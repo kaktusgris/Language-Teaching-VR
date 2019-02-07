@@ -4350,7 +4350,7 @@ MonoBehaviour:
   LoginPanel: {fileID: 964844637}
   PlayerNameInput: {fileID: 328590478}
   AdminPasswordInput: {fileID: 403523316}
-  adminPassword: "l\xE6rer123"
+  adminPassword: "l\xE6rer"
   SelectionPanel: {fileID: 1771933899}
   CreateRoomPanel: {fileID: 1406502566}
   RoomNameInputField: {fileID: 1541721128}

@@ -62,7 +62,7 @@ public class MenuLaser : MonoBehaviour
                     SetButtonColor(clickedObject.GetComponent<Button>(), standByColor);
                     toggleLaser(false);
 
-                    ObjectClicked(clickedObject);
+                    clickedObject.GetComponent<Button>().onClick.Invoke();
                 }
             }
         }
@@ -119,19 +119,5 @@ public class MenuLaser : MonoBehaviour
         buttonColor.normalColor = color;
         buttonColor.colorMultiplier = 5;
         button.colors = buttonColor;
-    }
-
-    private void ObjectClicked(GameObject go)
-    {
-        string objectName = go.GetComponent<Text>().text;
-        PlayerDictionary dict = GameObject.Find("GameManager").GetComponent<GameManager>().GetPlayer().GetComponent<PlayerDictionary>();
-        GameObject interactable = dict.getInteractable(objectName);
-
-        print(objectName);
-        if (interactable.GetComponent<AudioSource>())
-        {
-            AudioSource source = interactable.GetComponent<AudioSource>();
-            source.Play();
-        }
     }
 }
