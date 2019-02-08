@@ -56,10 +56,10 @@ public class MenuLaser : MonoBehaviour
             if (Physics.Raycast(laser, out raycastHit, Mathf.Infinity, 1 << LayerMask.NameToLayer("InWorldUI"), QueryTriggerInteraction.Ignore))
             {
                 clickedObject = raycastHit.collider.gameObject;
-                if (clickedObject.GetComponent<Button>())
+                if (clickedObject.GetComponent<Button>() && clickedObject.GetComponent<InGameMenuUI>())
                 {
                     pinchPressed = true;
-                    SetButtonColor(clickedObject.GetComponent<Button>(), standByColor);
+                    SetButtonColor(clickedObject.GetComponent<Button>(), clickedObject.GetComponent<InGameMenuUI>().GetStandbyColor());
                     toggleLaser(false);
 
                     clickedObject.GetComponent<Button>().onClick.Invoke();
@@ -71,9 +71,9 @@ public class MenuLaser : MonoBehaviour
         if (!GetLaserButtonClicked())
         {
             pinchPressed = false;
-            if (clickedObject != null && clickedObject.GetComponent<Button>())
+            if (clickedObject != null && clickedObject.GetComponent<Button>() && clickedObject.GetComponent<InGameMenuUI>())
             {
-                SetButtonColor(clickedObject.GetComponent<Button>(), standByColor);
+                SetButtonColor(clickedObject.GetComponent<Button>(), clickedObject.GetComponent<InGameMenuUI>().GetStandbyColor());
                 clickedObject = null;
             }
 
@@ -90,25 +90,25 @@ public class MenuLaser : MonoBehaviour
 
             if (Physics.Raycast(laser, out raycastHit, Mathf.Infinity, 1 << LayerMask.NameToLayer("InWorldUI"), QueryTriggerInteraction.Ignore))
             {
-                if (clickedObject != null && clickedObject.GetComponent<Button>() && raycastHit.collider.gameObject != clickedObject)
+                if (clickedObject != null && clickedObject.GetComponent<Button>() && clickedObject.GetComponent<InGameMenuUI>() && raycastHit.collider.gameObject != clickedObject)
                 {
-                    SetButtonColor(clickedObject.GetComponent<Button>(), standByColor);
+                    SetButtonColor(clickedObject.GetComponent<Button>(), clickedObject.GetComponent<InGameMenuUI>().GetStandbyColor());
                 }
                 lr.SetPosition(1, raycastHit.point);
 
                 clickedObject = raycastHit.collider.gameObject;
                 if (clickedObject.GetComponent<Button>())
                 {
-                    SetButtonColor(clickedObject.GetComponent<Button>(), hoverColor);
+                    SetButtonColor(clickedObject.GetComponent<Button>(), clickedObject.GetComponent<InGameMenuUI>().GetHoverColor());
                 }
 
             }
             else
             {
                 lr.SetPosition(1, laser.origin + laser.direction * 3f);
-                if (clickedObject != null && clickedObject.GetComponent<Button>())
+                if (clickedObject != null && clickedObject.GetComponent<Button>() && clickedObject.GetComponent<InGameMenuUI>())
                 {
-                    SetButtonColor(clickedObject.GetComponent<Button>(), standByColor);
+                    SetButtonColor(clickedObject.GetComponent<Button>(), clickedObject.GetComponent<InGameMenuUI>().GetStandbyColor());
                 }
             }
 

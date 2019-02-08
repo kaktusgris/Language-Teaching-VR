@@ -66,13 +66,18 @@ namespace NTNU.CarloMarton.VRLanguage
         public void SetVisibility(bool visible)
         {
             this.visible = visible;
+            SetCollisionOnHead(visible);
         }
 
+        // Toggle the meshrenders of the avatar, except it's voice indicator as that is handled differently
         private void SetIfRender(bool toRender)
         {
             foreach (MeshRenderer renderer in gameObject.GetComponentsInChildren<MeshRenderer>())
             {
-                renderer.enabled = toRender;
+                if (!renderer.Equals(voiceIndicator.GetComponent<MeshRenderer>()))
+                {
+                    renderer.enabled = toRender;
+                }
             }
             foreach (SkinnedMeshRenderer renderer in gameObject.GetComponentsInChildren<SkinnedMeshRenderer>())
             {
@@ -86,6 +91,7 @@ namespace NTNU.CarloMarton.VRLanguage
             headCollider.enabled = collision;
         }
 
+        // Toggle the shader on hands between standard and a wireframe look
         private void ChangeHands()
         {
             SkinnedMeshRenderer rightRenderer = GameObject.FindGameObjectWithTag("MainCamera").transform.Find("RightHand").Find("RightRenderModel Slim(Clone)").Find("vr_glove_right_model_slim(Clone)").Find("slim_r").Find("vr_glove_right_slim").gameObject.GetComponent<SkinnedMeshRenderer>();
@@ -103,7 +109,7 @@ namespace NTNU.CarloMarton.VRLanguage
         void Update()
         {
             if (photonView.IsMine || !PhotonNetwork.IsConnected) {
-                if (photonView.IsMine && GameObject.Find("Voice(Clone)").GetComponent<Recorder>().VoiceDetector.Detected)
+                if (PhotonNetwork.IsConnected && GameObject.Find("Voice(Clone)").GetComponent<Recorder>().VoiceDetector.Detected)
                 {
                     voiceDetected = true;
                 } else

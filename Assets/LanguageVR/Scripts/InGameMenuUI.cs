@@ -8,6 +8,21 @@ public class InGameMenuUI : MonoBehaviour
 {
     private bool visible = true;
 
+    [SerializeField]
+    private Color standbyColor = Color.black;
+    [SerializeField]
+    private Color hoverColor = Color.white;
+
+    public Color GetHoverColor()
+    {
+        return hoverColor;
+    }
+
+    public Color GetStandbyColor()
+    {
+        return standbyColor;
+    }
+
     public void OnInvisibilityToggleClicked()
     {
         visible = !visible;
