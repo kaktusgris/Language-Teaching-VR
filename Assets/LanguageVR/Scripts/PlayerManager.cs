@@ -5,6 +5,7 @@ using System.Collections;
 using Photon.Pun;
 using Photon.Voice.Unity;
 using Photon.Voice.PUN;
+using UnityEngine.SceneManagement;
 
 namespace NTNU.CarloMarton.VRLanguage
 {
@@ -121,7 +122,7 @@ namespace NTNU.CarloMarton.VRLanguage
                 {
                     ChangeHands();
                 }
-            }  
+            }
         }
 
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

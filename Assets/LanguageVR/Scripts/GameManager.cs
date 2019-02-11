@@ -99,6 +99,17 @@ namespace NTNU.CarloMarton.VRLanguage
             }
         }
 
+        void Update()
+        {
+            //Resets objects that the host client and the scene owns
+            if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.R))
+            {
+                print("Reloading level");
+                
+                LoadArena();
+            }
+        }
+
         void LoadArena()
         {
             if (!PhotonNetwork.IsMasterClient)

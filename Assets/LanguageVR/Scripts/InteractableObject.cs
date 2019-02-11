@@ -114,6 +114,7 @@ public class InteractableObject : MonoBehaviour
         instantiatedObject.AddComponent<VelocityEstimator>();
         PhotonView photonView = instantiatedObject.AddComponent<PhotonView>();
 
+        photonView.ObservedComponents = new List<Component>();
         photonView.ObservedComponents.Add(throwable);
         photonView.OwnershipTransfer = OwnershipOption.Takeover;
         photonView.Synchronization = ViewSynchronization.UnreliableOnChange;
