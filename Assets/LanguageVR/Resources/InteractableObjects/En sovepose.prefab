@@ -110,7 +110,7 @@ GameObject:
   - component: {fileID: 1687156967445969109}
   - component: {fileID: 1687156967445969110}
   m_Layer: 0
-  m_Name: SleepingBed(Clone)
+  m_Name: En sovepose
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -415,6 +415,7 @@ GameObject:
   - component: {fileID: 1687156968731406182}
   - component: {fileID: 1687156968731406180}
   - component: {fileID: 1687156968731406181}
+  - component: {fileID: 3670563352614164700}
   m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
@@ -495,3 +496,15 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
+--- !u!114 &3670563352614164700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1687156968731406183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eade8640ec66ea3448167fc732c8088d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -65,12 +65,20 @@ public class InGameMenuUI : MonoBehaviour
         }
     }
 
+    // Spawns the object between the button and the user's head
     public void OnAddInteractableObjectButtonClicked()
     {
         string objectName = gameObject.GetComponentInParent<Text>().text;
         Vector3 headPosition = ViveManager.Instance.head.transform.position;
-        Vector3 spawnPosition = new Vector3(headPosition.x, headPosition.y, headPosition.z + 0.5f);
+        Vector3 buttonPosition = transform.position;
 
-        PhotonNetwork.Instantiate(objectName, spawnPosition, Quaternion.identity);
+        float spawnX = (headPosition.x + buttonPosition.x) / 2f;
+        float spawnY = (headPosition.y + buttonPosition.y) / 2f;
+        float spawnZ = (headPosition.z + buttonPosition.z) / 2f;
+
+        Vector3 spawnPosition = new Vector3(spawnX, spawnY, spawnZ);
+
+        Debug.LogFormat("Instantiated {0} at {1}", objectName, spawnPosition);
+        PhotonNetwork.Instantiate("InteractableObjects/" + objectName, spawnPosition, Quaternion.identity);
     }
 }

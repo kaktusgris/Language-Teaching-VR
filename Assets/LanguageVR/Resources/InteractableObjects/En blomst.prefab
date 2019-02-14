@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 8709606322502988277}
   - component: {fileID: 8709606322502988274}
   m_Layer: 0
-  m_Name: Flower(Clone)
+  m_Name: En blomst
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -505,6 +505,7 @@ GameObject:
   - component: {fileID: 8709606324070514904}
   - component: {fileID: 8709606324070514906}
   - component: {fileID: 8709606324070514907}
+  - component: {fileID: 5344632657250838694}
   m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
@@ -585,3 +586,15 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
+--- !u!114 &5344632657250838694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8709606324070514905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eade8640ec66ea3448167fc732c8088d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

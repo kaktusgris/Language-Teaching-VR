@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8691040159440075405}
   - component: {fileID: 8691040159440075407}
   - component: {fileID: 8691040159440075404}
+  - component: {fileID: 7040799449233601816}
   m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
@@ -91,6 +92,18 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
+--- !u!114 &7040799449233601816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8691040159440075506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eade8640ec66ea3448167fc732c8088d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8691040159851699314
 GameObject:
   m_ObjectHideFlags: 0
@@ -112,7 +125,7 @@ GameObject:
   - component: {fileID: 8691040159851699215}
   - component: {fileID: 8691040159851699212}
   m_Layer: 0
-  m_Name: Axe(Clone)
+  m_Name: "Ei \xF8ks"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

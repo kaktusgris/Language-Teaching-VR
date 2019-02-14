@@ -7,7 +7,7 @@ using Photon.Pun;
 using UnityEditor;
 
 //[ExecuteInEditMode]
-public class InteractableObject : MonoBehaviour
+public class InteractableObjectInitialiser : MonoBehaviour
 {
     [Tooltip("Click to instantiate the prefab in scene. Sometimes the old is not removed, manually delete it then")]
     [SerializeField] private bool instantiatePrefab = false;
@@ -40,24 +40,7 @@ public class InteractableObject : MonoBehaviour
         textMesh = GetComponentInChildren<TextMesh>();
     }
 
-    void Update()
-    {
-        Throwable throwable = instantiatedObject.GetComponent<Throwable>();
-        if (throwable.IsAttached() && !instantiatedTextObject.activeSelf && throwable.IsMine())
-        {
-            instantiatedTextObject.SetActive(true);
-        }
-        else if (!throwable.IsAttached() && instantiatedTextObject.activeSelf)
-        {
-            instantiatedTextObject.SetActive(false);
-        }
-
-        if (instantiatedTextObject.activeSelf)
-        {
-            Transform headTransform = ViveManager.Instance.head.transform;
-            instantiatedTextObject.transform.rotation = Quaternion.LookRotation(instantiatedTextObject.transform.position - headTransform.position);
-        }
-    }
+    
 
     private void OnValidate()
     {
@@ -129,6 +112,7 @@ public class InteractableObject : MonoBehaviour
         instantiatedTextObject.transform.parent = instantiatedObject.transform;
         instantiatedObject.transform.localPosition = Vector3.zero;
 
+        instantiatedTextObject.AddComponent<InteractableObjectText>();
         textMesh = instantiatedTextObject.AddComponent<TextMesh>();
 
         textMesh.text = name;
