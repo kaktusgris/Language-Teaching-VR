@@ -1,6 +1,7 @@
-﻿using NTNU.CarloMarton.VRLanguage;
+﻿using ExitGames.Client.Photon;
+using NTNU.CarloMarton.VRLanguage;
 using Photon.Pun;
-using System.Collections;
+
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,20 +20,26 @@ public class InGameMenu : MonoBehaviour
     private GameObject handPrefabL;
     private GameObject handPrefabR;
 
-    public GameObject invisibilityButton;
     public RectTransform myPanel;
     public GameObject menuTextPrefab;
 
     private void Awake()
     {
+        // Force admin mode on user if not set before. Most likely cause it was launched in editor. Neccessary to be able to play straight in scene
+        if (PhotonNetwork.LocalPlayer.CustomProperties["admin"] == null)
+        {
+            print("User set as admin");
+            Hashtable hash = new Hashtable();
+            hash.Add("admin", true);
+            PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+        }
+
         GameObject cameraRig = GameObject.FindGameObjectWithTag("MainCamera");
         leftHand = cameraRig.transform.Find("LeftHand").gameObject;
         rightHand = cameraRig.transform.Find("RightHand").gameObject;
 
         handPrefabL = transform.Find("HandPrefabL").gameObject;
         handPrefabR = transform.Find("HandPrefabR").gameObject;
-
-        invisibilityButton.SetActive((bool)PhotonNetwork.LocalPlayer.CustomProperties["admin"]);
     }
 
     private void ToggleMenu(SteamVR_Input_Sources hand)

@@ -4,6 +4,7 @@ using UnityEngine;
 using Valve.VR;
 using Valve.VR.InteractionSystem;
 using Photon.Pun;
+using UnityEditor;
 
 //[ExecuteInEditMode]
 public class InteractableObject : MonoBehaviour
@@ -11,17 +12,17 @@ public class InteractableObject : MonoBehaviour
     [Tooltip("Click to instantiate the prefab in scene. Sometimes the old is not removed, manually delete it then")]
     [SerializeField] private bool instantiatePrefab = false;
 
-    [Tooltip ("The word to appear over the object")]
+    [Tooltip("The word to appear over the object")]
     [SerializeField] private new string name;
 
     // Changing font not working (out of the box)
     //[Tooltip ("Font of name displayed in scene")]
     //[SerializeField] private Font font;
 
-    [Tooltip ("The GameObject to be instantiated in the scene")]
+    [Tooltip("The GameObject to be instantiated in the scene")]
     [SerializeField] private GameObject physicalObject;
 
-    [Tooltip ("The audioclip associated with this object")]
+    [Tooltip("The audioclip associated with this object")]
     [SerializeField] private AudioClip audioClip;
 
     private GameObject instantiatedObject;
@@ -33,7 +34,7 @@ public class InteractableObject : MonoBehaviour
     void Awake()
     {
         instantiatedObject = transform.Find(physicalObject.name + "(Clone)").gameObject;
-        instantiatedTextObject = instantiatedObject.transform.Find("Text").gameObject;        
+        instantiatedTextObject = instantiatedObject.transform.Find("Text").gameObject;
 
         audioSource = GetComponent<AudioSource>();
         textMesh = GetComponentInChildren<TextMesh>();
@@ -64,6 +65,7 @@ public class InteractableObject : MonoBehaviour
         {
             InstantiatePhysicalObject();
             InstantiateText();
+            SaveToResources();
             instantiatePrefab = false;
         }
     }
@@ -71,10 +73,11 @@ public class InteractableObject : MonoBehaviour
     // Instansiates the given gameobject
     private void InstantiatePhysicalObject()
     {
+
         // Destroy previous object if a new one is selected
-        if (instantiatedObject != null)
+        if (transform.childCount > 0)
         {
-            StartCoroutine(Destroy(instantiatedObject));
+            StartCoroutine(Destroy(transform.GetChild(0).gameObject));
         }
 
         instantiatedObject = Instantiate(physicalObject);
@@ -107,7 +110,7 @@ public class InteractableObject : MonoBehaviour
         AudioSource instantiatedAudioSource = instantiatedObject.AddComponent<AudioSource>();
         instantiatedAudioSource.clip = audioClip;
         instantiatedAudioSource.playOnAwake = false;
-        
+
 
         Throwable throwable = instantiatedObject.AddComponent<Throwable>();
         instantiatedObject.AddComponent<Interactable>();
@@ -134,6 +137,12 @@ public class InteractableObject : MonoBehaviour
         textMesh.fontSize = 100;
         textMesh.anchor = TextAnchor.MiddleCenter;
         //textMesh.font = font;
+    }
+
+    private void SaveToResources()
+    {
+        Debug.LogError("Cannot create prefab of interactable object."); // A bug in unity 2018.3.5
+        //PrefabUtility.SaveAsPrefabAsset(instantiatedObject, "Assets/LanguageVR/Resources/InteractableObjects/" + textMesh.text + ".prefab");
     }
 
     // Can only destroy gameobjects in OnValidate using a coroutine

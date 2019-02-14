@@ -1095,7 +1095,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 8122932467738112846}
+  - {fileID: 5728361616221549395}
   m_Father: {fileID: 856693737708900489}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1368,7 +1368,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_NormalColor: {r: 0, g: 0, b: 0, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -1426,8 +1426,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ab1790fff39e454aa64d3e3582b92c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  standbyColor: {r: 1, g: 1, b: 1, a: 1}
-  hoverColor: {r: 0, g: 0, b: 0, a: 1}
+  onlyAdmin: 1
+  normalColor: {r: 0, g: 0, b: 0, a: 1}
+  highlightedColor: {r: 1, g: 1, b: 1, a: 1}
+  pressedColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!1 &6595757521299591152
 GameObject:
   m_ObjectHideFlags: 0
@@ -1747,7 +1749,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4fc36d3106da2c04db3d73512e31bd4a, type: 3}
---- !u!224 &8122932467738112846 stripped
+--- !u!224 &5728361616221549395 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4595165310723179615, guid: 4fc36d3106da2c04db3d73512e31bd4a,
     type: 3}

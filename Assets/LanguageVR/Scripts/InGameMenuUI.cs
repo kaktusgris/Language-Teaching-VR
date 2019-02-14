@@ -1,4 +1,5 @@
 ﻿using NTNU.CarloMarton.VRLanguage;
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,19 +9,37 @@ public class InGameMenuUI : MonoBehaviour
 {
     private bool visible = true;
 
-    [SerializeField]
-    private Color standbyColor = Color.black;
-    [SerializeField]
-    private Color hoverColor = Color.white;
+    [SerializeField] [Tooltip ("If this element should only be available to admin users")]
+    private bool onlyAdmin = false;
 
-    public Color GetHoverColor()
+    [SerializeField]
+    private Color normalColor = Color.black;
+    [SerializeField]
+    private Color highlightedColor = Color.white;
+    [SerializeField]
+    private Color pressedColor = Color.green;
+
+    private void Start()
     {
-        return hoverColor;
+        if (onlyAdmin)
+        {
+            gameObject.SetActive((bool) PhotonNetwork.LocalPlayer.CustomProperties["admin"]);
+        }
     }
 
-    public Color GetStandbyColor()
+    public Color GetNormalColor()
     {
-        return standbyColor;
+        return normalColor;
+    }
+
+    public Color GetHighlightedColor()
+    {
+        return highlightedColor;
+    }
+
+    public Color GetPressedColor()
+    {
+        return pressedColor;
     }
 
     public void OnInvisibilityToggleClicked()
@@ -32,17 +51,26 @@ public class InGameMenuUI : MonoBehaviour
         playerManager.SetVisibility(visible);
     }
 
-    public void OnTextBlockClicked()
+    public void OnPlayAudioButtonClicked()
     {
-        string objectName = gameObject.GetComponent<Text>().text;
+        string objectName = gameObject.GetComponentInParent<Text>().text;
         PlayerDictionary dict = GameObject.Find("GameManager").GetComponent<GameManager>().GetPlayer().GetComponent<PlayerDictionary>();
         GameObject interactable = dict.getInteractable(objectName);
 
-        print(objectName);
+        print("Playing audio from " + objectName);
         if (interactable.GetComponent<AudioSource>())
         {
             AudioSource source = interactable.GetComponent<AudioSource>();
             source.Play();
         }
+    }
+
+    public void OnAddInteractableObjectButtonClicked()
+    {
+        string objectName = gameObject.GetComponentInParent<Text>().text;
+        Vector3 headPosition = ViveManager.Instance.head.transform.position;
+        Vector3 spawnPosition = new Vector3(headPosition.x, headPosition.y, headPosition.z + 0.5f);
+
+        PhotonNetwork.Instantiate(objectName, spawnPosition, Quaternion.identity);
     }
 }
