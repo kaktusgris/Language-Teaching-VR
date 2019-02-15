@@ -6,6 +6,9 @@ public class PlayerDictionary : MonoBehaviour {
 
     public InGameMenu inGameMenu;
 
+    [SerializeField]
+    private AudioSource audioSource;
+
     private Dictionary<string, GameObject> wordDictionary;
 
 	// Use this for initialization
@@ -14,9 +17,9 @@ public class PlayerDictionary : MonoBehaviour {
         print("Dictionary initialized");
 	}
 
-    public bool addItemToDictionary(string word, GameObject item)
+    public bool AddItemToDictionary(string word, GameObject item)
     {
-        if (!isAdded(word))
+        if (!IsAdded(word))
         {
             wordDictionary.Add(word, item);
             inGameMenu.AddTextBlock(word);
@@ -25,7 +28,7 @@ public class PlayerDictionary : MonoBehaviour {
         return false;
     }
 
-    public void printDictionary()
+    public void PrintDictionary()
     {
         foreach (string key in wordDictionary.Keys)
         {
@@ -33,18 +36,18 @@ public class PlayerDictionary : MonoBehaviour {
         }
     }
 
-    public GameObject getInteractable(string word)
+    public GameObject GetInteractable(string word)
     {
-        if (!isAdded(word))
+        if (!IsAdded(word))
         {
             return null;
         }
         return wordDictionary[word];
     }
 
-    public void removeItem(string word)
+    public void RemoveItem(string word)
     {
-        if (!isAdded(word))
+        if (!IsAdded(word))
         {
             print("That item has not been added to the dictionary.");
             return;
@@ -52,9 +55,23 @@ public class PlayerDictionary : MonoBehaviour {
         wordDictionary.Remove(word);
     }
 
-    public bool isAdded(string word)
+    public bool IsAdded(string word)
     {
         return wordDictionary.ContainsKey(word);
     }
 
+    public void PlayAudio(string word)
+    {
+        
+        audioSource.clip = GetInteractable(word).GetComponentInChildren<InteractableObjectText>().GetAudioClip();
+        if (audioSource.clip != null)
+        {
+            print("Playing audio from " + word);
+            audioSource.Play();
+        }
+        else
+        {
+            Debug.LogFormat("Tried to play audio from {0}, but id did not have an audio clip", word);
+        }
+    }
 }

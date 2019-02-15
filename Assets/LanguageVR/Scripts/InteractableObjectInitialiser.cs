@@ -27,17 +27,11 @@ public class InteractableObjectInitialiser : MonoBehaviour
 
     private GameObject instantiatedObject;
     private GameObject instantiatedTextObject;
-    private TextMesh textMesh;
-
-    private AudioSource audioSource;
 
     void Awake()
     {
         instantiatedObject = transform.Find(physicalObject.name + "(Clone)").gameObject;
         instantiatedTextObject = instantiatedObject.transform.Find("Text").gameObject;
-
-        audioSource = GetComponent<AudioSource>();
-        textMesh = GetComponentInChildren<TextMesh>();
     }
 
     
@@ -90,13 +84,8 @@ public class InteractableObjectInitialiser : MonoBehaviour
             }
         }
 
-        AudioSource instantiatedAudioSource = instantiatedObject.AddComponent<AudioSource>();
-        instantiatedAudioSource.clip = audioClip;
-        instantiatedAudioSource.playOnAwake = false;
-
-
         Throwable throwable = instantiatedObject.AddComponent<Throwable>();
-        instantiatedObject.AddComponent<Interactable>();
+        //instantiatedObject.AddComponent<Interactable>(); // Comes with Throwable
         instantiatedObject.AddComponent<VelocityEstimator>();
         PhotonView photonView = instantiatedObject.AddComponent<PhotonView>();
 
@@ -112,9 +101,10 @@ public class InteractableObjectInitialiser : MonoBehaviour
         instantiatedTextObject.transform.parent = instantiatedObject.transform;
         instantiatedObject.transform.localPosition = Vector3.zero;
 
-        instantiatedTextObject.AddComponent<InteractableObjectText>();
-        textMesh = instantiatedTextObject.AddComponent<TextMesh>();
+        InteractableObjectText iot = instantiatedTextObject.AddComponent<InteractableObjectText>();
+        iot.SetAudioClip(audioClip);
 
+        TextMesh textMesh = instantiatedTextObject.AddComponent<TextMesh>();
         textMesh.text = name;
         textMesh.transform.localPosition = Vector3.zero;
         textMesh.transform.localScale = Vector3.one * 0.01f;

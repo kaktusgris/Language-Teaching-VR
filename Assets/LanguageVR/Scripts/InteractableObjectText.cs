@@ -5,8 +5,11 @@ using Valve.VR.InteractionSystem;
 
 public class InteractableObjectText : MonoBehaviour
 {
-    Throwable throwable;
-    MeshRenderer textRenderer;
+    [SerializeField]
+    private AudioClip audioClip;
+
+    private Throwable throwable;
+    private MeshRenderer textRenderer;
 
     private void Start()
     {
@@ -32,5 +35,15 @@ public class InteractableObjectText : MonoBehaviour
             Transform headTransform = ViveManager.Instance.head.transform;
             gameObject.transform.rotation = Quaternion.LookRotation(gameObject.transform.position - headTransform.position);
         }
+    }
+
+    public void SetAudioClip(AudioClip audioClip)
+    {
+        this.audioClip = audioClip;
+    }
+
+    public AudioClip GetAudioClip()
+    {
+        return audioClip;
     }
 }

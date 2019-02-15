@@ -191,9 +191,12 @@ namespace Valve.VR.InteractionSystem
             //Add this gameobject to dictionary when it is picked up by the player.
             GameObject playerAvatar = GameObject.Find("GameManager").GetComponent<NTNU.CarloMarton.VRLanguage.GameManager>().GetPlayer();
             PlayerDictionary dictionary = playerAvatar.GetComponent<PlayerDictionary>();
-            string txt = this.gameObject.GetComponentInChildren<TextMesh>(true).text;
-            if (dictionary.addItemToDictionary(txt, this.gameObject) && gameObject.GetComponent<AudioSource>())
+            string name = this.gameObject.GetComponentInChildren<TextMesh>(true).text;
+
+            // tries to add item to dictionary when picked up. Plays the item's audioClip if it is added (for the first time)
+            if (dictionary.AddItemToDictionary(name, this.gameObject))
             {
+                dictionary.PlayAudio(name);
                 gameObject.GetComponent<AudioSource>().Play();
             }
 

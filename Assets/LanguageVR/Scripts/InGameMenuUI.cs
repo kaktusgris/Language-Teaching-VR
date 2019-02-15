@@ -55,14 +55,8 @@ public class InGameMenuUI : MonoBehaviour
     {
         string objectName = gameObject.GetComponentInParent<Text>().text;
         PlayerDictionary dict = GameObject.Find("GameManager").GetComponent<GameManager>().GetPlayer().GetComponent<PlayerDictionary>();
-        GameObject interactable = dict.getInteractable(objectName);
-
-        print("Playing audio from " + objectName);
-        if (interactable.GetComponent<AudioSource>())
-        {
-            AudioSource source = interactable.GetComponent<AudioSource>();
-            source.Play();
-        }
+        
+        dict.PlayAudio(objectName);
     }
 
     // Spawns the object between the button and the user's head
