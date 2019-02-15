@@ -14,12 +14,16 @@ public class AdminMode : MonoBehaviour
     {
         isAdmin = (bool) PhotonNetwork.LocalPlayer.CustomProperties["admin"];
 
+        InitialiseAdmin();
+    }
+
+    private void InitialiseAdmin()
+    {
         if (isAdmin)
         {
             FillDictionary();
         }
     }
-
 
     private void FillDictionary()
     {
