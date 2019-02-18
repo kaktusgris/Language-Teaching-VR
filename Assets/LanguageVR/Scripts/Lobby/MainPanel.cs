@@ -288,7 +288,7 @@ namespace NTNU.CarloMarton.VRLanguage
                 adminMode = AdminPasswordInput.text.Equals(adminPassword) && LoginPanel.GetComponentInChildren<Toggle>().isOn;
 
                 Hashtable hash = new Hashtable();
-                hash.Add("adminMode", adminMode);
+                hash.Add("admin", adminMode);
                 PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
 
                 PhotonNetwork.ConnectUsingSettings();

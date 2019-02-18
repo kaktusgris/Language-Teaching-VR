@@ -1,5 +1,7 @@
-﻿using Photon.Pun;
-using System.Collections;
+﻿using ExitGames.Client.Photon;
+using NTNU.CarloMarton.VRLanguage;
+using Photon.Pun;
+
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,6 +25,15 @@ public class InGameMenu : MonoBehaviour
 
     private void Awake()
     {
+        // Force admin mode on user if not set before. Most likely cause it was launched in editor. Neccessary to be able to play straight in scene
+        if (PhotonNetwork.LocalPlayer.CustomProperties["admin"] == null)
+        {
+            print("User set as admin");
+            Hashtable hash = new Hashtable();
+            hash.Add("admin", true);
+            PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+        }
+
         GameObject cameraRig = GameObject.FindGameObjectWithTag("MainCamera");
         leftHand = cameraRig.transform.Find("LeftHand").gameObject;
         rightHand = cameraRig.transform.Find("RightHand").gameObject;
@@ -48,16 +59,16 @@ public class InGameMenu : MonoBehaviour
         }
         else
         {
-            if (hand == SteamVR_Input_Sources.LeftHand)
+            if (hand == SteamVR_Input_Sources.RightHand)
             {
-                currentHandParent = SteamVR_Input_Sources.LeftHand;
+                currentHandParent = SteamVR_Input_Sources.RightHand;
                 menu.transform.SetParent(rightHand.transform);
                 SetEnablelaserOnHand(handPrefabL, true);
                 SetEnablelaserOnHand(handPrefabR, false);
             }
-            else if (hand == SteamVR_Input_Sources.RightHand)
+            else if (hand == SteamVR_Input_Sources.LeftHand)
             {
-                currentHandParent = SteamVR_Input_Sources.RightHand;
+                currentHandParent = SteamVR_Input_Sources.LeftHand;
                 menu.transform.SetParent(leftHand.transform);
                 SetEnablelaserOnHand(handPrefabR, true);
                 SetEnablelaserOnHand(handPrefabL, false);
@@ -94,7 +105,6 @@ public class InGameMenu : MonoBehaviour
     {
         if (menuButtonAction.GetStateDown(handType))
         {
-            print(PhotonNetwork.LocalPlayer.CustomProperties["adminMode"]);
             if (menuButtonAction.GetStateDown(SteamVR_Input_Sources.LeftHand))
             {
                 ToggleMenu(SteamVR_Input_Sources.LeftHand);

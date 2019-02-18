@@ -1,6 +1,6 @@
-﻿using NTNU.CarloMarton.VRLanguage;
+﻿using ExitGames.Client.Photon;
+using NTNU.CarloMarton.VRLanguage;
 using Photon.Pun;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,12 +26,17 @@ public class LoginPanel : MonoBehaviourPunCallbacks
         PhotonNetwork.LocalPlayer.NickName = "test_name";
         PhotonNetwork.GameVersion = "0";
         PhotonNetwork.ConnectUsingSettings();
+
     }
 
     public override void OnConnectedToMaster()
     {
         if (bypass)
         {
+            Hashtable hash = new Hashtable();
+            hash.Add("admin", true);
+            PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+
             PhotonNetwork.CreateRoom("test" + Random.value.ToString(), new Photon.Realtime.RoomOptions { MaxPlayers = 1 }, null);
             PhotonNetwork.LoadLevel(mainPanel.sceneToLoadString);
         }
