@@ -25,30 +25,19 @@ public class InteractableObjectInitialiser : MonoBehaviour
     [Tooltip("The audioclip associated with this object")]
     [SerializeField] private AudioClip audioClip;
 
-    private GameObject instantiatedObject;
-    private GameObject instantiatedTextObject;
-
-    void Awake()
-    {
-        instantiatedObject = transform.Find(physicalObject.name + "(Clone)").gameObject;
-        instantiatedTextObject = instantiatedObject.transform.Find("Text").gameObject;
-    }
-
-    
-
     private void OnValidate()
     {
         if (instantiatePrefab)
         {
-            InstantiatePhysicalObject();
-            InstantiateText();
-            SaveToResources();
+            GameObject go = InstantiatePhysicalObject();
+            go = InstantiateText(go);
+            SaveToResources(go);
             instantiatePrefab = false;
         }
     }
 
     // Instansiates the given gameobject
-    private void InstantiatePhysicalObject()
+    private GameObject InstantiatePhysicalObject()
     {
 
         // Destroy previous object if a new one is selected
@@ -57,7 +46,7 @@ public class InteractableObjectInitialiser : MonoBehaviour
             StartCoroutine(Destroy(transform.GetChild(0).gameObject));
         }
 
-        instantiatedObject = Instantiate(physicalObject);
+        GameObject instantiatedObject = Instantiate(physicalObject);
         instantiatedObject.transform.parent = this.transform;
         instantiatedObject.transform.localPosition = Vector3.zero;
         instantiatedObject.AddComponent<Rigidbody>();
@@ -93,11 +82,13 @@ public class InteractableObjectInitialiser : MonoBehaviour
         photonView.ObservedComponents.Add(throwable);
         photonView.OwnershipTransfer = OwnershipOption.Takeover;
         photonView.Synchronization = ViewSynchronization.UnreliableOnChange;
+
+        return instantiatedObject;
     }
 
-    private void InstantiateText()
+    private GameObject InstantiateText(GameObject instantiatedObject)
     {
-        instantiatedTextObject = new GameObject("Text");
+        GameObject instantiatedTextObject = new GameObject("Text");
         instantiatedTextObject.transform.parent = instantiatedObject.transform;
         instantiatedObject.transform.localPosition = Vector3.zero;
 
@@ -111,9 +102,11 @@ public class InteractableObjectInitialiser : MonoBehaviour
         textMesh.fontSize = 100;
         textMesh.anchor = TextAnchor.MiddleCenter;
         //textMesh.font = font;
+
+        return instantiatedObject;
     }
 
-    private void SaveToResources()
+    private void SaveToResources(GameObject instantiatedObject)
     {
         Debug.LogError("Cannot create prefab of interactable object."); // A bug in unity 2018.3.5
         //PrefabUtility.SaveAsPrefabAsset(instantiatedObject, "Assets/LanguageVR/Resources/InteractableObjects/" + textMesh.text + ".prefab");

@@ -16,6 +16,14 @@ public class MenuLaser : MonoBehaviour
     private LineRenderer lr;
     private Ray laser;
    
+    public SteamVR_Input_Sources handType;
+    public SteamVR_Action_Boolean laserClickButton;
+    public SteamVR_Action_Boolean touchInput;
+    public SteamVR_Action_Vector2 touchDirectionInput;
+
+    public GameObject menu;
+    private RectTransform scrollContent;
+    private ScrollRect scrollRect;
 
     // Start is called before the first frame update
     void Start()
@@ -26,14 +34,23 @@ public class MenuLaser : MonoBehaviour
         lr.startColor = new Color(0.70588f, 1f, 0.56863f);
         lr.endColor = new Color(0.70588f, 1f, 0.56863f);
 
+        scrollContent = menu.transform.Find("MainPanel").Find("ScrollRect").Find("ScrollContent").GetComponent<RectTransform>();
+        scrollRect = menu.transform.Find("MainPanel").Find("ScrollRect").GetComponent<ScrollRect>();
     }
-
-    public SteamVR_Input_Sources handType;
-    public SteamVR_Action_Boolean laserClickButton;
 
     public bool GetLaserButtonClicked()
     {
         return laserClickButton.GetLastStateDown(handType);
+    }
+
+    public bool GetTrackpadTouched()
+    {
+        return touchInput.GetState(handType);
+    }
+
+    public Vector2 GetTouchDirection()
+    {
+        return touchDirectionInput.GetLastAxis(handType);
     }
 
     void toggleLaser(bool toggleMode)
@@ -113,7 +130,37 @@ public class MenuLaser : MonoBehaviour
             }
 
         }
+
+        // Scrolling in the menu
+        if (GetTrackpadTouched())
+        {
+            float currentPosY = scrollContent.GetComponent<RectTransform>().localPosition.y;
+            float threshold = 0f;
+            float yDirection = GetTouchDirection().y;
+            float moveSpeed = 5f;
+
+            float contentHeight = CalculateHeightOfContent();
+            float mainPanelHeight = scrollContent.GetComponent<RectTransform>().rect.height;
+
+            if (yDirection < -threshold && currentPosY + mainPanelHeight < contentHeight) // Down
+            {
+                scrollContent.transform.localPosition -= new Vector3(0f, moveSpeed * yDirection, 0f);
+            }
+            else if (yDirection > threshold && currentPosY > 0) // Up
+            {
+                scrollContent.transform.localPosition -= new Vector3(0f, moveSpeed * yDirection, 0f);
+            }
+        }
+
     }
+
+    private float CalculateHeightOfContent()
+    {
+        float childHeight = scrollContent.GetChild(0).GetComponent<RectTransform>().rect.height;
+        float padding = scrollContent.GetComponent<VerticalLayoutGroup>().padding.bottom;
+        return scrollContent.childCount * (childHeight);
+    }
+
     private void SetButtonColor(Button button, Color color)
     {
         //button.image.color = color;

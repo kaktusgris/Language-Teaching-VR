@@ -26,6 +26,8 @@ MonoBehaviour:
   - __actions_language_in_Pose
   - __actions_language_in_SkeletonLeftHand
   - __actions_language_in_SkeletonRightHand
+  - __actions_language_in_TouchDirection
+  - __actions_language_in_TouchpadTouched
   - __actions_language_out_Haptic
   actionObjects:
   - {fileID: 11400000, guid: 056e4b30917cf0f4aa4500823b5b3167, type: 2}
@@ -37,4 +39,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 16da4d8430c726f49ae05d15d47a8251, type: 2}
   - {fileID: 11400000, guid: 66e7eef88b548544da8694f15879cc11, type: 2}
   - {fileID: 11400000, guid: ba2db5cb31a58b24bbe7dc6266d3d977, type: 2}
+  - {fileID: 11400000, guid: dcfe63fcaf150cb4ea90a07f55a3e127, type: 2}
+  - {fileID: 11400000, guid: 347c8fe91d219904092a2092c6cdd57d, type: 2}
   - {fileID: 11400000, guid: ba4f037cca46c8948bc8bd2b0ced113d, type: 2}

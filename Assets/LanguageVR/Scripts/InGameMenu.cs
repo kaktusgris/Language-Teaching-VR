@@ -59,16 +59,16 @@ public class InGameMenu : MonoBehaviour
         }
         else
         {
-            if (hand == SteamVR_Input_Sources.LeftHand)
+            if (hand == SteamVR_Input_Sources.RightHand)
             {
-                currentHandParent = SteamVR_Input_Sources.LeftHand;
+                currentHandParent = SteamVR_Input_Sources.RightHand;
                 menu.transform.SetParent(rightHand.transform);
                 SetEnablelaserOnHand(handPrefabL, true);
                 SetEnablelaserOnHand(handPrefabR, false);
             }
-            else if (hand == SteamVR_Input_Sources.RightHand)
+            else if (hand == SteamVR_Input_Sources.LeftHand)
             {
-                currentHandParent = SteamVR_Input_Sources.RightHand;
+                currentHandParent = SteamVR_Input_Sources.LeftHand;
                 menu.transform.SetParent(leftHand.transform);
                 SetEnablelaserOnHand(handPrefabR, true);
                 SetEnablelaserOnHand(handPrefabL, false);

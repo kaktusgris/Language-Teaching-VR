@@ -34,7 +34,7 @@ public class AdminMode : MonoBehaviour
         {
             GameObject item = (GameObject) ob;
             string name = item.GetComponentInChildren<TextMesh>().text;
-            playerDictionary.AddItemToDictionary(name, Instantiate(item));
+            playerDictionary.AddItemToDictionary(name, item);
         }
     }
 }
