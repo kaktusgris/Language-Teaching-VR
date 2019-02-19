@@ -20,7 +20,7 @@ GameObject:
   - component: {fileID: 2321483670017084816}
   - component: {fileID: 2321483670017084847}
   - component: {fileID: 2321483670017084846}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: En stein
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -385,7 +385,7 @@ GameObject:
   - component: {fileID: 2321483670573321112}
   - component: {fileID: 2321483670573321111}
   - component: {fileID: 4390363167083047437}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}

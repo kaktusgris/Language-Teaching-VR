@@ -49,6 +49,7 @@ public class InteractableObjectInitialiser : MonoBehaviour
         GameObject instantiatedObject = Instantiate(physicalObject);
         instantiatedObject.transform.parent = this.transform;
         instantiatedObject.transform.localPosition = Vector3.zero;
+        instantiatedObject.layer = LayerMask.NameToLayer("DeletableObjects");
         instantiatedObject.AddComponent<Rigidbody>();
 
         int numberOfChildren = instantiatedObject.transform.childCount;

@@ -51,6 +51,24 @@ public class InGameMenuUI : MonoBehaviour
         playerManager.SetVisibility(visible);
     }
 
+
+    public void OnDeleteObjectToggleClicked()
+    {
+        visible = !visible;
+        transform.Find("DeleteDefaultImage").gameObject.SetActive(visible);
+        transform.Find("DeleteActiveImage").gameObject.SetActive(!visible);
+        MenuLaser menuLaser = GameObject.Find("GameManager").GetComponent<GameManager>().instantiatedAvatar.GetComponent<InGameMenu>().GetLaserHand().GetComponent<MenuLaser>();
+        menuLaser.toggleDeleteMode(!visible);
+    }
+
+    public void resetDeleteObjectMode()
+    {
+        if (transform.Find("DeleteActiveImage").gameObject.activeSelf)
+        {
+            OnDeleteObjectToggleClicked();
+        }
+    }
+
     public void OnPlayAudioButtonClicked()
     {
         string objectName = gameObject.GetComponentInParent<Text>().text;

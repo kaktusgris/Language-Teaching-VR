@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7567171506772141271}
   - component: {fileID: 7567171506772141268}
   - component: {fileID: 3915670457703758885}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ GameObject:
   - component: {fileID: 7567171506986070608}
   - component: {fileID: 7567171506986070609}
   - component: {fileID: 7567171506986070614}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: front_flap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -209,7 +209,7 @@ GameObject:
   - component: {fileID: 7567171507269299419}
   - component: {fileID: 7567171507269299416}
   - component: {fileID: 7567171507269299417}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: leather_piece_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -301,7 +301,7 @@ GameObject:
   - component: {fileID: 7567171507908551234}
   - component: {fileID: 7567171507908551235}
   - component: {fileID: 7567171507908551232}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: top_strap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -393,7 +393,7 @@ GameObject:
   - component: {fileID: 7567171508013589005}
   - component: {fileID: 7567171508013588994}
   - component: {fileID: 7567171508013588995}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: strap_r
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -485,7 +485,7 @@ GameObject:
   - component: {fileID: 7567171508041021275}
   - component: {fileID: 7567171508041021272}
   - component: {fileID: 7567171508041021273}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: strap_r1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -577,7 +577,7 @@ GameObject:
   - component: {fileID: 7567171508161109533}
   - component: {fileID: 7567171508161109522}
   - component: {fileID: 7567171508161109523}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: bag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -674,7 +674,7 @@ GameObject:
   - component: {fileID: 7567171508249697696}
   - component: {fileID: 7567171508249697697}
   - component: {fileID: 7567171508249697702}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: En sekk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -989,7 +989,7 @@ GameObject:
   - component: {fileID: 7567171508444384863}
   - component: {fileID: 7567171508444384860}
   - component: {fileID: 7567171508444384861}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: back_leather
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1081,7 +1081,7 @@ GameObject:
   - component: {fileID: 7567171508473372269}
   - component: {fileID: 7567171508473372258}
   - component: {fileID: 7567171508473372259}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: leather_piece_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1173,7 +1173,7 @@ GameObject:
   - component: {fileID: 7567171508547652592}
   - component: {fileID: 7567171508547652593}
   - component: {fileID: 7567171508547652598}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: leather_piece_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
