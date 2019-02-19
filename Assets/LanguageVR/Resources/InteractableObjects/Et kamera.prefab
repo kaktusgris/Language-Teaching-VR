@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1861915470316037096}
   - component: {fileID: 1861915470316037099}
   - component: {fileID: 4899492017044826000}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -125,7 +125,7 @@ GameObject:
   - component: {fileID: 1861915470767697547}
   - component: {fileID: 1861915470767697546}
   - component: {fileID: 1861915470767697541}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Et kamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
