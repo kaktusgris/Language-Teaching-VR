@@ -20,7 +20,7 @@ GameObject:
   - component: {fileID: 2119419816325776434}
   - component: {fileID: 2119419816325776435}
   - component: {fileID: 2119419816325776436}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Et eple
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -385,7 +385,7 @@ GameObject:
   - component: {fileID: 2119419817138449794}
   - component: {fileID: 2119419817138449795}
   - component: {fileID: 4383858518419443944}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8691040159440075407}
   - component: {fileID: 8691040159440075404}
   - component: {fileID: 7040799449233601816}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -125,7 +125,7 @@ GameObject:
   - component: {fileID: 8691040159851699214}
   - component: {fileID: 8691040159851699215}
   - component: {fileID: 8691040159851699212}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: "Ei \xF8ks"
   m_TagString: Untagged
   m_Icon: {fileID: 0}

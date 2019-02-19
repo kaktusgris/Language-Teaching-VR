@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8739246128330471581}
   - component: {fileID: 8739246128330471582}
   - component: {fileID: 4095065161740803408}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,7 +126,7 @@ GameObject:
   - component: {fileID: 8739246129664653953}
   - component: {fileID: 8739246129664653954}
   - component: {fileID: 8739246129664653955}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: En appelsin
   m_TagString: Untagged
   m_Icon: {fileID: 0}

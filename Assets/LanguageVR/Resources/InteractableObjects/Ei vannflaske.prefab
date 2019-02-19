@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8816945052494669805}
   - component: {fileID: 8816945052494669804}
   - component: {fileID: 8816945052494669803}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: default
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,7 +109,7 @@ GameObject:
   - component: {fileID: 8816945053754141808}
   - component: {fileID: 8816945053754141807}
   - component: {fileID: 8816945053754141806}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Ei vannflaske
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -416,7 +416,7 @@ GameObject:
   - component: {fileID: 8816945053867342081}
   - component: {fileID: 8816945053867342080}
   - component: {fileID: 6625165231462918116}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}

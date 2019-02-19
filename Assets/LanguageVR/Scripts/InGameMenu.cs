@@ -17,6 +17,7 @@ public class InGameMenu : MonoBehaviour
     private GameObject leftHand;
     private GameObject rightHand;
     private SteamVR_Input_Sources currentHandParent;
+    private GameObject laserHand;
     private GameObject handPrefabL;
     private GameObject handPrefabR;
 
@@ -63,6 +64,7 @@ public class InGameMenu : MonoBehaviour
             {
                 currentHandParent = SteamVR_Input_Sources.LeftHand;
                 menu.transform.SetParent(rightHand.transform);
+                laserHand = handPrefabL;
                 SetEnablelaserOnHand(handPrefabL, true);
                 SetEnablelaserOnHand(handPrefabR, false);
             }
@@ -70,6 +72,8 @@ public class InGameMenu : MonoBehaviour
             {
                 currentHandParent = SteamVR_Input_Sources.RightHand;
                 menu.transform.SetParent(leftHand.transform);
+                
+                laserHand = handPrefabR;
                 SetEnablelaserOnHand(handPrefabR, true);
                 SetEnablelaserOnHand(handPrefabL, false);
             }
@@ -80,6 +84,7 @@ public class InGameMenu : MonoBehaviour
 
             menu.transform.localPosition = new Vector3(0, -0.25f, 0.25f);
             menu.transform.localRotation = Quaternion.Euler(60, 0, 0);
+            menu.transform.Find("TopPanel").transform.Find("DeleteObjectButton").GetComponent<InGameMenuUI>().resetDeleteObjectMode();
             menu.SetActive(true);
         }
     }
@@ -90,9 +95,15 @@ public class InGameMenu : MonoBehaviour
         {
             LineRenderer lr = hand.GetComponent<LineRenderer>();
             MenuLaser menuLaser = hand.GetComponent<MenuLaser>();
+            menuLaser.toggleDeleteMode(false);
             lr.enabled = enabled;
             menuLaser.enabled = enabled;
         }
+    }
+
+    public GameObject GetLaserHand()
+    {
+        return laserHand;
     }
 
     public void AddTextBlock(string text)

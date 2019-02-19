@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7048496429877942747}
   - component: {fileID: 7048496429877942746}
   - component: {fileID: 6256770222729230269}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -125,7 +125,7 @@ GameObject:
   - component: {fileID: 7048496431280434781}
   - component: {fileID: 7048496431280434780}
   - component: {fileID: 7048496431280434779}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Et telt
   m_TagString: Untagged
   m_Icon: {fileID: 0}

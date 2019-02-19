@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 8709606322502988276}
   - component: {fileID: 8709606322502988277}
   - component: {fileID: 8709606322502988274}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: En blomst
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -288,7 +288,7 @@ GameObject:
   - component: {fileID: 8709606323077387988}
   - component: {fileID: 8709606323077387989}
   - component: {fileID: 8709606323077387986}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Flower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -387,7 +387,7 @@ GameObject:
   - component: {fileID: 8709606323267794999}
   - component: {fileID: 8709606323267794996}
   - component: {fileID: 8709606323267795000}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Flower (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -506,7 +506,7 @@ GameObject:
   - component: {fileID: 8709606324070514906}
   - component: {fileID: 8709606324070514907}
   - component: {fileID: 5344632657250838694}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -598,3 +598,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eade8640ec66ea3448167fc732c8088d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioClip: {fileID: 0}
