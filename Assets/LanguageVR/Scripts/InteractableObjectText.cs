@@ -24,7 +24,7 @@ public class InteractableObjectText : MonoBehaviour
         {
             textRenderer.enabled = true;
         }
-        else if (!throwable.IsAttached() && textRenderer.enabled && throwable.IsMine())
+        else if (!throwable.IsAttached() && textRenderer.enabled)
         {
             textRenderer.enabled = false;
         }

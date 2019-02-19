@@ -30,6 +30,14 @@ public class MenuLaser : MonoBehaviour
     private float timerThreshold = 3.0f;
     private bool clickBeingHeld = false;
    
+    public SteamVR_Input_Sources handType;
+    public SteamVR_Action_Boolean laserClickButton;
+    public SteamVR_Action_Boolean touchInput;
+    public SteamVR_Action_Vector2 touchDirectionInput;
+
+    public GameObject menu;
+    private RectTransform scrollContent;
+    private ScrollRect scrollRect;
 
     // Start is called before the first frame update
     void Start()
@@ -44,13 +52,16 @@ public class MenuLaser : MonoBehaviour
         deleteToggle = false;
         lr = GetComponent<LineRenderer>();
         laser = new Ray();
+
         timer = 0;
        
         SetLaserColor(standardLaserColor);
+
+        scrollContent = menu.transform.Find("MainPanel").Find("ScrollRect").Find("ScrollContent").GetComponent<RectTransform>();
+        scrollRect = menu.transform.Find("MainPanel").Find("ScrollRect").GetComponent<ScrollRect>();
     }
 
-    public SteamVR_Input_Sources handType;
-    public SteamVR_Action_Boolean laserClickButton;
+    
 
     public void SetLaserColor(Color laserColor)
     {
@@ -63,6 +74,7 @@ public class MenuLaser : MonoBehaviour
         return laserClickButton.GetLastStateDown(handType);
     }
 
+
     public bool GetLaserButtonNotClicked()
     {
         return laserClickButton.GetLastStateUp(handType);
@@ -72,7 +84,16 @@ public class MenuLaser : MonoBehaviour
     {
         deleteToggle = toggleMode;
 
-        
+    }
+
+    public bool GetTrackpadTouched()
+    {
+        return touchInput.GetState(handType);
+    }
+
+    public Vector2 GetTouchDirection()
+    {
+        return touchDirectionInput.GetLastAxis(handType);
     }
 
     void toggleLaser(bool toggleMode)
@@ -209,7 +230,37 @@ public class MenuLaser : MonoBehaviour
            
 
         }
+
+        // Scrolling in the menu
+        if (GetTrackpadTouched())
+        {
+            float currentPosY = scrollContent.GetComponent<RectTransform>().localPosition.y;
+            float threshold = 0f;
+            float yDirection = GetTouchDirection().y;
+            float moveSpeed = 5f;
+
+            float contentHeight = CalculateHeightOfContent();
+            float mainPanelHeight = scrollContent.GetComponent<RectTransform>().rect.height;
+
+            if (yDirection < -threshold && currentPosY + mainPanelHeight < contentHeight) // Down
+            {
+                scrollContent.transform.localPosition -= new Vector3(0f, moveSpeed * yDirection, 0f);
+            }
+            else if (yDirection > threshold && currentPosY > 0) // Up
+            {
+                scrollContent.transform.localPosition -= new Vector3(0f, moveSpeed * yDirection, 0f);
+            }
+        }
+
     }
+
+    private float CalculateHeightOfContent()
+    {
+        float childHeight = scrollContent.GetChild(0).GetComponent<RectTransform>().rect.height;
+        float padding = scrollContent.GetComponent<VerticalLayoutGroup>().padding.bottom;
+        return scrollContent.childCount * (childHeight);
+    }
+
     private void SetButtonColor(Button button, Color color)
     {
         //button.image.color = color;
