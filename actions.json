@@ -39,6 +39,14 @@
       "skeleton": "/skeleton/hand/right"
     },
     {
+      "name": "/actions/language/in/TouchDirection",
+      "type": "vector2"
+    },
+    {
+      "name": "/actions/language/in/TouchpadTouched",
+      "type": "boolean"
+    },
+    {
       "name": "/actions/language/out/Haptic",
       "type": "vibration"
     }
