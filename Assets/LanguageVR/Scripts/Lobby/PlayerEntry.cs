@@ -137,7 +137,7 @@ namespace NTNU.CarloMarton.VRLanguage
         {
             Color color = img.color;
             string colorName = img.gameObject.name;
-            print(colorName);
+            print("Changed player colour to " + colorName);
             if (!ColorPicker.transform.Find(colorName).Find("DisabledImage").gameObject.activeSelf)
             {
                 ChangeColor(color);
@@ -165,7 +165,6 @@ namespace NTNU.CarloMarton.VRLanguage
                 Color colorObject = GetColorOnPlayer(player);
                 if (colorObject != null)
                 {
-                    print(colorObject + "is unavailable");
                     takenColors.Add(colorObject);
                 }
             }
