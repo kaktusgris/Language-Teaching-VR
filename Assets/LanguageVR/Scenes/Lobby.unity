@@ -3621,8 +3621,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 561.32855, y: -115.51167}
-  m_SizeDelta: {x: 522.6571, y: 31.023338}
+  m_AnchoredPosition: {x: 608.2849, y: -115.69768}
+  m_SizeDelta: {x: 616.5698, y: 31.39535}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1020245479
 GameObject:
@@ -4363,6 +4363,7 @@ MonoBehaviour:
   StartGameButton: {fileID: 800069350}
   PlayerListEntryPrefab: {fileID: 195212, guid: d68bf8413681d9b4aa7328277e632e3f,
     type: 3}
+  ColorPicker: {fileID: 0}
   sceneToLoadString: Forest
   roomNameText: {fileID: 1020082201}
 --- !u!222 &1310044698
@@ -4846,10 +4847,10 @@ RectTransform:
   m_Father: {fileID: 1370510200}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 608.2849, y: -147.09303}
+  m_SizeDelta: {x: 616.5698, y: 31.39535}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1456935159
 MonoBehaviour:

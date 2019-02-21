@@ -61,7 +61,16 @@ public class RandomColour : MonoBehaviour, IPunObservable {
     public void UpdateColour()
     {
         //generatedColour = randomFromList ? GetSemiRandomColour() : GetRandomColour();
-        generatedColour = GetRandomColour();
+        if (PhotonNetwork.LocalPlayer.CustomProperties["Color"] != null)
+        {
+            float[] colorAsFloat = (float[])PhotonNetwork.LocalPlayer.CustomProperties["Color"];
+            generatedColour = new Color(colorAsFloat[0], colorAsFloat[1], colorAsFloat[2], colorAsFloat[3]);
+        }
+        else
+        {
+            generatedColour = GetRandomColour();
+        }
+
         UpdateColour(generatedColour);
     }
 
@@ -87,7 +96,7 @@ public class RandomColour : MonoBehaviour, IPunObservable {
     }
 
     // Returns a random colour
-    public Color GetRandomColour()
+    public static Color GetRandomColour()
     {
         float r = Random.value;
         float g = Random.value;

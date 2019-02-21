@@ -15,6 +15,7 @@ using ExitGames.Client.Photon;
 using Photon.Realtime;
 using Photon.Pun.UtilityScripts;
 using Photon.Pun;
+using System.Collections.Generic;
 
 namespace NTNU.CarloMarton.VRLanguage
 {
@@ -27,15 +28,15 @@ namespace NTNU.CarloMarton.VRLanguage
         public Button PlayerReadyButton;
         public Image PlayerReadyImage;
 
+        public Button ColorPickerPutton;
+        public GameObject ColorPicker;
+
         private int ownerId;
         private bool isPlayerReady;
 
-        #region UNITY
+        private System.Random rng = new System.Random();
 
-        public void OnEnable()
-        {
-            PlayerNumbering.OnPlayerNumberingChanged += OnPlayerNumberingChanged;
-        }
+        #region UNITY
 
         public void Start()
         {
@@ -45,10 +46,6 @@ namespace NTNU.CarloMarton.VRLanguage
             }
             else
             {
-                //Hashtable initialProps = new Hashtable() {{"IsPlayerReady", isPlayerReady}};
-                //PhotonNetwork.LocalPlayer.SetCustomProperties(initialProps);
-                //PhotonNetwork.LocalPlayer.SetScore(0);
-
                 PlayerReadyButton.onClick.AddListener(() =>
                 {
                     isPlayerReady = !isPlayerReady;
@@ -62,12 +59,32 @@ namespace NTNU.CarloMarton.VRLanguage
                         FindObjectOfType<MainPanel>().LocalPlayerPropertiesUpdated();
                     }
                 });
+                ColorPickerPutton.onClick.AddListener(OnPlayerColorClicked);
+
+
+                InitialiseColor();
             }
         }
 
-        public void OnDisable()
+        private void Update()
         {
-            PlayerNumbering.OnPlayerNumberingChanged -= OnPlayerNumberingChanged;
+            // Only need to change colour on other players tag, your own is handled on change
+            if (PhotonNetwork.LocalPlayer.ActorNumber != ownerId)
+            {
+                foreach (Player p in PhotonNetwork.PlayerListOthers)
+                {
+                    // Find the player owning this entry
+                    if (p.ActorNumber == ownerId)
+                    {
+                        Color playerColor = GetColorOnPlayer(p);
+                        // Only change if the colour is different
+                        if (!playerColor.Equals(PlayerColorImage.color))
+                        {
+                            ChangeColor(playerColor);
+                        }
+                    }
+                }
+            }
         }
 
         #endregion
@@ -78,21 +95,102 @@ namespace NTNU.CarloMarton.VRLanguage
             PlayerNameText.text = playerName;
         }
 
-        private void OnPlayerNumberingChanged()
-        {
-            foreach (Player p in PhotonNetwork.PlayerList)
-            {
-                if (p.ActorNumber == ownerId)
-                {
-                    //PlayerColorImage.color = AsteroidsGame.GetColor(p.GetPlayerNumber());
-                }
-            }
-        }
-
         public void SetPlayerReady(bool playerReady)
         {
             PlayerReadyButton.GetComponentInChildren<Text>().text = playerReady ? "Klar!" : "Klar?";
             PlayerReadyImage.enabled = playerReady;
+        }
+
+        private void InitialiseColor()
+        {
+            List<Color> availableColors = new List<Color>();
+            List<Color> takenColors = new List<Color>();
+            foreach (Player player in PhotonNetwork.PlayerList)
+            {
+                object colorObject = GetColorOnPlayer(player);
+                if (colorObject != null)
+                { 
+                    takenColors.Add((Color) colorObject);
+                }
+            }
+
+            foreach (Transform colorTransform in ColorPicker.transform)
+            {
+                Color usedColor = colorTransform.GetComponent<Image>().color;
+                if (!takenColors.Contains(usedColor))
+                {
+                    availableColors.Add(usedColor);
+                }
+            }
+
+            Color color = availableColors[rng.Next(availableColors.Count)];
+            ChangeColor(color);
+        }
+
+        public void OnPlayerColorClicked()
+        {
+            UpdateAvailableColors();
+            ColorPicker.SetActive(!ColorPicker.activeSelf);
+        }
+
+        public void OnColorPickerColorClicked(Image img)
+        {
+            Color color = img.color;
+            string colorName = img.gameObject.name;
+            print("Changed player colour to " + colorName);
+            if (!ColorPicker.transform.Find(colorName).Find("DisabledImage").gameObject.activeSelf)
+            {
+                ChangeColor(color);
+                ColorPicker.SetActive(false);
+            }
+        }
+
+        private void ChangeColor(Color color)
+        {
+            PlayerColorImage.color = color;
+            float[] colorAsList = { color.r, color.g, color.b, color.a };
+            if (PhotonNetwork.LocalPlayer.ActorNumber == ownerId)
+            {
+                Hashtable hash = new Hashtable() { {"Color", colorAsList } };
+                PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
+            }
+            UpdateAvailableColors();
+        }
+
+        private void UpdateAvailableColors()
+        {
+            List<Color> takenColors = new List<Color>();
+            foreach (Player player in PhotonNetwork.PlayerList)
+            {
+                Color colorObject = GetColorOnPlayer(player);
+                if (colorObject != null)
+                {
+                    takenColors.Add(colorObject);
+                }
+            }
+
+            foreach (Transform colorTransform in ColorPicker.transform)
+            {
+                Color usedColor = colorTransform.GetComponent<Image>().color;
+                GameObject disabledImageObject = colorTransform.Find("DisabledImage").gameObject;
+                disabledImageObject.SetActive(takenColors.Contains(usedColor));
+            }
+        }
+
+        private Color GetColorOnPlayer(Player p)
+        {
+            float[] colorAsFloat = (float[]) p.CustomProperties["Color"];
+            if (colorAsFloat == null)
+            {
+                return Color.black;
+            }
+
+            float r = colorAsFloat[0];
+            float g = colorAsFloat[1];
+            float b = colorAsFloat[2];
+            float a = colorAsFloat[3];
+
+            return new Color(r, g, b, a);
         }
     }
 }

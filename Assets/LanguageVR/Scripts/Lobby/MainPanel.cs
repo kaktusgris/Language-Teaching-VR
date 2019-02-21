@@ -45,6 +45,7 @@ namespace NTNU.CarloMarton.VRLanguage
 
         public Button StartGameButton;
         public GameObject PlayerListEntryPrefab;
+        public GameObject ColorPicker;
 
         private Dictionary<string, RoomInfo> cachedRoomList;
         private Dictionary<string, GameObject> roomListEntries;
