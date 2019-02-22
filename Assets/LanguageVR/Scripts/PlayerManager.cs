@@ -6,6 +6,7 @@ using Photon.Pun;
 using Photon.Voice.Unity;
 using Photon.Voice.PUN;
 using UnityEngine.SceneManagement;
+using Valve.VR.InteractionSystem;
 
 namespace NTNU.CarloMarton.VRLanguage
 {
@@ -42,7 +43,8 @@ namespace NTNU.CarloMarton.VRLanguage
             // we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
             DontDestroyOnLoad(this.gameObject);
 
-
+            // Teleport has hint by default, disable it here to not show up
+            Valve.VR.InteractionSystem.Teleport.instance.CancelTeleportHint();
         }
 
         void Start()
@@ -58,7 +60,6 @@ namespace NTNU.CarloMarton.VRLanguage
             {
                 gameObject.GetComponentInChildren<AudioSource>().spatialBlend = 1.0f;
             }
-
         }
 
         #endregion
@@ -107,6 +108,32 @@ namespace NTNU.CarloMarton.VRLanguage
             leftRenderer.material.shader = newShader;
         }
 
+        public void HideControllers()
+        {
+            for (int handIndex = 0; handIndex < Player.instance.hands.Length; handIndex++)
+            {
+                Hand hand = Player.instance.hands[handIndex];
+                if (hand != null)
+                {
+                    hand.HideController(true);
+                    hand.SetSkeletonRangeOfMotion(Valve.VR.EVRSkeletalMotionRange.WithoutController);
+                }
+            }
+        }
+
+        public void ShowControllers()
+        {
+            for (int handIndex = 0; handIndex < Player.instance.hands.Length; handIndex++)
+            {
+                Hand hand = Player.instance.hands[handIndex];
+                if (hand != null)
+                {
+                    hand.HideController(false);
+                    hand.SetSkeletonRangeOfMotion(Valve.VR.EVRSkeletalMotionRange.WithController);
+                }
+            }
+        }
+
         void Update()
         {
             if (photonView.IsMine || !PhotonNetwork.IsConnected) {
@@ -122,6 +149,10 @@ namespace NTNU.CarloMarton.VRLanguage
                 {
                     ChangeHands();
                 }
+            }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                HideControllers();
             }
         }
 

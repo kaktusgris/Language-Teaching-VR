@@ -163,15 +163,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 756}
-  - component: {fileID: 1295}
+  - component: {fileID: 1283}
   - component: {fileID: 1170}
-  - component: {fileID: 1464}
-  - component: {fileID: 1451}
-  - component: {fileID: 1463}
-  - component: {fileID: 1453}
+  - component: {fileID: 1439}
+  - component: {fileID: 1426}
+  - component: {fileID: 1438}
+  - component: {fileID: 1428}
   - component: {fileID: 1235}
-  - component: {fileID: 1455}
-  - component: {fileID: 1457}
+  - component: {fileID: 1430}
+  - component: {fileID: 1432}
   m_Layer: 26
   m_Name: Body
   m_TagString: Untagged
@@ -195,7 +195,7 @@ Transform:
   m_Father: {fileID: 754}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &1295
+--- !u!135 &1283
 SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -224,7 +224,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &1464
+--- !u!114 &1439
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -237,7 +237,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bodyPart: 0
---- !u!114 &1451
+--- !u!114 &1426
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -255,11 +255,11 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 1463}
+  - {fileID: 1438}
   viewIdField: 0
   InstantiationId: 4
   isRuntimeInstantiated: 0
---- !u!114 &1463
+--- !u!114 &1438
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -274,7 +274,7 @@ MonoBehaviour:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
---- !u!114 &1453
+--- !u!114 &1428
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -288,7 +288,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   logLevel: 1
   recorderInUse: {fileID: 0}
-  speakerInUse: {fileID: 1455}
+  speakerInUse: {fileID: 1430}
   AutoCreateRecorderIfNotFound: 0
   UsePrimaryRecorder: 1
   SetupDebugSpeaker: 1
@@ -406,7 +406,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1455
+--- !u!114 &1430
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -420,7 +420,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   logLevel: 1
   PlayDelayMs: 200
---- !u!114 &1457
+--- !u!114 &1432
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -755,7 +755,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 711}
-  - component: {fileID: 1308}
+  - component: {fileID: 1296}
   m_Layer: 0
   m_Name: vr_glove_right_slim
   m_TagString: Untagged
@@ -777,7 +777,7 @@ Transform:
   m_Father: {fileID: 762}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!137 &1308
+--- !u!137 &1296
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1081,12 +1081,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 744}
-  - component: {fileID: 1468}
-  - component: {fileID: 1461}
-  - component: {fileID: 1459}
-  - component: {fileID: 1456}
-  - component: {fileID: 1286}
-  - component: {fileID: 1475}
+  - component: {fileID: 1443}
+  - component: {fileID: 1436}
+  - component: {fileID: 1434}
+  - component: {fileID: 1431}
+  - component: {fileID: 1274}
+  - component: {fileID: 1450}
   m_Layer: 0
   m_Name: HandPrefabL
   m_TagString: Untagged
@@ -1109,19 +1109,21 @@ Transform:
   m_Father: {fileID: 754}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1468
+--- !u!114 &1443
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 399}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 00f6c0d7b5a00aa4a8d38a09a0480032, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skeletonAction: {fileID: 11400000, guid: 66e7eef88b548544da8694f15879cc11, type: 2}
+  skeletonAction:
+    actionPath: 
+    needsReinit: 0
   inputSource: 1
   rangeOfMotion: 1
   skeletonRoot: {fileID: 767}
@@ -1129,9 +1131,33 @@ MonoBehaviour:
   updatePose: 0
   onlySetRotations: 0
   skeletonBlend: 1
+  onBoneTransformsUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: Valve.VR.SteamVR_Behaviour_SkeletonEvent, SteamVR, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  onTransformUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: Valve.VR.SteamVR_Behaviour_SkeletonEvent, SteamVR, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  onTransformChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: Valve.VR.SteamVR_Behaviour_SkeletonEvent, SteamVR, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  onConnectedChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: Valve.VR.SteamVR_Behaviour_Skeleton_ConnectedChangedEvent, SteamVR,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  onTrackingChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: Valve.VR.SteamVR_Behaviour_Skeleton_TrackingChangedEvent, SteamVR,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   mirroring: 2
-  photonView: {fileID: 1459}
---- !u!114 &1461
+--- !u!114 &1436
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1144,7 +1170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bodyPart: 1
---- !u!114 &1459
+--- !u!114 &1434
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1162,11 +1188,11 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 1456}
+  - {fileID: 1431}
   viewIdField: 0
   InstantiationId: 5
   isRuntimeInstantiated: 0
---- !u!114 &1456
+--- !u!114 &1431
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1181,7 +1207,7 @@ MonoBehaviour:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
---- !u!120 &1286
+--- !u!120 &1274
 LineRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1276,7 +1302,7 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
---- !u!114 &1475
+--- !u!114 &1450
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1290,10 +1316,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainPanel: {fileID: 1054110687254935386}
   handType: 1
-  laserClickButton: {fileID: 11400000, guid: 5f61770a623753540adf0148a2360ef4, type: 2}
-  touchInput: {fileID: 11400000, guid: 347c8fe91d219904092a2092c6cdd57d, type: 2}
-  touchDirectionInput: {fileID: 11400000, guid: dcfe63fcaf150cb4ea90a07f55a3e127,
-    type: 2}
+  laserClickButton:
+    actionPath: /actions/language/in/InteractUI
+    needsReinit: 0
+  touchInput:
+    actionPath: /actions/language/in/TouchpadTouched
+    needsReinit: 0
+  touchDirectionInput:
+    actionPath: /actions/language/in/TouchDirection
+    needsReinit: 0
   menu: {fileID: 6065267638203257269}
 --- !u!1 &400
 GameObject:
@@ -1710,9 +1741,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 762}
-  - component: {fileID: 1257}
-  - component: {fileID: 1465}
-  - component: {fileID: 1471}
+  - component: {fileID: 1245}
+  - component: {fileID: 1440}
+  - component: {fileID: 1446}
   m_Layer: 0
   m_Name: slim_r
   m_TagString: Untagged
@@ -1733,10 +1764,10 @@ Transform:
   m_Children:
   - {fileID: 752}
   - {fileID: 711}
-  m_Father: {fileID: 1380}
+  m_Father: {fileID: 1357}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &1257
+--- !u!95 &1245
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0
@@ -1755,7 +1786,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1465
+--- !u!114 &1440
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1773,11 +1804,11 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 1471}
+  - {fileID: 1446}
   viewIdField: 0
   InstantiationId: 7
   isRuntimeInstantiated: 0
---- !u!114 &1471
+--- !u!114 &1446
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1867,14 +1898,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 754}
-  - component: {fileID: 1462}
-  - component: {fileID: 1458}
+  - component: {fileID: 1437}
+  - component: {fileID: 1433}
+  - component: {fileID: 1424}
+  - component: {fileID: 1441}
+  - component: {fileID: 1444}
+  - component: {fileID: 1423}
   - component: {fileID: 1449}
-  - component: {fileID: 1466}
-  - component: {fileID: 1469}
-  - component: {fileID: 1448}
-  - component: {fileID: 1474}
-  - component: {fileID: 1476}
+  - component: {fileID: 1451}
   m_Layer: 0
   m_Name: Avatar
   m_TagString: Avatar
@@ -1895,12 +1926,12 @@ Transform:
   m_Children:
   - {fileID: 756}
   - {fileID: 744}
-  - {fileID: 1380}
+  - {fileID: 1357}
   - {fileID: 6749980221267619395}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1462
+--- !u!114 &1437
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1913,7 +1944,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   voiceIndicator: {fileID: 448}
---- !u!114 &1458
+--- !u!114 &1433
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1931,13 +1962,13 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 1449}
-  - {fileID: 1469}
-  - {fileID: 1462}
+  - {fileID: 1424}
+  - {fileID: 1444}
+  - {fileID: 1437}
   viewIdField: 0
   InstantiationId: 3
   isRuntimeInstantiated: 0
---- !u!114 &1449
+--- !u!114 &1424
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1952,7 +1983,7 @@ MonoBehaviour:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
---- !u!114 &1466
+--- !u!114 &1441
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1966,7 +1997,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TerrainSimplificationLevel: 0
   exportAllChildren: 1
---- !u!114 &1469
+--- !u!114 &1444
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1980,12 +2011,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   randomFromList: 1
   head: {fileID: 991}
-  leftHand: {fileID: 1307}
-  rightHand: {fileID: 1308}
+  leftHand: {fileID: 1295}
+  rightHand: {fileID: 1296}
   torso: {fileID: 992}
   handMat: {fileID: 2100000, guid: 8f32b3d74401443479c643e48c21915a, type: 2}
-  photonView: {fileID: 1458}
---- !u!114 &1448
+  photonView: {fileID: 1433}
+--- !u!114 &1423
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1997,9 +2028,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 272319131f9e79d43a3bead6fc1b7deb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inGameMenu: {fileID: 1474}
+  inGameMenu: {fileID: 1449}
   audioSource: {fileID: 1235}
---- !u!114 &1474
+--- !u!114 &1449
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2012,12 +2043,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handType: 0
-  menuButtonAction: {fileID: 11400000, guid: 056e4b30917cf0f4aa4500823b5b3167, type: 2}
+  menuButtonAction:
+    actionPath: /actions/language/in/OpenMenu
+    needsReinit: 0
   menu: {fileID: 6065267638203257269}
   myPanel: {fileID: 6001242214832788455}
   menuTextPrefab: {fileID: 1511298223660246780, guid: 4fc36d3106da2c04db3d73512e31bd4a,
     type: 3}
---- !u!114 &1476
+--- !u!114 &1451
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2029,7 +2062,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 071f731b7be8b8348bcf1c068b34a333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerDictionary: {fileID: 1448}
+  playerDictionary: {fileID: 1423}
 --- !u!1 &417
 GameObject:
   m_ObjectHideFlags: 0
@@ -2151,7 +2184,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 418}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!1 &419
 GameObject:
   m_ObjectHideFlags: 0
@@ -2374,7 +2407,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 720}
-  - component: {fileID: 1307}
+  - component: {fileID: 1295}
   m_Layer: 0
   m_Name: vr_glove_right_slim
   m_TagString: Untagged
@@ -2396,7 +2429,7 @@ Transform:
   m_Father: {fileID: 712}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!137 &1307
+--- !u!137 &1295
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2947,7 +2980,7 @@ GameObject:
   - component: {fileID: 1087}
   - component: {fileID: 992}
   - component: {fileID: 1169}
-  - component: {fileID: 1315}
+  - component: {fileID: 1303}
   m_Layer: 0
   m_Name: Torso
   m_TagString: Untagged
@@ -3033,7 +3066,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!144 &1315
+--- !u!144 &1303
 CharacterJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3086,13 +3119,13 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1380}
-  - component: {fileID: 1450}
-  - component: {fileID: 1467}
-  - component: {fileID: 1460}
-  - component: {fileID: 1452}
-  - component: {fileID: 1285}
-  - component: {fileID: 1473}
+  - component: {fileID: 1357}
+  - component: {fileID: 1425}
+  - component: {fileID: 1442}
+  - component: {fileID: 1435}
+  - component: {fileID: 1427}
+  - component: {fileID: 1273}
+  - component: {fileID: 1448}
   m_Layer: 0
   m_Name: HandPrefabR
   m_TagString: Untagged
@@ -3100,7 +3133,7 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &1380
+--- !u!224 &1357
 RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3120,19 +3153,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1450
+--- !u!114 &1425
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 443}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 00f6c0d7b5a00aa4a8d38a09a0480032, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skeletonAction: {fileID: 11400000, guid: ba2db5cb31a58b24bbe7dc6266d3d977, type: 2}
+  skeletonAction:
+    actionPath: 
+    needsReinit: 0
   inputSource: 2
   rangeOfMotion: 1
   skeletonRoot: {fileID: 752}
@@ -3140,9 +3175,33 @@ MonoBehaviour:
   updatePose: 0
   onlySetRotations: 0
   skeletonBlend: 1
+  onBoneTransformsUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: Valve.VR.SteamVR_Behaviour_SkeletonEvent, SteamVR, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  onTransformUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: Valve.VR.SteamVR_Behaviour_SkeletonEvent, SteamVR, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  onTransformChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: Valve.VR.SteamVR_Behaviour_SkeletonEvent, SteamVR, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  onConnectedChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: Valve.VR.SteamVR_Behaviour_Skeleton_ConnectedChangedEvent, SteamVR,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  onTrackingChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: Valve.VR.SteamVR_Behaviour_Skeleton_TrackingChangedEvent, SteamVR,
+      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   mirroring: 0
-  photonView: {fileID: 1460}
---- !u!114 &1467
+--- !u!114 &1442
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3155,7 +3214,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bodyPart: 2
---- !u!114 &1460
+--- !u!114 &1435
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3173,11 +3232,11 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 1452}
+  - {fileID: 1427}
   viewIdField: 0
   InstantiationId: 6
   isRuntimeInstantiated: 0
---- !u!114 &1452
+--- !u!114 &1427
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3192,7 +3251,7 @@ MonoBehaviour:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
---- !u!120 &1285
+--- !u!120 &1273
 LineRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3287,7 +3346,7 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
---- !u!114 &1473
+--- !u!114 &1448
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3301,10 +3360,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainPanel: {fileID: 1054110687254935386}
   handType: 2
-  laserClickButton: {fileID: 11400000, guid: 5f61770a623753540adf0148a2360ef4, type: 2}
-  touchInput: {fileID: 11400000, guid: 347c8fe91d219904092a2092c6cdd57d, type: 2}
-  touchDirectionInput: {fileID: 11400000, guid: dcfe63fcaf150cb4ea90a07f55a3e127,
-    type: 2}
+  laserClickButton:
+    actionPath: /actions/language/in/InteractUI
+    needsReinit: 0
+  touchInput:
+    actionPath: /actions/language/in/TouchpadTouched
+    needsReinit: 0
+  touchDirectionInput:
+    actionPath: /actions/language/in/TouchDirection
+    needsReinit: 0
   menu: {fileID: 6065267638203257269}
 --- !u!1 &444
 GameObject:
@@ -3412,9 +3476,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 712}
-  - component: {fileID: 1258}
-  - component: {fileID: 1470}
-  - component: {fileID: 1454}
+  - component: {fileID: 1246}
+  - component: {fileID: 1445}
+  - component: {fileID: 1429}
   m_Layer: 0
   m_Name: slim_l
   m_TagString: Untagged
@@ -3438,7 +3502,7 @@ Transform:
   m_Father: {fileID: 744}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &1258
+--- !u!95 &1246
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0
@@ -3457,7 +3521,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1470
+--- !u!114 &1445
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3475,11 +3539,11 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 1454}
+  - {fileID: 1429}
   viewIdField: 0
   InstantiationId: 12
   isRuntimeInstantiated: 0
---- !u!114 &1454
+--- !u!114 &1429
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3577,7 +3641,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &1472
+--- !u!114 &1447
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3621,6 +3685,16 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 5230122538845417068, guid: 177f633357b2a5641bc1238d640be254,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5230122538845417068, guid: 177f633357b2a5641bc1238d640be254,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1548505272468572881, guid: 177f633357b2a5641bc1238d640be254,
         type: 3}
       propertyPath: m_SizeDelta.y
@@ -3635,16 +3709,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 5230122538845417068, guid: 177f633357b2a5641bc1238d640be254,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 5230122538845417068, guid: 177f633357b2a5641bc1238d640be254,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5879315911073429861, guid: 177f633357b2a5641bc1238d640be254,
         type: 3}

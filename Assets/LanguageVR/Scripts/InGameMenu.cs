@@ -35,9 +35,8 @@ public class InGameMenu : MonoBehaviour
             PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
         }
 
-        GameObject cameraRig = GameObject.FindGameObjectWithTag("MainCamera");
-        leftHand = cameraRig.transform.Find("LeftHand").gameObject;
-        rightHand = cameraRig.transform.Find("RightHand").gameObject;
+        leftHand = ViveManager.Instance.leftHand;
+        rightHand = ViveManager.Instance.rightHand;
 
         handPrefabL = transform.Find("HandPrefabL").gameObject;
         handPrefabR = transform.Find("HandPrefabR").gameObject;
