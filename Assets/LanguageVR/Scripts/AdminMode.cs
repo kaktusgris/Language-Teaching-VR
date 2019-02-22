@@ -3,38 +3,41 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AdminMode : MonoBehaviour
+namespace NTNU.CarloMarton.VRLanguage
 {
-    [SerializeField]
-    private PlayerDictionary playerDictionary;
-
-    private bool isAdmin;
-
-    void Start()
+    public class AdminMode : MonoBehaviour
     {
-        isAdmin = (bool) PhotonNetwork.LocalPlayer.CustomProperties["admin"];
+        [SerializeField]
+        private PlayerDictionary playerDictionary;
 
-        InitialiseAdmin();
-    }
+        private bool isAdmin;
 
-    private void InitialiseAdmin()
-    {
-        if (isAdmin)
+        void Start()
         {
-            FillDictionary();
+            isAdmin = (bool) PhotonNetwork.LocalPlayer.CustomProperties["admin"];
+
+            InitialiseAdmin();
         }
-    }
 
-    private void FillDictionary()
-    {
-        print("Filling dictionary with all interactable objects from Resources/InteractableObjects");
-        Object[] objects = Resources.LoadAll("InteractableObjects");
-        
-        foreach (Object ob in objects)
+        private void InitialiseAdmin()
         {
-            GameObject item = (GameObject) ob;
-            string name = item.GetComponentInChildren<TextMesh>().text;
-            playerDictionary.AddItemToDictionary(name, item);
+            if (isAdmin)
+            {
+                FillDictionary();
+            }
+        }
+
+        private void FillDictionary()
+        {
+            print("Filling dictionary with all interactable objects from Resources/InteractableObjects");
+            Object[] objects = Resources.LoadAll("InteractableObjects");
+        
+            foreach (Object ob in objects)
+            {
+                GameObject item = (GameObject) ob;
+                string name = item.GetComponentInChildren<TextMesh>().text;
+                playerDictionary.AddItemToDictionary(name, item);
+            }
         }
     }
 }
