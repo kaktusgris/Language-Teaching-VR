@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Valve.VR.InteractionSystem;
 
 public class RandomColour : MonoBehaviour, IPunObservable {
 
@@ -58,6 +59,38 @@ public class RandomColour : MonoBehaviour, IPunObservable {
         UpdateColour();
     }
 
+    // Sets the colours on the player's hands when they are conected to the base stations
+    private IEnumerator Start()
+    {
+        Transform rHandTransform = Player.instance.rightHand.transform;
+        Transform lHandTransform = Player.instance.leftHand.transform;
+        bool lhandChanged = false;
+        bool rHandChanged = false;
+
+        while (true)
+        {
+            //print(lHandTransform.Find("RightRenderModel Slim(Clone)"));
+            if (!lhandChanged && lHandTransform.Find("LeftRenderModel Slim(Clone)"))
+            {
+                Material lHand = lHandTransform.Find("LeftRenderModel Slim(Clone)/vr_glove_left_model_slim(Clone)/slim_l/vr_glove_right_slim").GetComponent<SkinnedMeshRenderer>().material;
+                UpdateColourOnMaterial(lHand, generatedColour);
+                lhandChanged = true;
+            }
+            if (!rHandChanged && rHandTransform.Find("RightRenderModel Slim(Clone)"))
+            {
+                Material rhand = rHandTransform.Find("RightRenderModel Slim(Clone)/vr_glove_right_model_slim(Clone)/slim_r/vr_glove_right_slim").GetComponent<SkinnedMeshRenderer>().material;
+                UpdateColourOnMaterial(rhand, generatedColour);
+                rHandChanged = true;
+            }
+            if (lhandChanged && rHandChanged)
+            {
+                break;
+            }
+
+            yield return null;
+        }
+    }
+
     public void UpdateColour()
     {
         //generatedColour = randomFromList ? GetSemiRandomColour() : GetRandomColour();
@@ -82,7 +115,8 @@ public class RandomColour : MonoBehaviour, IPunObservable {
         // Update hands localy as they would change all hands when a new player logs in otherwise
         if (photonView.IsMine || !PhotonNetwork.IsConnected)
         {
-            UpdateColourOnMaterial(handMat, colour);
+            UpdateColourOnMaterial(leftHandMaterial, colour);
+            UpdateColourOnMaterial(rightHandMaterial, colour);
         }
         UpdateColourOnMaterial(torsoMaterial, colour);
     }
@@ -104,38 +138,6 @@ public class RandomColour : MonoBehaviour, IPunObservable {
 
         return new Color(r, g, b);
     }
-
-    /*
-    // Returns a random colour from a set of colours
-    public Color GetSemiRandomColour()
-    {
-        int i = rng.Next(colours.Count);
-        print(colours.Count);
-        print(i);
-        return colours[i];
-    }
-
-    private void SetColours()
-    {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            colours = new List<Color>() { Color.blue, Color.red };//, Color.yellow, Color.green };
-            //foreach (RandomColour rc in FindObjectsOfType<RandomColour>())
-            //{
-            //    Color occupiedColour = rc.colour;
-            //    colours.Remove(occupiedColour);
-            //}
-            this.colours = colours;
-        }
-        else
-        {
-            foreach (RandomColour rc in FindObjectsOfType<RandomColour>())
-            {
-                if (rc.photonView.)
-            }
-        }
-    }
-    */
 
     public static string ColorToString(Color color)
     {
