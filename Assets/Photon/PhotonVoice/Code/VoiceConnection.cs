@@ -38,7 +38,7 @@ namespace Photon.Voice.Unity
         protected bool usePunSettings = true;
         #endif
 
-        private LoadBalancingFrontend client;
+        private LoadBalancingTransport client;
         [SerializeField]
         private bool enableSupportLogger;
 
@@ -106,7 +106,7 @@ namespace Photon.Voice.Unity
         /// and in case that multiple controllers are attached, the audio output might be sent to the headphones of a different controller then intended.</remarks>
         public int PS4UserID = 0;                       // set from your games code
         #endif
-
+        
         #endregion
 
         #region Properties
@@ -145,18 +145,17 @@ namespace Photon.Voice.Unity
             }
         }
 
-        /// <summary>Returns underlying Photon LoadBalancing client.</summary>
-        public new LoadBalancingFrontend Client
+        public new LoadBalancingTransport Client
         {
             get
             {
                 if (client == null)
                 {
-                    client = new LoadBalancingFrontend();
+                    client = new LoadBalancingTransport();
                     client.VoiceClient.OnRemoteVoiceInfoAction += OnRemoteVoiceInfo;
                     client.OpResponseReceived += OnOperationResponse;
                     client.StateChanged += OnVoiceStateChanged;
-                    base.Client = client; // is this necessary?
+                    base.Client = client;
                     this.StartFallbackSendAckThread();
                 }
                 return client;
@@ -164,10 +163,10 @@ namespace Photon.Voice.Unity
         }
         
         /// <summary>Returns underlying Photon Voice client.</summary>
-        public VoiceClient VoiceClient { get { return Client.VoiceClient; } }
+        public VoiceClient VoiceClient { get { return this.Client.VoiceClient; } }
 
         /// <summary>Returns Photon Voice client state.</summary>
-        public ClientState ClientState { get { return Client.State; } }
+        public ClientState ClientState { get { return this.Client.State; } }
 
         /// <summary>Number of frames received per second.</summary>
         public float FramesReceivedPerSecond { get; private set; }
@@ -201,6 +200,14 @@ namespace Photon.Voice.Unity
             }
         }
 
+        
+        #if UNITY_EDITOR
+        public List<RemoteVoiceLink> CachedRemoteVoices
+        {
+            get { return this.cachedRemoteVoices; }
+        }
+        #endif
+
         #endregion
 
         #region Public Methods
@@ -212,11 +219,11 @@ namespace Photon.Voice.Unity
         /// <returns>If true voice connection command was sent from client</returns>
         public bool ConnectUsingSettings(AppSettings overwriteSettings = null)
         {
-            if (Client.LoadBalancingPeer.PeerState != PeerStateValue.Disconnected)
+            if (this.Client.LoadBalancingPeer.PeerState != PeerStateValue.Disconnected)
             {
                 if (this.Logger.IsWarningEnabled)
                 {
-                    this.Logger.LogWarning("ConnectUsingSettings() failed. Can only connect while in state 'Disconnected'. Current state: {0}", Client.LoadBalancingPeer.PeerState);
+                    this.Logger.LogWarning("ConnectUsingSettings() failed. Can only connect while in state 'Disconnected'. Current state: {0}", this.Client.LoadBalancingPeer.PeerState);
                 }
                 return false;
             }
@@ -247,11 +254,11 @@ namespace Photon.Voice.Unity
                     {
                         this.Logger.LogWarning("Requested protocol not supported on Photon Cloud {0}. Switched to UDP.", Settings.Protocol);
                     }
-                    Client.LoadBalancingPeer.TransportProtocol = ConnectionProtocol.Udp;
+                    this.Client.LoadBalancingPeer.TransportProtocol = ConnectionProtocol.Udp;
                 }
                 else
                 {
-                    Client.LoadBalancingPeer.TransportProtocol = ConnectionProtocol.Tcp;
+                    this.Client.LoadBalancingPeer.TransportProtocol = ConnectionProtocol.Tcp;
                 }
             }
             else if (Settings.Protocol != ConnectionProtocol.Udp)
@@ -260,55 +267,50 @@ namespace Photon.Voice.Unity
                 {
                     this.Logger.LogWarning("Requested protocol not supported: {0}. Switched to UDP.", Settings.Protocol);
                 }
-                Client.LoadBalancingPeer.TransportProtocol = ConnectionProtocol.Udp;
+                this.Client.LoadBalancingPeer.TransportProtocol = ConnectionProtocol.Udp;
             }
             
-            Client.EnableLobbyStatistics = Settings.EnableLobbyStatistics;
+            this.Client.EnableLobbyStatistics = Settings.EnableLobbyStatistics;
 
-            Client.LoadBalancingPeer.DebugOut = Settings.NetworkLogging;
+            this.Client.LoadBalancingPeer.DebugOut = Settings.NetworkLogging;
 
             if (Settings.IsMasterServerAddress)
             {
-                Client.LoadBalancingPeer.SerializationProtocolType = SerializationProtocol.GpBinaryV16;
+                this.Client.LoadBalancingPeer.SerializationProtocolType = SerializationProtocol.GpBinaryV16;
 
-                if (string.IsNullOrEmpty(Client.UserId))
+                if (string.IsNullOrEmpty(this.Client.UserId))
                 {
+                    this.Client.UserId = Guid.NewGuid().ToString();
                     #if PHOTON_UNITY_NETWORKING
                     if (!string.IsNullOrEmpty(Pun.PhotonNetwork.NetworkingClient.UserId))
                     {
-                        Client.UserId = Pun.PhotonNetwork.NetworkingClient.UserId;
+                        this.Client.UserId = Pun.PhotonNetwork.NetworkingClient.UserId;
                     }
-                    else
-                    {
-                        Client.UserId = Guid.NewGuid().ToString();
-                    }
-                    #else
-                    Client.UserId = Guid.NewGuid().ToString();
                     #endif
                 }
 
-                Client.IsUsingNameServer = false;
-                Client.MasterServerAddress = Settings.Port == 0 ? Settings.Server : string.Format("{0}:{1}", Settings.Server, Settings.Port);
+                this.Client.IsUsingNameServer = false;
+                this.Client.MasterServerAddress = Settings.Port == 0 ? Settings.Server : string.Format("{0}:{1}", Settings.Server, Settings.Port);
 
-                return Client.Connect();
+                return this.Client.Connect();
             }
 
-            Client.AppId = Settings.AppIdVoice;
-            Client.AppVersion = Settings.AppVersion;
+            this.Client.AppId = Settings.AppIdVoice;
+            this.Client.AppVersion = Settings.AppVersion;
 
             if (!Settings.IsDefaultNameServer)
             {
-                Client.NameServerHost = Settings.Server;
+                this.Client.NameServerHost = Settings.Server;
             }
 
             if (Settings.IsBestRegion)
             {
-                return Client.ConnectToNameServer();
+                return this.Client.ConnectToNameServer();
             }
 
-            return Client.ConnectToRegionMaster(Settings.FixedRegion);
+            return this.Client.ConnectToRegionMaster(Settings.FixedRegion);
         }
-        
+
         #endregion
 
         #region Private Methods
@@ -339,14 +341,14 @@ namespace Photon.Voice.Unity
             this.VoiceClient.Service();
         }
 
-        private void FixedUpdate()
+        protected virtual void FixedUpdate()
         {
             bool doDispatch = true;
             while (doDispatch)
             {
                 // DispatchIncomingCommands() returns true of it found any command to dispatch (event, result or state change)
                 Profiler.BeginSample("[Photon Voice]: DispatchIncomingCommands");
-                doDispatch = Client.LoadBalancingPeer.DispatchIncomingCommands();
+                doDispatch = this.Client.LoadBalancingPeer.DispatchIncomingCommands();
                 Profiler.EndSample();
             }
         }
@@ -361,7 +363,7 @@ namespace Photon.Voice.Unity
                 {
                     // Send all outgoing commands
                     Profiler.BeginSample("[Photon Voice]: SendOutgoingCommands");
-                    doSend = Client.LoadBalancingPeer.SendOutgoingCommands();
+                    doSend = this.Client.LoadBalancingPeer.SendOutgoingCommands();
                     Profiler.EndSample();
                 }
 
@@ -478,9 +480,9 @@ namespace Photon.Voice.Unity
             switch (opResponse.OperationCode)
             {
                 case OperationCode.GetRegions:
-                    if (Settings != null && Settings.IsBestRegion && Client.RegionHandler != null)
+                    if (Settings != null && Settings.IsBestRegion && this.Client.RegionHandler != null)
                     {
-                        Client.RegionHandler.PingMinimumOfRegions(OnRegionsPinged, BestRegionSummaryInPreferences);
+                        this.Client.RegionHandler.PingMinimumOfRegions(OnRegionsPinged, BestRegionSummaryInPreferences);
                     }
                     break;
             }
@@ -526,7 +528,7 @@ namespace Photon.Voice.Unity
         private void OnRegionsPinged(RegionHandler regionHandler)
         {
             cachedRegionHandler = regionHandler;
-            Client.ConnectToRegionMaster(regionHandler.BestRegion.Code);
+            this.Client.ConnectToRegionMaster(regionHandler.BestRegion.Code);
         }
 
         protected override void OnApplicationQuit()
@@ -627,5 +629,13 @@ namespace Photon.Voice.Unity
         }
 
         #endregion
+    }
+}
+
+namespace Photon.Voice
+{
+    [Obsolete("Class renamed. Use LoadBalancingTransport instead.")]
+    public class LoadBalancingFrontend : LoadBalancingTransport
+    {
     }
 }

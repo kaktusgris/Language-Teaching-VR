@@ -42,7 +42,7 @@ namespace Photon.Voice
         void LogInfo(string fmt, params object[] args);
         void LogDebug(string fmt, params object[] args);
     }
-    interface IVoiceFrontend : ILogger
+    interface IVoiceTransport : ILogger
     {
         int AssignChannel(VoiceInfo v);
         bool IsChannelJoined(int channelId);
@@ -58,7 +58,7 @@ namespace Photon.Voice
     /// </summary>        
     public class VoiceClient : IDisposable
     {
-        internal IVoiceFrontend frontend;
+        internal IVoiceTransport transport;
         /// <summary>Lost frames counter.</summary>
         public int FramesLost { get; internal set; }
         /// <summary>Received frames counter.</summary>
@@ -125,27 +125,10 @@ namespace Photon.Voice
                 }
             }
         }
-        /// <summary>Iterates through all local objects set by user in remote voices.</summary>
-        public IEnumerable<object> RemoteVoiceLocalUserObjects
-        {
-            get
-            {
-                foreach (var channelVoices in this.remoteVoices)
-                {
-                    foreach (var playerVoices in channelVoices.Value)
-                    {
-                        foreach (var voice in playerVoices.Value)
-                        {
-                            yield return voice.Value.options.LocalUserObject;
-                        }
-                    }
-                }
-            }
-        }
         /// <summary>Creates VoiceClient instance</summary>
-        internal VoiceClient(IVoiceFrontend frontend)
+        internal VoiceClient(IVoiceTransport transport)
         {
-            this.frontend = frontend;
+            this.transport = transport;
         }
         /// <summary>
         /// This method dispatches all available incoming commands and then sends this client's outgoing commands.
@@ -162,7 +145,7 @@ namespace Photon.Voice
         {
             if (channelId == ChannelAuto)
             {
-                channelId = this.frontend.AssignChannel(voiceInfo);
+                channelId = this.transport.AssignChannel(voiceInfo);
             }
             var newId = getNewVoiceId();
             if (newId != 0)
@@ -171,18 +154,18 @@ namespace Photon.Voice
                 if (v != null)
                 {
                     addVoice(newId, channelId, v);
-                    this.frontend.LogInfo(v.LogPrefix + " added enc: " + v.info.ToString());
+                    this.transport.LogInfo(v.LogPrefix + " added enc: " + v.info.ToString());
                     return v;
                 }
             }
             return null;
         }
-        public const int ChannelAuto = -1; // any number not used as channel id in frontends
+        public const int ChannelAuto = -1; // any number not used as channel id in transports
         /// <summary>
         /// Creates basic outgoing stream w/o data processing support. Provided encoder should generate output data stream.
         /// </summary>
         /// <param name="voiceInfo">Outgoing stream parameters. Set applicable fields to read them by encoder and by receiving client when voice created.</param>
-        /// <param name="channelId">Transport channel specific to frontend. Set to VoiceClient.ChannelAuto to let frontend automatically assign channel.</param>
+        /// <param name="channelId">Transport channel specific to transport. Set to VoiceClient.ChannelAuto to let transport automatically assign channel.</param>
         /// <param name="encoder">Encoder producing the stream.</param>
         /// <returns>Outgoing stream handler.</returns>
         public LocalVoice CreateLocalVoice(VoiceInfo voiceInfo, int channelId = ChannelAuto, IEncoder encoder = null)
@@ -194,7 +177,7 @@ namespace Photon.Voice
         /// </summary>
         /// <typeparam name="T">Type of data consumed by outgoing stream (element type of array buffers).</typeparam>
         /// <param name="voiceInfo">Outgoing stream parameters. Set applicable fields to read them by encoder and by receiving client when voice created.</param>
-        /// <param name="channelId">Transport channel specific to frontend. Set to VoiceClient.ChannelAuto to let frontend automatically assign channel.</param>
+        /// <param name="channelId">Transport channel specific to transport. Set to VoiceClient.ChannelAuto to let transport automatically assign channel.</param>
         /// <param name="encoder">Encoder compressing data stream in pipeline.</param>
         /// <returns>Outgoing stream handler.</returns>
         public LocalVoiceFramed<T> CreateLocalVoiceFramed<T>(VoiceInfo voiceInfo, int frameSize, int channelId = ChannelAuto, IEncoderDataFlow<T> encoder = null)
@@ -206,7 +189,7 @@ namespace Photon.Voice
         /// </summary>
         /// <typeparam name="T">Element type of audio array buffers.</typeparam>
         /// <param name="voiceInfo">Outgoing audio stream parameters. Set applicable fields to read them by encoder and by receiving client when voice created.</param>
-        /// <param name="channelId">Transport channel specific to frontend. Set to VoiceClient.ChannelAuto to let frontend automatically assign channel.</param>
+        /// <param name="channelId">Transport channel specific to transport. Set to VoiceClient.ChannelAuto to let transport automatically assign channel.</param>
         /// <param name="encoder">Audio encoder. Set to null to use default Opus encoder.</param>
         /// <returns>Outgoing stream handler.</returns>
         /// <remarks>
@@ -223,7 +206,7 @@ namespace Photon.Voice
         /// <param name="voiceInfo">Outgoing audio stream parameters. Set applicable fields to read them by encoder and by receiving client when voice created.</param>
         /// <param name="source">Streaming audio source.</param>
         /// <param name="forceShort">For audio sources producing buffers of 'float' type, creates stream of 'short' type and adds converter.</param>
-        /// <param name="channelId">Transport channel specific to frontend. Set to VoiceClient.ChannelAuto to let frontend automatically assign channel.</param>
+        /// <param name="channelId">Transport channel specific to transport. Set to VoiceClient.ChannelAuto to let transport automatically assign channel.</param>
         /// <param name="encoder">Audio encoder. Set to null to use default Opus encoder.</param>
         /// <returns>Outgoing stream handler.</returns>
         /// <remarks>
@@ -263,7 +246,7 @@ namespace Photon.Voice
             {
                 if (forceShort)
                 {
-                    frontend.LogInfo("[PV] Creating local voice with source samples type conversion from float to short.");
+                    transport.LogInfo("[PV] Creating local voice with source samples type conversion from float to short.");
                     var localVoice = CreateLocalVoiceAudio<short>(voiceInfo, channelId, encoder);
                     localVoice.LocalUserServiceable = new Voice.BufferReaderPushAdapterAsyncPoolFloatToShort(localVoice, source as Voice.IAudioReader<float>);
                     return localVoice;
@@ -283,7 +266,7 @@ namespace Photon.Voice
             }
             else
             {
-                frontend.LogError("[PV] CreateLocalVoiceAudioFromSource does not support Voice.IAudioDesc of type {0}", source.GetType());
+                transport.LogError("[PV] CreateLocalVoiceAudioFromSource does not support Voice.IAudioDesc of type {0}", source.GetType());
                 return Voice.LocalVoiceAudioDummy.Dummy;
             }
         }
@@ -292,7 +275,7 @@ namespace Photon.Voice
         /// Creates outgoing video stream consuming sequence of image buffers.
         /// </summary>
         /// <param name="voiceInfo">Outgoing stream parameters. Set applicable fields to read them by encoder and by receiving client when voice created.</param>
-        /// <param name="channelId">Transport channel specific to frontend. Set to VoiceClient.ChannelAuto to let frontend automatically assign channel.</param>
+        /// <param name="channelId">Transport channel specific to transport. Set to VoiceClient.ChannelAuto to let transport automatically assign channel.</param>
         /// <param name="encoder">Encoder compressing video data. Set to null to use default VP8 implementation.</param>
         /// <returns>Outgoing stream handler.</returns>
         public LocalVoiceVideo CreateLocalVoiceVideo(VoiceInfo voiceInfo, int channelId = ChannelAuto, IEncoder encoder = null)
@@ -339,11 +322,11 @@ namespace Photon.Voice
                 localVoicesPerChannel[channelId] = voiceList;
             }
             voiceList.Add(v);
-            if (this.frontend.IsChannelJoined(channelId))
+            if (this.transport.IsChannelJoined(channelId))
             {
-                this.frontend.SendVoicesInfo(new List<LocalVoice>() { v }, channelId, 0); // broadcast if joined
+                this.transport.SendVoicesInfo(new List<LocalVoice>() { v }, channelId, 0); // broadcast if joined
             }
-            v.Group = this.GlobalGroup;
+            v.InterestGroup = this.GlobalInterestGroup;
         }
         /// <summary>
         /// Removes local voice (outgoing data stream).
@@ -353,12 +336,12 @@ namespace Photon.Voice
         {
             this.localVoices.Remove(voice.id);
             this.localVoicesPerChannel[voice.channelId].Remove(voice);
-            if (this.frontend.IsChannelJoined(voice.channelId))
+            if (this.transport.IsChannelJoined(voice.channelId))
             {
-                this.frontend.SendVoiceRemove(voice, voice.channelId, 0);
+                this.transport.SendVoiceRemove(voice, voice.channelId, 0);
             }
             voice.Dispose();
-            this.frontend.LogInfo(voice.LogPrefix + " removed");
+            this.transport.LogInfo(voice.LogPrefix + " removed");
         }
         internal void sendVoicesInfo(int targetPlayerId)
         {
@@ -369,12 +352,12 @@ namespace Photon.Voice
         }
         internal void sendChannelVoicesInfo(int channelId, int targetPlayerId)
         {
-            if (this.frontend.IsChannelJoined(channelId))
+            if (this.transport.IsChannelJoined(channelId))
             {
                 List<LocalVoice> voiceList;
                 if (this.localVoicesPerChannel.TryGetValue(channelId, out voiceList))
                 {
-                    this.frontend.SendVoicesInfo(voiceList, channelId, targetPlayerId);
+                    this.transport.SendVoicesInfo(voiceList, channelId, targetPlayerId);
                 }
             }
         }
@@ -392,7 +375,7 @@ namespace Photon.Voice
                         this.onVoiceRemove(channelId, playerId, content[2]);
                         break;
                     default:
-                        this.frontend.LogError("[PV] Unknown sevent subcode " + content[1]);
+                        this.transport.LogError("[PV] Unknown sevent subcode " + content[1]);
                         break;
                 }
             }
@@ -422,20 +405,20 @@ namespace Photon.Voice
                 this.onFrame(channelId, playerId, voiceId, evNumber, receivedBytes);
             }
         }
-        internal byte GlobalGroup
+        internal byte GlobalInterestGroup
         {
-            get { return this.globalGroup; }
+            get { return this.globalInterestGroup; }
             set
             {
-                this.globalGroup = value;
+                this.globalInterestGroup = value;
                 foreach (var v in this.localVoices)
                 {
-                    v.Value.Group = this.globalGroup;
+                    v.Value.InterestGroup = this.globalInterestGroup;
                 }
             }
         }
         #region nonpublic
-        private byte globalGroup;
+        private byte globalInterestGroup;
         private byte voiceIdCnt = 0;
         private Dictionary<byte, LocalVoice> localVoices = new Dictionary<byte, LocalVoice>();
         private Dictionary<int, List<LocalVoice>> localVoicesPerChannel = new Dictionary<int, List<LocalVoice>>();
@@ -461,7 +444,7 @@ namespace Photon.Voice
                 i++;
                 if (logInfo)
                 {
-                    this.frontend.LogInfo(v.LogPrefix + " Sending info: " + v.info.ToString() + " ev=" + v.evNumber);
+                    this.transport.LogInfo(v.LogPrefix + " Sending info: " + v.info.ToString() + " ev=" + v.evNumber);
                 }
             }
             return content;
@@ -470,7 +453,7 @@ namespace Photon.Voice
         {
             byte[] ids = new byte[] { v.id };
             object[] content = new object[] { (byte)0, EventSubcode.VoiceRemove, ids };
-            this.frontend.LogInfo(v.LogPrefix + " remove sent");
+            this.transport.LogInfo(v.LogPrefix + " remove sent");
             return content;
         }
         internal void clearRemoteVoices()
@@ -486,7 +469,7 @@ namespace Photon.Voice
                 }
             }
             remoteVoices.Clear();
-            this.frontend.LogInfo("[PV] Remote voices cleared");
+            this.transport.LogInfo("[PV] Remote voices cleared");
         }
         internal void clearRemoteVoicesInChannel(int channelId)
         {
@@ -502,7 +485,7 @@ namespace Photon.Voice
                 }
                 this.remoteVoices.Remove(channelId);
             }
-            this.frontend.LogInfo("[PV] Remote voices for channel " + this.channelStr(channelId) + " cleared");
+            this.transport.LogInfo("[PV] Remote voices for channel " + this.channelStr(channelId) + " cleared");
         }
         private void onVoiceInfo(int channelId, int playerId, object payload)
         {
@@ -526,12 +509,12 @@ namespace Photon.Voice
                 {
                     var eventNumber = (byte)h[(byte)EventParam.EventNumber];
                     var info = VoiceInfo.CreateFromEventPayload(h);
-                    this.frontend.LogInfo("[PV] ch#" + this.channelStr(channelId) + " p#" + this.playerStr(playerId) + " v#" + voiceId + " Info received: " + info.ToString() + " ev=" + eventNumber);
+                    this.transport.LogInfo("[PV] ch#" + this.channelStr(channelId) + " p#" + this.playerStr(playerId) + " v#" + voiceId + " Info received: " + info.ToString() + " ev=" + eventNumber);
                     // create default decoder                   
                     RemoteVoiceOptions options = new RemoteVoiceOptions();
                     // create default decoder
                     // may be overwritten in OnRemoteVoiceInfoAction call
-                    options.Decoder = VoiceCodec.CreateDefaultDecoder(channelId, playerId, voiceId, info, this.frontend);
+                    options.Decoder = VoiceCodec.CreateDefaultDecoder(channelId, playerId, voiceId, info, this.transport);
                     if (this.OnRemoteVoiceInfoAction != null)
                     {
                         this.OnRemoteVoiceInfoAction(channelId, playerId, voiceId, info, ref options);
@@ -542,7 +525,7 @@ namespace Photon.Voice
                 {
                     if (!this.SuppressInfoDuplicateWarning)
                     {
-                        this.frontend.LogWarning("[PV] Info duplicate for voice #" + voiceId + " of player " + this.playerStr(playerId) + " at channel " + this.channelStr(channelId));
+                        this.transport.LogWarning("[PV] Info duplicate for voice #" + voiceId + " of player " + this.playerStr(playerId) + " at channel " + this.channelStr(channelId));
                     }
                 }
             }
@@ -562,23 +545,23 @@ namespace Photon.Voice
                         if (playerVoices.TryGetValue(voiceId, out voice))
                         {
                             playerVoices.Remove(voiceId);
-                            this.frontend.LogInfo("[PV] Remote voice #" + voiceId + " of player " + this.playerStr(playerId) + " at channel " + this.channelStr(channelId) + " removed");
+                            this.transport.LogInfo("[PV] Remote voice #" + voiceId + " of player " + this.playerStr(playerId) + " at channel " + this.channelStr(channelId) + " removed");
                             voice.removeAndDispose();
                         }
                         else
                         {
-                            this.frontend.LogWarning("[PV] Remote voice #" + voiceId + " of player " + this.playerStr(playerId) + " at channel " + this.channelStr(channelId) + " not found when trying to remove");
+                            this.transport.LogWarning("[PV] Remote voice #" + voiceId + " of player " + this.playerStr(playerId) + " at channel " + this.channelStr(channelId) + " not found when trying to remove");
                         }
                     }
                 }
                 else
                 {
-                    this.frontend.LogWarning("[PV] Remote voice list of player " + this.playerStr(playerId) + " at channel " + this.channelStr(channelId) + " not found when trying to remove voice(s)");
+                    this.transport.LogWarning("[PV] Remote voice list of player " + this.playerStr(playerId) + " at channel " + this.channelStr(channelId) + " not found when trying to remove voice(s)");
                 }
             }
             else
             {
-                this.frontend.LogWarning("[PV] Remote voice list of channel " + this.channelStr(channelId) + " not found when trying to remove voice(s)");
+                this.transport.LogWarning("[PV] Remote voice list of channel " + this.channelStr(channelId) + " not found when trying to remove voice(s)");
             }
         }
         Random rnd = new Random();
@@ -586,7 +569,7 @@ namespace Photon.Voice
         {
             if (this.DebugLostPercent > 0 && rnd.Next(100) < this.DebugLostPercent)
             {
-                this.frontend.LogWarning("[PV] Debug Lost Sim: 1 packet dropped");
+                this.transport.LogWarning("[PV] Debug Lost Sim: 1 packet dropped");
                 return;
             }
             FramesReceived++;
@@ -603,17 +586,17 @@ namespace Photon.Voice
                     }
                     else
                     {
-                        this.frontend.LogWarning("[PV] Frame event for not inited voice #" + voiceId + " of player " + this.playerStr(playerId) + " at channel " + this.channelStr(channelId));
+                        this.transport.LogWarning("[PV] Frame event for not inited voice #" + voiceId + " of player " + this.playerStr(playerId) + " at channel " + this.channelStr(channelId));
                     }
                 }
                 else
                 {
-                    this.frontend.LogWarning("[PV] Frame event for voice #" + voiceId + " of not inited player " + this.playerStr(playerId) + " at channel " + this.channelStr(channelId));
+                    this.transport.LogWarning("[PV] Frame event for voice #" + voiceId + " of not inited player " + this.playerStr(playerId) + " at channel " + this.channelStr(channelId));
                 }
             }
             else
             {
-                this.frontend.LogWarning("[PV] Frame event for voice #" + voiceId + " of not inited channel " + this.channelStr(channelId));
+                this.transport.LogWarning("[PV] Frame event for voice #" + voiceId + " of not inited channel " + this.channelStr(channelId));
             }
         }
         internal bool removePlayerVoices(int playerId)
@@ -651,7 +634,7 @@ namespace Photon.Voice
         }
         internal string channelStr(int channelId)
         {
-            var str = this.frontend.ChannelIdStr(channelId);
+            var str = this.transport.ChannelIdStr(channelId);
             if (str != null)
             {
                 return channelId + "(" + str + ")";
@@ -663,7 +646,7 @@ namespace Photon.Voice
         }
         internal string playerStr(int playerId)
         {
-            var str = this.frontend.PlayerIdStr(playerId);
+            var str = this.transport.PlayerIdStr(playerId);
             if (str != null)
             {
                 return playerId + "(" + str + ")";

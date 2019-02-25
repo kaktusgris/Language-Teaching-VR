@@ -2,27 +2,33 @@
   "actions": [
     {
       "name": "/actions/language/in/OpenMenu",
-      "type": "boolean"
+      "type": "boolean",
+      "requirement": "mandatory"
     },
     {
       "name": "/actions/language/in/InteractUI",
-      "type": "boolean"
+      "type": "boolean",
+      "requirement": "mandatory"
     },
     {
       "name": "/actions/language/in/Teleport",
-      "type": "boolean"
+      "type": "boolean",
+      "requirement": "mandatory"
     },
     {
       "name": "/actions/language/in/GrabPinch",
-      "type": "boolean"
+      "type": "boolean",
+      "requirement": "mandatory"
     },
     {
       "name": "/actions/language/in/GrabGrip",
-      "type": "boolean"
+      "type": "boolean",
+      "requirement": "mandatory"
     },
     {
       "name": "/actions/language/in/Squeeze",
-      "type": "vector1"
+      "type": "vector1",
+      "requirement": "suggested"
     },
     {
       "name": "/actions/language/in/Pose",
@@ -40,11 +46,13 @@
     },
     {
       "name": "/actions/language/in/TouchDirection",
-      "type": "vector2"
+      "type": "vector2",
+      "requirement": "mandatory"
     },
     {
       "name": "/actions/language/in/TouchpadTouched",
-      "type": "boolean"
+      "type": "boolean",
+      "requirement": "mandatory"
     },
     {
       "name": "/actions/language/out/Haptic",
@@ -78,24 +86,9 @@
   "localization": [
     {
       "language_tag": "en_US",
-      "/actions/default/in/InteractUI": "Interact With UI",
-      "/actions/default/in/Teleport": "Teleport",
-      "/actions/default/in/GrabPinch": "Grab Pinch",
-      "/actions/default/in/GrabGrip": "Grab Grip",
-      "/actions/default/in/SkeletonLeftHand": "Skeleton (Left)",
-      "/actions/default/in/SkeletonRightHand": "Skeleton (Right)",
-      "/actions/default/in/Pose": "Pose",
-      "/actions/default/out/Haptic": "Haptic",
-      "/actions/buggybuddy/in/Steering": "Steering",
-      "/actions/buggybuddy/in/Throttle": "Throttle",
-      "/actions/buggybuddy/in/Brake": "Brake",
-      "/actions/buggybuddy/in/Reset": "Reset",
-      "/actions/platformer/in/Move": "Move",
-      "/actions/platformer/in/Jump": "Jump",
       "/actions/language/in/OpenMenu": "Open Menu",
       "/actions/language/in/InteractUI": "Interact UI",
       "/actions/language/in/GrabPinch": "Grab Pinch",
-      "/actions/language/in/Grab Grip": "Grab Grip",
       "/actions/language/in/SkeletonLeftHand": "Skeleton Left Hand",
       "/actions/language/in/SkeletonRightHand": "Skeleton Right hand",
       "/actions/language/in/GrabGrip": "Grab Grip"

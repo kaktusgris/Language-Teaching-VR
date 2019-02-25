@@ -45,7 +45,6 @@ namespace NTNU.CarloMarton.VRLanguage
 
         public Button StartGameButton;
         public GameObject PlayerListEntryPrefab;
-        public GameObject ColorPicker;
 
         private Dictionary<string, RoomInfo> cachedRoomList;
         private Dictionary<string, GameObject> roomListEntries;
@@ -58,7 +57,7 @@ namespace NTNU.CarloMarton.VRLanguage
         public Text roomNameText;
 
         string gameVersion = "1";
-            
+
         #region UNITY
 
         public void Awake()
@@ -113,7 +112,7 @@ namespace NTNU.CarloMarton.VRLanguage
         {
             string roomName = "Room " + Random.Range(1000, 10000);
 
-            RoomOptions options = new RoomOptions {MaxPlayers = 8};
+            RoomOptions options = new RoomOptions { MaxPlayers = 8 };
 
             PhotonNetwork.CreateRoom(roomName, options, null);
         }
@@ -139,7 +138,7 @@ namespace NTNU.CarloMarton.VRLanguage
                 object isPlayerReady;
                 if (p.CustomProperties.TryGetValue("IsPlayerReady", out isPlayerReady))
                 {
-                    entry.GetComponent<PlayerEntry>().SetPlayerReady((bool) isPlayerReady);
+                    entry.GetComponent<PlayerEntry>().SetPlayerReady((bool)isPlayerReady);
                 }
 
                 playerListEntries.Add(p.ActorNumber, entry);
@@ -208,7 +207,7 @@ namespace NTNU.CarloMarton.VRLanguage
                 object isPlayerReady;
                 if (changedProps.TryGetValue("IsPlayerReady", out isPlayerReady))
                 {
-                    entry.GetComponent<PlayerEntry>().SetPlayerReady((bool) isPlayerReady);
+                    entry.GetComponent<PlayerEntry>().SetPlayerReady((bool)isPlayerReady);
                 }
             }
 
@@ -244,9 +243,9 @@ namespace NTNU.CarloMarton.VRLanguage
                 return;
             }
 
-            maxPlayers = (byte) Mathf.Clamp(maxPlayers, 2, 8);
+            maxPlayers = (byte)Mathf.Clamp(maxPlayers, 2, 8);
 
-            RoomOptions options = new RoomOptions {MaxPlayers = maxPlayers};
+            RoomOptions options = new RoomOptions { MaxPlayers = maxPlayers };
 
             PhotonNetwork.CreateRoom(roomName, options, null);
         }
@@ -335,7 +334,7 @@ namespace NTNU.CarloMarton.VRLanguage
                 object isPlayerReady;
                 if (p.CustomProperties.TryGetValue("IsPlayerReady", out isPlayerReady))
                 {
-                    if (!(bool) isPlayerReady)
+                    if (!(bool)isPlayerReady)
                     {
                         return false;
                     }
@@ -348,7 +347,7 @@ namespace NTNU.CarloMarton.VRLanguage
 
             return true;
         }
-        
+
         private void ClearRoomListView()
         {
             foreach (GameObject entry in roomListEntries.Values)
@@ -417,13 +416,13 @@ namespace NTNU.CarloMarton.VRLanguage
 
         public void Exit()
         {
-            #if UNITY_EDITOR
-                // Application.Quit() does not work in the editor so
-                // UnityEditor.EditorApplication.isPlaying need to be set to false to end the game
-                UnityEditor.EditorApplication.isPlaying = false;
-            #else
+#if UNITY_EDITOR
+            // Application.Quit() does not work in the editor so
+            // UnityEditor.EditorApplication.isPlaying need to be set to false to end the game
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
                 Application.Quit();
-            #endif
+#endif
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿#if (UNITY_IOS && !UNITY_EDITOR) || __IOS__
 using System;
+using System.Threading;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Voice = Photon.Voice;
@@ -24,20 +25,30 @@ namespace Photon.Voice.IOS
 
         public AudioInPusher(AudioSessionParameters sessParam, Voice.ILogger logger)
         {
-            try
+            var t = new Thread(() =>
             {
-                handle = Photon_Audio_In_CreatePusher(instanceCnt, nativePushCallback, (int)sessParam.Category, (int)sessParam.Mode, sessParam.CategotyOptionsToInt());
-                instancePerHandle.Add(instanceCnt++, this);
-            }
-            catch (Exception e)
-            {
-                Error = e.ToString();
-                if (Error == null) // should never happen but since Error used as validity flag, make sure that it's not null
+                try
                 {
-                    Error = "Exception in AudioInPusher constructor";
+                    var handle = Photon_Audio_In_CreatePusher(instanceCnt, nativePushCallback, (int)sessParam.Category, (int)sessParam.Mode, sessParam.CategotyOptionsToInt());
+                    lock (instancePerHandle)
+                    {
+                        this.handle = handle;
+                        this.instanceID = instanceCnt;
+                        instancePerHandle.Add(instanceCnt++, this);
+                    }
                 }
-                logger.LogError("[PV] AudioInPusher: " + Error);
-            }
+                catch (Exception e)
+                {
+                    Error = e.ToString();
+                    if (Error == null) // should never happen but since Error used as validity flag, make sure that it's not null
+                    {
+                        Error = "Exception in AudioInPusher constructor";
+                    }
+                    logger.LogError("[PV] AudioInPusher: " + Error);
+                }
+            });
+            t.Name = "IOS AudioInPusher ctr";
+            t.Start();
         }
 
         // IL2CPP does not support marshaling delegates that point to instance methods to native code.
@@ -48,13 +59,19 @@ namespace Photon.Voice.IOS
         private static void nativePushCallback(int instanceID, IntPtr buf, int len)
         {
             AudioInPusher instance;
-            if (instancePerHandle.TryGetValue(instanceID, out instance))
+            bool ok;
+            lock (instancePerHandle)
+            {
+                ok = instancePerHandle.TryGetValue(instanceID, out instance);
+            }
+            if (ok)
             {
                 instance.push(buf, len);
             }
         }
 
         IntPtr handle;
+        int instanceID;
         Action<float[]> pushCallback;
         Voice.ObjectFactory<float[], int> bufferFactory;
 
@@ -80,11 +97,14 @@ namespace Photon.Voice.IOS
 
         public void Dispose()
         {
+            lock (instancePerHandle)
+            {
+                instancePerHandle.Remove(instanceID);
+            }
             if (handle != IntPtr.Zero)
             {
                 Photon_Audio_In_Destroy(handle);
             }
-            // TODO: Remove this from instancePerHandle
         }
     }
 }

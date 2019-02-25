@@ -102,7 +102,7 @@ namespace Photon.Voice
     /// </summary>
     /// Consumes data in array buffers of arbitrary length. Repacks them in frames of constant length for further processing and encoding.
     /// <param name="voiceInfo">Outgoing stream parameters. Set applicable fields to read them by encoder and by receiving client when voice created.</param>
-    /// <param name="channelId">Transport channel specific to frontend. Set to VoiceClient.ChannelAuto to let frontend automatically assign channel.</param>
+    /// <param name="channelId">Transport channel specific to transport. Set to VoiceClient.ChannelAuto to let transport automatically assign channel.</param>
     /// <param name="encoder">Encoder producing the stream.</param>
     /// <returns>Outgoing stream handler.</returns>
     public class LocalVoiceFramed<T> : LocalVoiceFramedBase
@@ -188,7 +188,7 @@ namespace Photon.Voice
             if (disposed) return;
             if (!dataEncodeThreadStarted)
             {
-                voiceClient.frontend.LogInfo(LogPrefix + ": Starting data encode thread");
+                voiceClient.transport.LogInfo(LogPrefix + ": Starting data encode thread");
 #if NETFX_CORE
                 ThreadPool.RunAsync((x) =>
                 {
@@ -217,7 +217,7 @@ namespace Photon.Voice
                 this.bufferFactory.Free(buf, buf.Length);
                 if (framesSkipped == framesSkippedNextLog)
                 {
-                    voiceClient.frontend.LogWarning(LogPrefix + ": PushData queue overflow. Frames skipped: " + (framesSkipped + 1));
+                    voiceClient.transport.LogWarning(LogPrefix + ": PushData queue overflow. Frames skipped: " + (framesSkipped + 1));
                     framesSkippedNextLog = framesSkipped + 10;
                 }
                 framesSkipped++;
@@ -258,7 +258,7 @@ namespace Photon.Voice
             }
             catch (Exception e)
             {
-                voiceClient.frontend.LogError(LogPrefix + ": Exception in encode thread: " + e);
+                voiceClient.transport.LogError(LogPrefix + ": Exception in encode thread: " + e);
                 throw e;
             }
             finally
@@ -273,14 +273,14 @@ namespace Photon.Voice
 #else
                 pushDataQueueReady.Close();
 #endif
-                voiceClient.frontend.LogInfo(LogPrefix + ": Exiting data encode thread");
+                voiceClient.transport.LogInfo(LogPrefix + ": Exiting data encode thread");
             }
         }
         /// <summary>Synchronously push data into this stream.</summary>
         // Accepts array of arbitrary size. Automatically splits or aggregates input to buffers of length <see cref="FrameSize"></see>.
         public void PushData(T[] buf)
         {
-            if (this.voiceClient.frontend.IsChannelJoined(this.channelId) && this.TransmitEnabled)
+            if (this.voiceClient.transport.IsChannelJoined(this.channelId) && this.TransmitEnabled)
             {
                 if (this.encoder is IEncoderDataFlowDirect<T>)
                 {

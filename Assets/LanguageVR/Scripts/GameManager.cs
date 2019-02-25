@@ -17,6 +17,8 @@ namespace NTNU.CarloMarton.VRLanguage
         [Tooltip("The prefab to use for representing the player")]
         public GameObject avatarPrefab;
 
+        public Valve.VR.InteractionSystem.Player playerInScene;
+
         public static GameManager Instance;
 
         [NonSerialized] public GameObject instantiatedAvatar;
@@ -71,6 +73,8 @@ namespace NTNU.CarloMarton.VRLanguage
                 // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
                 instantiatedAvatar = PhotonNetwork.Instantiate(this.avatarPrefab.name, ViveManager.Instance.head.transform.position, ViveManager.Instance.head.transform.rotation, 0);
 
+                //instantiatedAvatar.GetComponent<PlayerManager>().InitialisePlayer(playerInScene);
+
                 // Make the local head invisible as to not see the inside of your own head
                 try
                 {
@@ -83,6 +87,7 @@ namespace NTNU.CarloMarton.VRLanguage
                 {
                     Debug.LogError("NullReferenceException. Probably because the head component in avatar is not named Head");
                 }
+
             }
             else
             {

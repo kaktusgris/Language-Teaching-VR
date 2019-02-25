@@ -21,7 +21,11 @@ namespace NTNU.CarloMarton.VRLanguage
 
         public void UpdateRoleText()
         {
-            RoleStatusText.text = (bool)PhotonNetwork.LocalPlayer.CustomProperties["admin"] ? "Lærer" : "Student";
+            object adminValue;
+            if(PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("admin", out adminValue))
+            {
+                RoleStatusText.text = (bool) adminValue ? "Lærer" : "Student";
+            }
         }
 
         #endregion

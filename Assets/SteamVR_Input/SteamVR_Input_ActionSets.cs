@@ -14,22 +14,25 @@ namespace Valve.VR
     using UnityEngine;
     
     
-    public partial class SteamVR_Input
+    public partial class SteamVR_Actions
     {
         
-        public static Valve.VR.SteamVR_Input_ActionSet_language language;
+        private static SteamVR_Input_ActionSet_language p_language;
         
-        public static void Dynamic_InitializeActionSets()
+        public static SteamVR_Input_ActionSet_language language
         {
-            SteamVR_Input.language.Initialize();
+            get
+            {
+                return SteamVR_Actions.p_language.GetCopy <SteamVR_Input_ActionSet_language>();
+            }
         }
         
-        public static void Dynamic_InitializeInstanceActionSets()
+        private static void StartPreInitActionSets()
         {
-            Valve.VR.SteamVR_Input.language = ((SteamVR_Input_ActionSet_language)(SteamVR_Input_References.GetActionSet("language")));
+            SteamVR_Actions.p_language = ((SteamVR_Input_ActionSet_language)(SteamVR_ActionSet.Create <SteamVR_Input_ActionSet_language>("/actions/language")));
             Valve.VR.SteamVR_Input.actionSets = new Valve.VR.SteamVR_ActionSet[]
             {
-                    Valve.VR.SteamVR_Input.language};
+                    SteamVR_Actions.language};
         }
     }
 }

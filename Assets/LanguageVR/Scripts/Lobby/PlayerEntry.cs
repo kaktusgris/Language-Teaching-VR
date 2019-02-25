@@ -1,14 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PlayerListEntry.cs" company="Exit Games GmbH">
-//   Part of: Asteroid Demo,
-// </copyright>
-// <summary>
-//  Player List Entry
-// </summary>
-// <author>developer@exitgames.com</author>
-// --------------------------------------------------------------------------------------------------------------------
-
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 using ExitGames.Client.Photon;
@@ -51,7 +41,7 @@ namespace NTNU.CarloMarton.VRLanguage
                     isPlayerReady = !isPlayerReady;
                     SetPlayerReady(isPlayerReady);
 
-                    Hashtable props = new Hashtable() {{"IsPlayerReady", isPlayerReady}};
+                    Hashtable props = new Hashtable() { { "IsPlayerReady", isPlayerReady } };
                     PhotonNetwork.LocalPlayer.SetCustomProperties(props);
 
                     if (PhotonNetwork.IsMasterClient)
@@ -109,8 +99,8 @@ namespace NTNU.CarloMarton.VRLanguage
             {
                 object colorObject = GetColorOnPlayer(player);
                 if (colorObject != null)
-                { 
-                    takenColors.Add((Color) colorObject);
+                {
+                    takenColors.Add((Color)colorObject);
                 }
             }
 
@@ -151,7 +141,7 @@ namespace NTNU.CarloMarton.VRLanguage
             float[] colorAsList = { color.r, color.g, color.b, color.a };
             if (PhotonNetwork.LocalPlayer.ActorNumber == ownerId)
             {
-                Hashtable hash = new Hashtable() { {"Color", colorAsList } };
+                Hashtable hash = new Hashtable() { { "Color", colorAsList } };
                 PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
             }
             UpdateAvailableColors();
@@ -179,7 +169,7 @@ namespace NTNU.CarloMarton.VRLanguage
 
         private Color GetColorOnPlayer(Player p)
         {
-            float[] colorAsFloat = (float[]) p.CustomProperties["Color"];
+            float[] colorAsFloat = (float[])p.CustomProperties["Color"];
             if (colorAsFloat == null)
             {
                 return Color.black;

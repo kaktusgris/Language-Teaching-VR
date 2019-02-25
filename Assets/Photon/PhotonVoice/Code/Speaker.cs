@@ -77,6 +77,13 @@ namespace Photon.Voice.Unity
             get { return this.remoteVoiceLink != null; }
         }
 
+        #if UNITY_EDITOR
+        public RemoteVoiceLink RemoteVoiceLink
+        {
+            get { return this.remoteVoiceLink; }
+        }
+        #endif
+
         #endregion
 
         #region Private Methods

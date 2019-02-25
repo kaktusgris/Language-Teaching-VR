@@ -93,7 +93,17 @@ namespace Photon.Voice
                 throw new UnsupportedSampleTypeException(typeof(T));
             }
         }
-        public virtual AudioUtil.IVoiceDetector VoiceDetector { get { return voiceDetector; } }
+        override public IEncoder CreateDefaultEncoder(VoiceInfo info)
+        {
+            switch (info.Codec)
+            {
+                case Codec.AudioOpus:
+                    return OpusCodec.EncoderFactory.Create<T>(info, Logger);
+                default:
+                    throw new UnsupportedCodecException("LocalVoiceAudio.CreateDefaultEncoder<" + (new T[1])[0].GetType() + ">", info.Codec, Logger);
+            }
+        }
+    	public virtual AudioUtil.IVoiceDetector VoiceDetector { get { return voiceDetector; } }
         protected AudioUtil.VoiceDetector<T> voiceDetector;
         protected AudioUtil.VoiceDetectorCalibration<T> voiceDetectorCalibration;
         public virtual AudioUtil.ILevelMeter LevelMeter { get { return levelMeter; } }
@@ -103,10 +113,10 @@ namespace Photon.Voice
         /// <param name="durationMs">Duration of calibration in milliseconds.</param>
         public void VoiceDetectorCalibrate(int durationMs)
         {
-            voiceDetectorCalibration.VoiceDetectorCalibrate(durationMs);
+            voiceDetectorCalibration.Calibrate(durationMs);
         }
         /// <summary>True if the VoiceDetector is currently calibrating.</summary>
-        public bool VoiceDetectorCalibrating { get { return voiceDetectorCalibration.VoiceDetectorCalibrating; } }
+        public bool VoiceDetectorCalibrating { get { return voiceDetectorCalibration.IsCalibrating; } }
         protected int channels;
         protected int sourceSamplingRateHz;
         protected bool resampleSource;
@@ -114,17 +124,13 @@ namespace Photon.Voice
             : base(voiceClient, encoder, id, voiceInfo, channelId,
                   voiceInfo.SamplingRate != 0 ? voiceInfo.FrameSize * voiceInfo.SourceSamplingRate / voiceInfo.SamplingRate : voiceInfo.FrameSize
                   )
-        {
-            if (this.encoder == null)
-            {
-                this.encoder = VoiceCodec.CreateDefaultEncoder(voiceInfo, this);
-            }
+        {            
             this.channels = voiceInfo.Channels;
             this.sourceSamplingRateHz = voiceInfo.SourceSamplingRate;
             if (this.sourceSamplingRateHz != voiceInfo.SamplingRate)
             {
                 this.resampleSource = true;
-                this.voiceClient.frontend.LogWarning("[PV] Local voice #" + this.id + " audio source frequency " + this.sourceSamplingRateHz + " and encoder sampling rate " + voiceInfo.SamplingRate + " do not match. Resampling will occur before encoding.");
+                this.voiceClient.transport.LogWarning("[PV] Local voice #" + this.id + " audio source frequency " + this.sourceSamplingRateHz + " and encoder sampling rate " + voiceInfo.SamplingRate + " do not match. Resampling will occur before encoding.");
             }
         }
         protected void initBuiltinProcessors()

@@ -11,8 +11,6 @@ namespace Photon.Voice.DemoVoiceUI
         public Text nameText;
         public Image remoteIsMuting;
         public Image remoteIsTalking;
-        public Text customUserObjectText;
-
 
         void Update()
         {
@@ -22,7 +20,7 @@ namespace Photon.Voice.DemoVoiceUI
                 string nick = speaker.Actor.NickName;
                 if (string.IsNullOrEmpty(nick))
                 {
-                    nick = "user " + speaker.Actor.ActorNumber;
+                    nick = string.Concat("user ", speaker.Actor.ActorNumber);
                 }
                 this.nameText.text = nick;
 

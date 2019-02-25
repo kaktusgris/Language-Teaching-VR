@@ -1,5 +1,6 @@
 ﻿#if (UNITY_IOS && !UNITY_EDITOR) || __IOS__
 using System;
+using System.Threading;
 using System.Runtime.InteropServices;
 
 namespace Photon.Voice.IOS
@@ -18,19 +19,28 @@ namespace Photon.Voice.IOS
 
         public AudioInReader(AudioSessionParameters sessParam, ILogger logger)
         {
-            try
+            var t = new Thread(() =>
             {
-                audioIn = Photon_Audio_In_CreateReader((int)sessParam.Category, (int)sessParam.Mode, sessParam.CategotyOptionsToInt());
-            }
-            catch (Exception e)
-            {
-                Error = e.ToString();
-                if (Error == null) // should never happen but since Error used as validity flag, make sure that it's not null
+                try
                 {
-                    Error = "Exception in AudioInReader constructor";
+                    var audioIn = Photon_Audio_In_CreateReader((int)sessParam.Category, (int)sessParam.Mode, sessParam.CategotyOptionsToInt());
+                    lock (this)
+                    {
+                        this.audioIn = audioIn;
+                    }
                 }
-                logger.LogError("[PV] AudioInReader: " + Error);
-            }
+                catch (Exception e)
+                {
+                    Error = e.ToString();
+                    if (Error == null) // should never happen but since Error used as validity flag, make sure that it's not null
+                    {
+                        Error = "Exception in AudioInReader constructor";
+                    }
+                    logger.LogError("[PV] AudioInReader: " + Error);
+                }
+            });
+            t.Name = "IOS AudioInPusher ctr";
+            t.Start();
         }
         public int Channels { get { return 1; } }
 
@@ -40,15 +50,21 @@ namespace Photon.Voice.IOS
 
         public void Dispose()
         {
-            if (audioIn != IntPtr.Zero)
+            lock (this)
             {
-                Photon_Audio_In_Destroy(audioIn);
+                if (audioIn == IntPtr.Zero)
+                {
+                    return;
+                }
             }
+
+            Photon_Audio_In_Destroy(audioIn);
+            audioIn = IntPtr.Zero;
         }
 
         public bool Read(float[] buf)
         {
-            return audioIn != IntPtr.Zero && Photon_Audio_In_Read(audioIn, buf, buf.Length);            
+            return audioIn != IntPtr.Zero && Photon_Audio_In_Read(audioIn, buf, buf.Length);
         }
     }
 }

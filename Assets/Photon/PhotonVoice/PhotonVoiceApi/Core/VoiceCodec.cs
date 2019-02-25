@@ -103,9 +103,10 @@ namespace Photon.Voice
     class UnsupportedCodecException : Exception
     {
         /// <summary>Create a new UnsupportedCodecException.</summary>
+        /// <param name="info">The info prepending standard message.</param>
         /// <param name="codec">The codec actually encountered.</param>
-        /// <param name="voice">The LocalVoice (outgoing stream) involved.</param>
-        public UnsupportedCodecException(Codec codec, LocalVoice voice) : base("[PV] unsupported codec: " + codec + " at voice " + voice.GetType()) { }
+        /// <param name="logger">Loogger.</param>
+        public UnsupportedCodecException(string info, Codec codec, ILogger logger) : base("[PV] " + info + ": unsupported codec: " + codec) { }
     }
     /// <summary>Enum for Media Codecs supported by PhotonVoice.</summary>
     /// <remarks>Transmitted in <see cref="VoiceInfo"></see>. Do not change the values of this Enum!</remarks>
@@ -231,20 +232,6 @@ namespace Photon.Voice
     }
     internal static class VoiceCodec
     {
-        internal static IEncoder CreateDefaultEncoder(VoiceInfo info, LocalVoice localVoice)
-        {
-            switch (info.Codec)
-            {
-                case Codec.AudioOpus:
-                    return OpusCodec.EncoderFactory.Create(info, localVoice);
-#if PHOTON_VOICE_VIDEO_ENABLE
-                case Codec.VideoVP8:
-                    return new VPxCodec.Encoder(info);
-#endif
-                default:
-                    throw new UnsupportedCodecException(info.Codec, localVoice);
-            }
-        }
         internal static IDecoder CreateDefaultDecoder(int channelId, int playerId, byte voiceId, VoiceInfo info, ILogger logger)
         {
             switch (info.Codec)

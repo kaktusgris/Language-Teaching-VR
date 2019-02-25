@@ -221,7 +221,10 @@ namespace Photon.Voice.PUN
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            instantiated = false;
+            lock (instanceLock)
+            {
+                instantiated = false;
+            }
         }
 
         private void OnPunStateChanged(ClientState fromState, ClientState toState)
@@ -365,7 +368,7 @@ namespace Photon.Voice.PUN
             }
             if (PhotonNetwork.NetworkClientState == this.ClientState)
             {
-                if (PhotonNetwork.NetworkClientState == ClientState.Joined)
+                if (PhotonNetwork.NetworkClientState == ClientState.Joined && this.AutoConnectAndJoin)
                 {
                     string expectedRoomName = GetVoiceRoomName();
                     string currentRoomName = this.Client.CurrentRoom.Name;

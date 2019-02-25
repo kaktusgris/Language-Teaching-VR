@@ -57,7 +57,7 @@ namespace Photon.Voice
             {
                 for (int i = 0; i < dstCount; i++)
                 {
-                    dst[i] = src[i * src.Length / dstCount] * (float)short.MaxValue;
+                    dst[i] = src[i * src.Length / dstCount] / (float)short.MaxValue;
                 }
             }
             else if (channels == 2)
@@ -67,8 +67,8 @@ namespace Photon.Voice
                     var srcI = i * src.Length / dstCount;
                     var dstCh0I = i * 2;
                     var srcCh0I = srcI * 2;
-                    dst[dstCh0I++] = src[srcCh0I++] * (float)short.MaxValue;
-                    dst[dstCh0I] = src[srcCh0I] * (float)short.MaxValue;
+                    dst[dstCh0I++] = src[srcCh0I++] / (float)short.MaxValue;
+                    dst[dstCh0I] = src[srcCh0I] / (float)short.MaxValue;
                 }
             }
             else
@@ -80,7 +80,7 @@ namespace Photon.Voice
                     var srcCh0I = srcI * channels;
                     for (int ch = 0; ch < channels; ch++)
                     {
-                        dst[dstCh0I++] = src[srcCh0I++] * (float)short.MaxValue;
+                        dst[dstCh0I++] = src[srcCh0I++] / (float)short.MaxValue;
                     }
                 }
             }
@@ -236,14 +236,14 @@ namespace Photon.Voice
             // max of values from start buffer to current pos
             protected float ampPeak;
             protected int bufferSize;
-            protected float[] buffer;
-            protected int prevValuesPtr;
+            protected float[] prevValues;
+            protected int prevValuesHead;
             protected float accumAvgPeakAmpSum;
             protected int accumAvgPeakAmpCount;
             internal LevelMeter(int samplingRate, int numChannels)
             {
                 this.bufferSize = samplingRate * numChannels / 2; // 1/2 sec
-                this.buffer = new float[this.bufferSize];
+                this.prevValues = new float[this.bufferSize];
             }
             public float CurrentAvgAmp { get { return ampSum / this.bufferSize; } }
             public float CurrentPeakAmp
@@ -276,20 +276,20 @@ namespace Photon.Voice
                     {
                         a = -a;
                     }
-                    ampSum = ampSum + a - this.buffer[this.prevValuesPtr];
-                    this.buffer[this.prevValuesPtr] = a;
+                    ampSum = ampSum + a - this.prevValues[this.prevValuesHead];
+                    this.prevValues[this.prevValuesHead] = a;
                     if (ampPeak < a)
                     {
                         ampPeak = a;
                     }
-                    if (this.prevValuesPtr == 0)
+                    if (this.prevValuesHead == 0)
                     {
                         CurrentPeakAmp = ampPeak;
                         ampPeak = 0;
                         accumAvgPeakAmpSum += CurrentPeakAmp;
                         accumAvgPeakAmpCount++;
                     }
-                    this.prevValuesPtr = (this.prevValuesPtr + 1) % this.bufferSize;
+                    this.prevValuesHead = (this.prevValuesHead + 1) % this.bufferSize;
                 }
                 return buf;
             }
@@ -312,20 +312,20 @@ namespace Photon.Voice
                     {
                         a = (short)-a;
                     }
-                    ampSum = ampSum + a - this.buffer[this.prevValuesPtr];
-                    this.buffer[this.prevValuesPtr] = a;
+                    ampSum = ampSum + a - this.prevValues[this.prevValuesHead];
+                    this.prevValues[this.prevValuesHead] = a;
                     if (ampPeak < a)
                     {
                         ampPeak = a;
                     }
-                    if (this.prevValuesPtr == 0)
+                    if (this.prevValuesHead == 0)
                     {
                         CurrentPeakAmp = ampPeak;
                         ampPeak = 0;
                         accumAvgPeakAmpSum += CurrentPeakAmp;
                         accumAvgPeakAmpCount++;
                     }
-                    this.prevValuesPtr = (this.prevValuesPtr + 1) % this.bufferSize;
+                    this.prevValuesHead = (this.prevValuesHead + 1) % this.bufferSize;
                 }
                 return buf;
             }
@@ -353,8 +353,8 @@ namespace Photon.Voice
             IVoiceDetector voiceDetector;
             ILevelMeter levelMeter;
             int valuesPerSec;
-            public bool VoiceDetectorCalibrating { get { return voiceDetectorCalibrateCount > 0; } }
-            protected int voiceDetectorCalibrateCount;
+            public bool IsCalibrating { get { return calibrateCount > 0; } }
+            protected int calibrateCount;
             /// <summary>Create new VoiceDetectorCalibration instance.</summary>
             /// <param name="voiceDetector">Voice Detector to calibrate.</param>
             /// <param name="levelMeter">Level Meter to look at for calibration.</param>
@@ -371,19 +371,19 @@ namespace Photon.Voice
             /// This activates the Calibration process. 
             /// It will reset the given LevelMeter's AccumAvgPeakAmp (accumulated average peak amplitude),
             /// and when the duration has passed, use it for the VoiceDetector's detection threshold.
-            public void VoiceDetectorCalibrate(int durationMs)
+            public void Calibrate(int durationMs)
             {
-                this.voiceDetectorCalibrateCount = valuesPerSec * durationMs / 1000;
+                this.calibrateCount = valuesPerSec * durationMs / 1000;
                 levelMeter.ResetAccumAvgPeakAmp();
             }
             public T[] Process(T[] buf)
             {
-                if (this.voiceDetectorCalibrateCount != 0)
+                if (this.calibrateCount != 0)
                 {
-                    this.voiceDetectorCalibrateCount -= buf.Length;
-                    if (this.voiceDetectorCalibrateCount <= 0)
+                    this.calibrateCount -= buf.Length;
+                    if (this.calibrateCount <= 0)
                     {
-                        this.voiceDetectorCalibrateCount = 0;
+                        this.calibrateCount = 0;
                         this.voiceDetector.Threshold = levelMeter.AccumAvgPeakAmp * 2;
                     }
                 }
@@ -536,11 +536,11 @@ namespace Photon.Voice
         public class VoiceLevelDetectCalibrate<T> : IProcessor<T>
         {
             /// <summary>The LevelMeter in use.</summary>
-            public ILevelMeter Level { get; private set; }
+            public ILevelMeter LevelMeter { get; private set; }
             /// <summary>The VoiceDetector in use</summary>
-            public IVoiceDetector Detector { get; private set; }
+            public IVoiceDetector VoiceDetector { get; private set; }
             /// <summary>The VoiceDetectorCalibration in use.</summary>
-            VoiceDetectorCalibration<T> c;
+            VoiceDetectorCalibration<T> calibration;
             /// <summary>Create new VoiceLevelDetectCalibrate instance</summary>
             /// <param name="samplingRate">Sampling rate of the audio signal (in Hz).</param>
             /// <param name="numChannels">Number of channels in the audio signal.</param>
@@ -549,19 +549,19 @@ namespace Photon.Voice
                 var x = new T[1];
                 if (x[0] is float)
                 {
-                    Level = new LevelMeterFloat(samplingRate, channels);
-                    Detector = new VoiceDetectorFloat(samplingRate, channels);
+                    LevelMeter = new LevelMeterFloat(samplingRate, channels);
+                    VoiceDetector = new VoiceDetectorFloat(samplingRate, channels);
                 }
                 else if (x[0] is short)
                 {
-                    Level = new LevelMeterShort(samplingRate, channels);
-                    Detector = new VoiceDetectorShort(samplingRate, channels);
+                    LevelMeter = new LevelMeterShort(samplingRate, channels);
+                    VoiceDetector = new VoiceDetectorShort(samplingRate, channels);
                 }
                 else
                 {
                     throw new Exception("VoiceLevelDetectCalibrate: type not supported: " + x[0].GetType());
                 }
-                c = new VoiceDetectorCalibration<T>(Detector, Level, samplingRate, channels);
+                calibration = new VoiceDetectorCalibration<T>(VoiceDetector, LevelMeter, samplingRate, channels);
             }
             /// <summary>Start calibration</summary>
             /// <param name="durationMs">Duration of the calibration procedure (in milliseconds).</param>
@@ -570,20 +570,22 @@ namespace Photon.Voice
             /// and when the duration has passed, use it for the VoiceDetector's detection threshold.
             public void Calibrate(int durationMs)
             {
-                c.VoiceDetectorCalibrate(durationMs);
+                calibration.Calibrate(durationMs);
             }
+            public bool IsCalibrating { get { return calibration.IsCalibrating; } }
+            
             public T[] Process(T[] buf)
             {
-                buf = (Level as IProcessor<T>).Process(buf);
-                buf = (c as IProcessor<T>).Process(buf);
-                buf = (Detector as IProcessor<T>).Process(buf);
+                buf = (LevelMeter as IProcessor<T>).Process(buf);
+                buf = (calibration as IProcessor<T>).Process(buf);
+                buf = (VoiceDetector as IProcessor<T>).Process(buf);
                 return buf;
             }
             public void Dispose()
             {
-                (Level as IProcessor<T>).Dispose();
-                (Detector as IProcessor<T>).Dispose();
-                c.Dispose();
+                (LevelMeter as IProcessor<T>).Dispose();
+                (VoiceDetector as IProcessor<T>).Dispose();
+                calibration.Dispose();
             }
         }
    }
