@@ -18,14 +18,15 @@ namespace Photon.Voice
         }
         public static class EncoderFactory
         {
-            public static IEncoder Create(VoiceInfo i, LocalVoice v)
+            public static IEncoder Create<T>(VoiceInfo i, ILogger logger)
             {
-                if (v.GetType() == typeof(LocalVoiceAudioFloat))
-                    return new EncoderFloat(i, v.Logger);
-                else if (v.GetType() == typeof(LocalVoiceAudioShort))
-                    return new EncoderShort(i, v.Logger);
+                var x = new T[1];
+                if (x[0].GetType() == typeof(float))
+                    return new EncoderFloat(i, logger);
+                else if (x[0].GetType() == typeof(short))
+                    return new EncoderShort(i, logger);
                 else
-                    throw new UnsupportedCodecException(i.Codec, v);
+                    throw new UnsupportedCodecException("EncoderFactory.Create<" + x[0].GetType() + ">", i.Codec, logger);
             }
         }
         abstract public class Encoder<T> : IEncoderDataFlowDirect<T>

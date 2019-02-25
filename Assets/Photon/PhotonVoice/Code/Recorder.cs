@@ -11,6 +11,7 @@
 using System;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Photon.Voice.Unity
 {
@@ -53,7 +54,8 @@ namespace Photon.Voice.Unity
         private bool forceShort;
 
         [SerializeField]
-        private byte audioGroup;
+        [FormerlySerializedAs("audioGroup")]
+        private byte interestGroup;
 
         [SerializeField]
         private bool debugEchoMode;
@@ -174,11 +176,11 @@ namespace Photon.Voice.Unity
                 {
                     return;
                 }
-                if (AudioGroup != 0)
+                if (this.InterestGroup != 0)
                 {
                     if (this.Logger.IsWarningEnabled)
                     {
-                        this.Logger.LogWarning("Cannot enable DebugEchoMode when AudioGroup value ({0}) is different than 0.", AudioGroup);
+                        this.Logger.LogWarning("Cannot enable DebugEchoMode when AudioGroup value ({0}) is different than 0.", this.InterestGroup);
                     }
                     return;
                 }
@@ -399,18 +401,27 @@ namespace Photon.Voice.Unity
         }
 
         /// <summary>Target interest group that will receive transmitted audio.</summary>
-        /// <remarks>If AudioGroup != 0, recorders's audio data is sent only to clients listening to this group.</remarks>
+        /// <remarks>If AudioGroup != 0, recorder's audio data is sent only to clients listening to this group.</remarks>
+        [Obsolete("Use InterestGroup instead")]
         public byte AudioGroup
         {
-            get { return audioGroup; }
+            get { return this.InterestGroup; }
+            set { this.InterestGroup = value; }
+        }
+
+        /// <summary>Target interest group that will receive transmitted audio.</summary>
+        /// <remarks>If InterestGroup != 0, recorder's audio data is sent only to clients listening to this group.</remarks>
+        public byte InterestGroup
+        {
+            get { return interestGroup; }
             set
             {
-                if (audioGroup == value)
+                if (interestGroup == value)
                 {
                     return;
                 }
-                audioGroup = value;
-                voice.Group = value;
+                interestGroup = value;
+                voice.InterestGroup = value;
             }
         }
 
@@ -685,7 +696,7 @@ namespace Photon.Voice.Unity
                 this.VoiceDetector.ActivityDelayMs = this.VoiceDetectionDelayMs;
                 this.VoiceDetector.On = VoiceDetection;
             }
-            this.voice.Group = AudioGroup;
+            this.voice.InterestGroup = this.InterestGroup;
             this.voice.DebugEchoMode = DebugEchoMode;
             this.voice.Encrypt = Encrypt;
             this.voice.Reliable = this.ReliableMode;

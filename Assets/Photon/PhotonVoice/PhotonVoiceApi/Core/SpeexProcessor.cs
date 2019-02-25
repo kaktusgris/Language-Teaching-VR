@@ -33,28 +33,46 @@ namespace Photon.Voice
                 }
             }
         }
+        // 
+        public bool IsAECLatecnyDetecting { get; private set; }
+        public bool IsAECLatecnyDetectingRTT
+        {
+            get { return _IsAECLatecnyDetectingRTT; }
+            private set
+            {
+                _IsAECLatecnyDetectingRTT = value;
+                beepFrameCnt = beepFrameCntInit;
+                UnityEngine.Debug.Log("Latency Detect =====================> Beep (detect Threshold: " + detectRec.VoiceDetector.Threshold + ")");
+                beepPhase = 0;
+            }
+        }
+        private bool _IsAECLatecnyDetectingRTT;
+        private int beepFrameCnt;
+        private int beepFrameCntInit = 40;
+        private int beepPhase;
+        // Caller should inject a beep somewhere on audio path synchronously with this call.
+        // Beep goes to speaker, then to microphone due to audio echo, then latency detector detects it in outgoing processing pipeline.
+        public void AECLatecnyDetectStartExternal()
+        {
+            IsAECLatecnyDetecting = true;
+            IsAECLatecnyDetectingRTT = false;
+        }
+        // Latency detector injects beep itself in outgoing processing pipeline before encoder (at the same point on audio path where it detects mic input).
+        public void AECLatecnyDetectStartRTT()
+        {
+            IsAECLatecnyDetecting = true;
+            IsAECLatecnyDetectingRTT = true;
+        }
         public struct AECLatencyResultType
         {
+            public int LatencyRTTMs;
             public int LatencyMs;
             public int LatencyDelayedMs;
             public bool PlayDetected;
             public bool PlayDelayedDetected;
             public bool RecDetected;
         }
-        public AECLatencyResultType AECLatencyResult
-        {
-            get
-            {
-                return new AECLatencyResultType()
-                {
-                    LatencyMs = (int)(detectTimeRec - detectTimePlay),
-                    LatencyDelayedMs = (int)(detectTimeRec - detectTimePlayDelayed),
-                    PlayDetected = detectPlay != null ? detectPlay.Detector.Detected : false,
-                    PlayDelayedDetected = detectPlayCorr != null ? detectPlayCorr.Detector.Detected : false,
-                    RecDetected = detectRec != null ? detectRec.Detector.Detected : false
-                };
-            }
-        }
+        public AECLatencyResultType AECLatencyResult { get; private set; }
         // Triggers echo state recreation with current filter length
         public void ResetAEC()
         {
@@ -69,6 +87,7 @@ namespace Photon.Voice
             detectPlay.Calibrate(2000);
             detectRec.Calibrate(2000);
         }
+        public bool IsAECLatecnyDetectCaliberating { get { return detectPlayCorr.IsCalibrating || detectPlay.IsCalibrating || detectRec.IsCalibrating; } }
         public bool Denoise
         {
             get { return getBool(SPEEX_PREPROCESS_GET_DENOISE); }
@@ -126,6 +145,7 @@ namespace Photon.Voice
         AudioUtil.VoiceLevelDetectCalibrate<float> detectPlay;
         AudioUtil.VoiceLevelDetectCalibrate<short> detectPlayCorr;
         AudioUtil.VoiceLevelDetectCalibrate<short> detectRec;
+        long beepTime;
         long detectTimePlay;
         long detectTimePlayDelayed;
         long detectTimeRec;
@@ -140,16 +160,40 @@ namespace Photon.Voice
             this.playChannels = playChannels;
             this.resultBuf = new short[frameSize];
             this.st = speex_preprocess_state_init(frameSamples, samplingRate);
+            this.beepFrameCntInit = samplingRate / frameSize / 5;
+            if (this.beepFrameCntInit == 0) this.beepFrameCntInit = 1;
             logger.LogInfo("SpeexProcessor state: create sampling rate {0}, frame samples {1}", samplingRate, frameSamples);
         }
         void InitLatencyDetect()
-        { 
+        {
             this.detectPlay = new AudioUtil.VoiceLevelDetectCalibrate<float>(playSamplingRate, playChannels);
             this.detectPlayCorr = new AudioUtil.VoiceLevelDetectCalibrate<short>(playSamplingRate, playChannels);
             this.detectRec = new AudioUtil.VoiceLevelDetectCalibrate<short>(samplingRate, channels);
-            this.detectPlay.Detector.OnDetected += () => detectTimePlay = clockMs();
-            this.detectPlayCorr.Detector.OnDetected += () => detectTimePlayDelayed = clockMs();
-            this.detectRec.Detector.OnDetected += () => detectTimeRec = clockMs();
+            this.detectPlay.VoiceDetector.OnDetected += () => {
+                if (IsAECLatecnyDetecting) detectTimePlay = clockMs();
+                UnityEngine.Debug.Log("Latency Detect <=== ! Play ");
+            };
+            this.detectPlayCorr.VoiceDetector.OnDetected += () => {
+                if (IsAECLatecnyDetecting) detectTimePlayDelayed = clockMs();
+                UnityEngine.Debug.Log("Latency Detect <=== ! Play Corr ");
+            };
+            this.detectRec.VoiceDetector.OnDetected += () => {
+                if (IsAECLatecnyDetecting)
+                {
+                    detectTimeRec = clockMs();
+                    this.AECLatencyResult = new AECLatencyResultType()
+                    {
+                        LatencyRTTMs = IsAECLatecnyDetectingRTT ? (int)(detectTimeRec - beepTime) : 0,
+                        LatencyMs = (int)(detectTimeRec - detectTimePlay),
+                        LatencyDelayedMs = (int)(detectTimeRec - detectTimePlayDelayed),
+                        PlayDetected = detectPlay != null ? detectPlay.VoiceDetector.Detected : false,
+                        PlayDelayedDetected = detectPlayCorr != null ? detectPlayCorr.VoiceDetector.Detected : false,
+                        RecDetected = detectRec != null ? detectRec.VoiceDetector.Detected : false
+                    };
+                    IsAECLatecnyDetecting = false;
+                }
+                UnityEngine.Debug.Log("Latency Detect <===================== ! Rec " + (detectTimeRec - (IsAECLatecnyDetectingRTT ? beepTime : detectTimePlay)));
+            };
         }
         public void InitAEC()
         {
@@ -185,7 +229,30 @@ namespace Photon.Voice
             if (disposed) return buf;
             if (_AECLatencyDetect)
             {
-                this.detectRec.Process(buf);
+                if (this.detectRec != null)
+                {
+                    this.detectRec.Process(buf);
+                }
+                if (IsAECLatecnyDetectingRTT && beepFrameCnt > 0)
+                {
+                    if (beepFrameCnt == beepFrameCntInit)
+                    {
+                        beepTime = clockMs();
+                    }
+                    for (int i = 0; i < buf.Length; i++)
+                    {
+                        buf[i] = (short)(Math.Sin((beepPhase + i) / 4.0f) * (double)(short.MaxValue / 2));
+                    }
+                    beepFrameCnt--;
+                    beepPhase += buf.Length;
+                }
+                else
+                {
+                    for (int i = 0; i < buf.Length; i++)
+                    {
+                        buf[i] = 0;
+                    }
+                }
             }
             if (AEC)
             {
@@ -201,7 +268,7 @@ namespace Photon.Voice
                     {
                         var b = playBufQueue.Dequeue();
                         speex_echo_cancellation(stEcho, buf, b, resultBuf);
-                        if (_AECLatencyDetect)
+                        if (_AECLatencyDetect && this.detectPlayCorr != null)
                         {
                             this.detectPlayCorr.Process(b);
                         }
@@ -227,7 +294,7 @@ namespace Photon.Voice
                 logger.LogError("SpeexProcessor AEC: OnAudioOutFrame channel count {0} != {1} AudioSettings.speakerMode channel count.", outChannels, playChannels);
                 return;
             }
-            if (_AECLatencyDetect)
+            if (_AECLatencyDetect && this.detectPlay != null)
             {
                 this.detectPlay.Process(data);
             }

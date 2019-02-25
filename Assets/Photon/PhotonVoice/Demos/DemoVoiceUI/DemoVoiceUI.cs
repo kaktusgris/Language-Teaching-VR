@@ -33,6 +33,27 @@ namespace Photon.Voice.DemoVoiceUI
 		[SerializeField]
 		private WebRtcAudioDsp voiceAudioPreprocessor;
 
+        [SerializeField]
+        private Toggle debugEchoToggle;
+
+        [SerializeField]
+        private Toggle reliableTransmissionToggle;
+
+        [SerializeField]
+        private GameObject webRtcDspGameObject;
+
+        [SerializeField]
+        private Toggle aecToggle;
+
+        [SerializeField]
+        private Toggle noiseSuppressionToggle;
+
+        [SerializeField]
+        private Toggle agcToggle;
+
+        [SerializeField]
+        private Toggle vadToggle;
+
         public Transform RemoteVoicesPanel;
 
         private VoiceConnection voiceConnection;
@@ -46,6 +67,7 @@ namespace Photon.Voice.DemoVoiceUI
         private void Awake()
         {
             this.voiceConnection = this.GetComponent<VoiceConnection>();
+            this.InitToggles();
         }
 
         private void OnEnable()
@@ -161,7 +183,9 @@ namespace Photon.Voice.DemoVoiceUI
 
         protected void Update()
         {
-
+            //#if UNITY_EDITOR
+            //this.InitToggles(); // refresh UI in case changed from Unity Editor
+            //#endif
             this.connectionStatusText.text = this.voiceConnection.Client.State.ToString();
             this.serverStatusText.text = string.Format("{0}/{1}", this.voiceConnection.Client.CloudRegion, this.voiceConnection.Client.CurrentServerAddress);
             string playerDebugString = string.Empty;
@@ -195,6 +219,54 @@ namespace Photon.Voice.DemoVoiceUI
             } else {
                 this.packetLossWarningText.text = "(no data)";
             }
+        }
+
+        private void InitToggles()
+        {
+            if (this.voiceConnection != null && this.voiceConnection.PrimaryRecorder != null)
+            {
+                if (this.debugEchoToggle != null)
+                {
+                    this.debugEchoToggle.isOn = this.voiceConnection.PrimaryRecorder.DebugEchoMode;
+                }
+                if (this.reliableTransmissionToggle != null)
+                {
+                    this.reliableTransmissionToggle.isOn = this.voiceConnection.PrimaryRecorder.ReliableMode;
+                }
+            }
+            if (this.webRtcDspGameObject != null)
+            {
+                if (this.voiceAudioPreprocessor == null)
+                {
+                    this.webRtcDspGameObject.SetActive(false);
+                }
+                else
+                {
+                    #if UNITY_EDITOR_WIN || UNITY_EDITOR_OSX || !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID || UNITY_STANDALONE_OSX || UNITY_STANDALONE_WIN)
+                    this.webRtcDspGameObject.SetActive(true);
+                    if (this.aecToggle != null)
+                    {
+                        this.aecToggle.isOn = this.voiceAudioPreprocessor.AEC;
+                    }
+                    if (this.noiseSuppressionToggle != null)
+                    {
+                        this.noiseSuppressionToggle.isOn = this.voiceAudioPreprocessor.NoiseSuppression;
+                    }
+                    if (this.agcToggle != null)
+                    {
+                        this.agcToggle.isOn = this.voiceAudioPreprocessor.AGC;
+                    }
+                    if (this.vadToggle != null)
+                    {
+                        this.vadToggle.isOn = this.voiceAudioPreprocessor.VAD;
+                    }
+                    #else
+                    this.webRtcDspGameObject.SetActive(false);
+                    #endif
+                }
+                
+            }
+            
         }
     }
 }

@@ -41,9 +41,10 @@ namespace Photon.Voice
     public class LocalVoice : IDisposable
     {
         public const int DATA_POOL_CAPACITY = 50; // TODO: may depend on data type and properties, set for average audio stream
-        /// <summary>If AudioGroup != 0, voice's data is sent only to clients listening to this group.</summary>
-        /// <see cref="LoadBalancingFrontend.ChangeAudioGroups(byte[], byte[])"/>
-        public byte Group { get; set; }
+        [Obsolete("Use InterestGroup.")]
+        public byte Group { get { return InterestGroup; } set { InterestGroup = value; } }
+        /// <summary>If InterestGroup != 0, voice's data is sent only to clients listening to this group (if supported by transport).</summary>
+        public byte InterestGroup { get; set; }
         /// <summary>Returns Info structure assigned on local voice cration.</summary>
         public VoiceInfo Info { get { return info; } }
         /// <summary>If true, stream data broadcasted.</summary>
@@ -60,10 +61,14 @@ namespace Photon.Voice
         public bool Encrypt { get; set; }
         /// <summary>Optional user object attached to LocalVoice. its Service() will be called at each VoiceClient.Service() call.</summary>
         public IServiceable LocalUserServiceable { get; set; }
+        virtual public IEncoder CreateDefaultEncoder(VoiceInfo info)
+        {
+            throw new UnsupportedCodecException("LocalVoice.CreateDefaultEncoder", info.Codec, Logger);
+        }
         /// <summary>
         /// If true, outgoing stream routed back to client via server same way as for remote client's streams.
         /// Can be swithed any time. OnRemoteVoiceInfoAction and OnRemoteVoiceRemoveAction are triggered if required.
-        /// This functionality availability depends on frontend.
+        /// This functionality availability depends on transport.
         /// </summary>
         public bool DebugEchoMode
         {
@@ -73,15 +78,15 @@ namespace Photon.Voice
                 if (debugEchoMode != value)
                 {
                     debugEchoMode = value;
-                    if (voiceClient != null && voiceClient.frontend != null)
+                    if (voiceClient != null && voiceClient.transport != null)
                     {
-                        voiceClient.frontend.SetDebugEchoMode(this);
+                        voiceClient.transport.SetDebugEchoMode(this);
                     }
                 }
             }
         }
         bool debugEchoMode;
-        internal ILogger Logger { get { return voiceClient.frontend; } }
+        internal ILogger Logger { get { return voiceClient.transport; } }
 #region nonpublic
         internal VoiceInfo info;
         protected IEncoder encoder;
@@ -95,13 +100,13 @@ namespace Photon.Voice
         {
         }
         internal LocalVoice(VoiceClient voiceClient, IEncoder encoder, byte id, VoiceInfo voiceInfo, int channelId)
-        {
-            this.encoder = encoder;
+        {            
             this.TransmitEnabled = true;
             this.info = voiceInfo;
             this.channelId = channelId;
             this.voiceClient = voiceClient;
             this.id = id;
+            this.encoder = encoder == null ? CreateDefaultEncoder(voiceInfo) : encoder;
         }
         internal string Name { get { return "Local v#" + id + " ch#" + voiceClient.channelStr(channelId); } }
         internal string LogPrefix { get { return "[PV] " + Name; } }
@@ -113,7 +118,7 @@ namespace Photon.Voice
         }
         internal virtual void service()
         {
-            if (this.voiceClient.frontend.IsChannelJoined(this.channelId) && this.TransmitEnabled)
+            if (this.voiceClient.transport.IsChannelJoined(this.channelId) && this.TransmitEnabled)
             {
                 if (encoder is IEncoderQueued)
                 {
@@ -141,7 +146,7 @@ namespace Photon.Voice
         {
             this.FramesSent++;
             this.FramesSentBytes += compressed.Count;
-            this.voiceClient.frontend.SendFrame(compressed, evNumber, id, this.channelId, this);
+            this.voiceClient.transport.SendFrame(compressed, evNumber, id, this.channelId, this);
             this.eventTimestamps[evNumber] = Environment.TickCount;
             evNumber++;
             resetNoTransmitCnt();
@@ -184,8 +189,7 @@ namespace Photon.Voice
         /// Register a method to be called when the remote voice is removed.
         /// </summary>
         public Action OnRemoteVoiceRemoveAction { get; set; }
-        /// <summary>User object (e.g. audio player) attached to remote voice instance for easy access.</summary>
-        public object LocalUserObject { get; set; }
+        
         /// <summary>Remote voice data decoder. Use to set decoder options or override it with user decoder.</summary>
         public IDecoder Decoder { get; set; }
     }
@@ -210,7 +214,7 @@ namespace Photon.Voice
             this.lastEvNumber = lastEventNumber;
             if (this.options.Decoder == null) // init fields first for proper logging
             {
-                voiceClient.frontend.LogError(LogPrefix + ": decoder is null");
+                voiceClient.transport.LogError(LogPrefix + ": decoder is null");
                 disposed = true;
                 return;
             }
@@ -241,7 +245,7 @@ namespace Photon.Voice
                 int missing = byteDiff(evNumber, this.lastEvNumber);
                 if (missing != 0)
                 {
-                    this.voiceClient.frontend.LogDebug(LogPrefix + " evNumer: " + evNumber + " playerVoice.lastEvNumber: " + this.lastEvNumber + " missing: " + missing + " r/b " + receivedBytes.Length);
+                    this.voiceClient.transport.LogDebug(LogPrefix + " evNumer: " + evNumber + " playerVoice.lastEvNumber: " + this.lastEvNumber + " missing: " + missing + " r/b " + receivedBytes.Length);
                 }
                 this.lastEvNumber = evNumber;
                 // restoring missing frames
@@ -281,7 +285,7 @@ namespace Photon.Voice
         }
         void decodeThread(IDecoder decoder)
         {
-            voiceClient.frontend.LogInfo(LogPrefix + ": Starting decode thread");
+            voiceClient.transport.LogInfo(LogPrefix + ": Starting decode thread");
             try
             {
                 decoder.Open(Info);
@@ -314,7 +318,7 @@ namespace Photon.Voice
             }
             catch (Exception e)
             {
-                voiceClient.frontend.LogError(LogPrefix + ": Exception in decode thread: " + e);
+                voiceClient.transport.LogError(LogPrefix + ": Exception in decode thread: " + e);
                 throw e;
             }
             finally
@@ -334,7 +338,7 @@ namespace Photon.Voice
                     frameQueue.Clear();
                 }
                 decoder.Dispose();
-                voiceClient.frontend.LogInfo(LogPrefix + ": Exiting decode thread");
+                voiceClient.transport.LogInfo(LogPrefix + ": Exiting decode thread");
             }
         }
         void decodeFrame(IDecoder decoder, byte[] frame)
@@ -368,7 +372,7 @@ namespace Photon.Voice
             if (buffer == null)
             {
                 res = ((IDecoderDirect)this.options.Decoder).DecodeToByte(null);
-                this.voiceClient.frontend.LogDebug(LogPrefix + " lost packet decoded length: " + res.Length);
+                this.voiceClient.transport.LogDebug(LogPrefix + " lost packet decoded length: " + res.Length);
             }
             else
             {
@@ -382,7 +386,7 @@ namespace Photon.Voice
             if (buffer == null)
             {
                 res = ((IDecoderDirect)this.options.Decoder).DecodeToShort(null);
-                this.voiceClient.frontend.LogDebug(LogPrefix + " lost packet decoded length: " + res.Length);
+                this.voiceClient.transport.LogDebug(LogPrefix + " lost packet decoded length: " + res.Length);
             }
             else
             {
@@ -396,7 +400,7 @@ namespace Photon.Voice
             if (buffer == null)
             {
                 res = ((IDecoderDirect)this.options.Decoder).DecodeToFloat(null);
-                this.voiceClient.frontend.LogDebug(LogPrefix + " lost packet decoded length: " + res.Length);
+                this.voiceClient.transport.LogDebug(LogPrefix + " lost packet decoded length: " + res.Length);
             }
             else
             {

@@ -304,7 +304,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddec46cf6a4c4addbf21b6be8442124, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  logLevel: 5
+  logLevel: 1
   aec: 1
   aecMobile: 0
   agc: 1
@@ -610,7 +610,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91175dcc15224463780e01a8a98b1b60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  logLevel: 5
+  logLevel: 1
   voiceDetection: 0
   voiceDetectionThreshold: 0.01
   voiceDetectionDelayMs: 500
@@ -1568,7 +1568,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   KeepAliveInBackground: 5000
   ApplyDontDestroyOnLoad: 0
-  logLevel: 5
+  logLevel: 1
   usePunSettings: 1
   enableSupportLogger: 0
   updateInterval: 50
@@ -1608,6 +1608,13 @@ MonoBehaviour:
   packetLossWarningText: {fileID: 197491233}
   localNicknameText: {fileID: 99}
   voiceAudioPreprocessor: {fileID: 23}
+  debugEchoToggle: {fileID: 180616561}
+  reliableTransmissionToggle: {fileID: 1186675922}
+  webRtcDspGameObject: {fileID: 1715276777}
+  aecToggle: {fileID: 1581920598}
+  noiseSuppressionToggle: {fileID: 953695371}
+  agcToggle: {fileID: 1757655247}
+  vadToggle: {fileID: 2050886326}
   RemoteVoicesPanel: {fileID: 84}
 --- !u!114 &124
 MonoBehaviour:

@@ -1,8 +1,11 @@
-﻿namespace Photon.Voice.Unity.Editor
+﻿using System.Collections.Generic;
+
+namespace Photon.Voice.Unity.Editor
 {
     using UnityEngine;
     using UnityEditor;
     using Unity;
+    using Realtime;
 
     [CustomEditor(typeof(VoiceConnection))]
     public class VoiceConnectionEditor : Editor
@@ -68,7 +71,20 @@
             if (connection.ShowSettings)
             {
                 EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(settingsSp.FindPropertyRelative("AppIdVoice"));
+                EditorGUILayout.BeginHorizontal();
+                SerializedProperty sP = settingsSp.FindPropertyRelative("AppIdVoice");
+                EditorGUILayout.PropertyField(sP);
+                string appId = sP.stringValue;
+                string url = "https://dashboard.photonengine.com/en-US/PublicCloud";
+                if (!string.IsNullOrEmpty(appId))
+                {
+                    url = string.Format("https://dashboard.photonengine.com/en-US/App/Manage/{0}", appId);
+                }
+                if (GUILayout.Button("Dashboard", EditorStyles.miniButton, GUILayout.Width(70)))
+                {
+                    Application.OpenURL(url);
+                }
+                EditorGUILayout.EndHorizontal();
                 EditorGUILayout.PropertyField(settingsSp.FindPropertyRelative("AppVersion"));
                 EditorGUILayout.PropertyField(settingsSp.FindPropertyRelative("UseNameServer"));
                 EditorGUILayout.PropertyField(settingsSp.FindPropertyRelative("FixedRegion"));
@@ -88,10 +104,139 @@
 
             if (Application.isPlaying)
             {
-                EditorGUILayout.LabelField(string.Format("Frames Received /s: {0}", connection.FramesReceivedPerSecond));
-                EditorGUILayout.LabelField(string.Format("Frames Lost /s: {0}", connection.FramesLostPerSecond));
-                EditorGUILayout.LabelField(string.Format("Frames Lost %: {0}", connection.FramesLostPercent));
+                this.DisplayVoiceStats();
+                this.DisplayDebugInfo(this.connection.Client);
+                this.DisplayCachedVoiceInfo();
             }
+        }
+
+        private bool showVoiceStats;
+        private bool showPlayersList;
+        private bool showDebugInfo;
+        private bool showCachedVoices;
+
+        protected virtual void DisplayVoiceStats()
+        {
+            showVoiceStats =
+                EditorGUILayout.Foldout(showVoiceStats, new GUIContent("Voice Frames Stats", "Show frames stats"));
+            if (showVoiceStats)
+            {
+                this.DrawLabel("Frames Received /s", connection.FramesReceivedPerSecond.ToString());
+                this.DrawLabel("Frames Lost /s", connection.FramesLostPerSecond.ToString());
+                this.DrawLabel("Frames Lost %", connection.FramesLostPercent.ToString());
+            }
+        }
+
+        protected virtual void DisplayDebugInfo(LoadBalancingClient client)
+        {
+            showDebugInfo = EditorGUILayout.Foldout(showDebugInfo, new GUIContent("Client Debug Info", "Debug info for Photon client"));
+            if (showDebugInfo)
+            {
+                EditorGUI.indentLevel++;
+                this.DrawLabel("Client State", client.State.ToString());
+                if (!string.IsNullOrEmpty(client.AppId))
+                {
+                    this.DrawLabel("AppId", client.AppId);
+                }
+                if (!string.IsNullOrEmpty(client.AppVersion))
+                {
+                    this.DrawLabel("AppVersion", client.AppVersion);
+                }
+                if (!string.IsNullOrEmpty(client.CloudRegion))
+                {
+                    this.DrawLabel("Current Cloud Region", client.CloudRegion);
+                }
+                if (client.IsConnected)
+                {
+                    this.DrawLabel("Current Server Address", client.CurrentServerAddress);
+                }
+                if (client.InRoom)
+                {
+                    this.DrawLabel("Room Name", client.CurrentRoom.Name);
+                    showPlayersList = EditorGUILayout.Foldout(showPlayersList, new GUIContent("Players List", "List of players joined to the room"));
+                    if (showPlayersList)
+                    {
+                        EditorGUI.indentLevel++;
+                        foreach (Player player in client.CurrentRoom.Players.Values)
+                        {
+                            this.DisplayPlayerDebugInfo(player);
+                            EditorGUILayout.LabelField(string.Empty, GUI.skin.horizontalSlider);
+                        }
+                        EditorGUI.indentLevel--;
+                    }
+                }
+                EditorGUI.indentLevel--;
+            }
+        }
+
+        protected virtual void DisplayPlayerDebugInfo(Player player)
+        {
+            this.DrawLabel("Actor Number", player.ActorNumber.ToString());
+            if (!string.IsNullOrEmpty(player.UserId))
+            {
+                this.DrawLabel("UserId", player.UserId);
+            }
+            if (!string.IsNullOrEmpty(player.NickName))
+            {
+                this.DrawLabel("NickName", player.NickName);
+            }
+            if (player.IsMasterClient)
+            {
+                EditorGUILayout.LabelField("Master Client");
+            }
+            if (player.IsLocal)
+            {
+                EditorGUILayout.LabelField("Local");
+            }
+            if (player.IsInactive)
+            {
+                EditorGUILayout.LabelField("Inactive");
+            }
+        }
+
+        protected virtual void DisplayCachedVoiceInfo()
+        {
+            showCachedVoices =
+                EditorGUILayout.Foldout(showCachedVoices, new GUIContent("Cached Remote Voices' Info", "Show remote voices info cached by local client"));
+            if (showCachedVoices)
+            {
+                List<RemoteVoiceLink> cachedVoices = this.connection.CachedRemoteVoices;
+                Speaker[] speakers = FindObjectsOfType<Speaker>();
+                for (int i = 0; i < cachedVoices.Count; i++)
+                {
+                    //VoiceInfo info = cachedVoices[i].Info;
+                    EditorGUI.indentLevel++;
+                    this.DrawLabel("Voice #", cachedVoices[i].VoiceId.ToString());
+                    this.DrawLabel("Player #", cachedVoices[i].PlayerId.ToString());
+                    this.DrawLabel("Channel #", cachedVoices[i].ChannelId.ToString());
+                    bool linked = false;
+                    for (int j = 0; j < speakers.Length; j++)
+                    {
+                        Speaker speaker = speakers[j];
+                        if (speaker.IsLinked && speaker.RemoteVoiceLink.PlayerId == cachedVoices[i].PlayerId &&
+                            speaker.RemoteVoiceLink.VoiceId == cachedVoices[i].VoiceId)
+                        {
+                            linked = true;
+                            EditorGUILayout.ObjectField(new GUIContent("Linked Speaker"), speaker, typeof(Speaker), false);
+                            break;
+                        }
+                    }
+                    if (!linked)
+                    {
+                        EditorGUILayout.LabelField("Not Linked");
+                    }
+                    EditorGUILayout.LabelField(string.Empty, GUI.skin.horizontalSlider);
+                    EditorGUI.indentLevel--;
+                }
+            }
+        }
+
+        private void DrawLabel(string prefix, string text)
+        {
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PrefixLabel(prefix);
+            EditorGUILayout.LabelField(text);
+            EditorGUILayout.EndHorizontal();
         }
     }
 }

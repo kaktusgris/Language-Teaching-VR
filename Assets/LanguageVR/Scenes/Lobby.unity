@@ -4110,7 +4110,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1165784656}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe0a55ef565e3984f8866c5c91e3c2fd, type: 3}
+  m_Script: {fileID: 11500000, guid: 10cd5550e3986c243aa1266aefbab3de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ConnectionStatusText: {fileID: 759308736}
@@ -4343,7 +4343,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1310044695}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84fd812a67908014cb408f749ca7a55e, type: 3}
+  m_Script: {fileID: 11500000, guid: 4d37073f243df3a4680fc14c87838e87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Voice: {fileID: 1530952949223954, guid: 710c5f628b16ddd4ab3aa4e290fcc9a1, type: 3}
@@ -4358,12 +4358,11 @@ MonoBehaviour:
   JoinRandomRoomPanel: {fileID: 751292280}
   RoomListPanel: {fileID: 953796484}
   RoomListContent: {fileID: 889509550}
-  RoomListEntryPrefab: {fileID: 114706, guid: 03c5e15309335324fba99d68e38cb08b, type: 3}
+  RoomListEntryPrefab: {fileID: 114706, guid: 3bc093f6a02d2cb4398d7ff414954542, type: 3}
   InsideRoomPanel: {fileID: 1370510199}
   StartGameButton: {fileID: 800069350}
-  PlayerListEntryPrefab: {fileID: 195212, guid: d68bf8413681d9b4aa7328277e632e3f,
+  PlayerListEntryPrefab: {fileID: 195212, guid: b818de21c8cf3664789351478974d3bc,
     type: 3}
-  ColorPicker: {fileID: 0}
   sceneToLoadString: Forest
   roomNameText: {fileID: 1020082201}
 --- !u!222 &1310044698

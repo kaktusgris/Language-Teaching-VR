@@ -80,8 +80,8 @@
             }
             EditorGUILayout.Slider("Level", amplitude, 0, 1);
             recorder.Encrypt = EditorGUILayout.Toggle(new GUIContent("Encrypt", "If true, voice stream is sent encrypted."), recorder.Encrypt);
-            recorder.AudioGroup = (byte)EditorGUILayout.IntField(new GUIContent("Audio Group", "Target interest group that will receive transmitted audio."), recorder.AudioGroup);
-            if (recorder.AudioGroup == 0)
+            recorder.InterestGroup = (byte)EditorGUILayout.IntField(new GUIContent("Interest Group", "Target interest group that will receive transmitted audio."), recorder.InterestGroup);
+            if (recorder.InterestGroup == 0)
             {
                 recorder.DebugEchoMode = EditorGUILayout.Toggle(new GUIContent("Debug Echo", "If true, outgoing stream routed back to client via server same way as for remote client's streams."), recorder.DebugEchoMode);
             }
