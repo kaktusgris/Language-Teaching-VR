@@ -47,7 +47,7 @@ public class InGameMenuUI : MonoBehaviour
         visible = !visible;
         transform.Find("VisibleImage").gameObject.SetActive(visible);
         transform.Find("InvisibleImage").gameObject.SetActive(!visible);
-        PlayerManager playerManager = GameObject.Find("GameManager").GetComponent<GameManager>().GetPlayer().GetComponent<PlayerManager>();
+        PlayerManager playerManager = GameManager.instance.GetAvatar().GetComponent<PlayerManager>();
         playerManager.SetVisibility(visible);
     }
 
@@ -72,7 +72,7 @@ public class InGameMenuUI : MonoBehaviour
     public void OnPlayAudioButtonClicked()
     {
         string objectName = gameObject.GetComponentInParent<Text>().text;
-        PlayerDictionary dict = GameObject.Find("GameManager").GetComponent<GameManager>().GetPlayer().GetComponent<PlayerDictionary>();
+        PlayerDictionary dict = GameManager.instance.GetAvatar().GetComponent<PlayerDictionary>();
         
         dict.PlayAudio(objectName);
     }

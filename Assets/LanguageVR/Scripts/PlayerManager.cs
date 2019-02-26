@@ -18,6 +18,8 @@ namespace NTNU.CarloMarton.VRLanguage
     {
 
         public GameObject voiceIndicator;
+        public string[] scenesToHaveVisibleControllers;
+
         private bool voiceDetected = false;
         private bool visible = true;
         private bool handsChanged = false;
@@ -47,7 +49,7 @@ namespace NTNU.CarloMarton.VRLanguage
             Valve.VR.InteractionSystem.Teleport.instance.CancelTeleportHint();
         }
 
-        void Start()
+        private IEnumerator Start()
         {
             voiceIndicator.GetComponent<MeshRenderer>().enabled = false;
             if (!photonView.IsMine && PhotonNetwork.IsConnected && photonView.Owner != null)
@@ -59,6 +61,41 @@ namespace NTNU.CarloMarton.VRLanguage
             if (photonView.IsMine)
             {
                 gameObject.GetComponentInChildren<AudioSource>().spatialBlend = 1.0f;
+            }
+
+            // Hands only exists if controllers are tracked, so we look for them until they are found
+            foreach (string sceneName in scenesToHaveVisibleControllers)
+            {
+                if (sceneName.Equals(SceneManager.GetActiveScene().name))
+                {
+                    print(SceneManager.GetActiveScene().name);
+                    yield break;
+                }
+            }
+
+            bool lHandChanged = false;
+            bool rHandChanged = false;
+            Hand lHand = Player.instance.leftHand;
+            Hand rHand = Player.instance.rightHand;
+
+            while (true)
+            {
+                if (!lHandChanged && lHand.transform.Find("LeftRenderModel Slim(Clone)"))
+                {
+                    HideController(lHand);
+                    lHandChanged = true;
+                }
+                if (!rHandChanged && rHand.transform.Find("RightRenderModel Slim(Clone)"))
+                {
+                    HideController(rHand);
+                    rHandChanged = true;
+                }
+                if (lHandChanged && rHandChanged)
+                {
+                    break;
+                }
+
+                yield return null;
             }
         }
 
@@ -108,30 +145,16 @@ namespace NTNU.CarloMarton.VRLanguage
             leftRenderer.material.shader = newShader;
         }
 
-        public void HideControllers()
+        public void HideController(Hand hand)
         {
-            for (int handIndex = 0; handIndex < Player.instance.hands.Length; handIndex++)
-            {
-                Hand hand = Player.instance.hands[handIndex];
-                if (hand != null)
-                {
-                    hand.HideController(true);
-                    hand.SetSkeletonRangeOfMotion(Valve.VR.EVRSkeletalMotionRange.WithoutController);
-                }
-            }
+            hand.HideController(true);
+            hand.SetSkeletonRangeOfMotion(Valve.VR.EVRSkeletalMotionRange.WithoutController);
         }
 
-        public void ShowControllers()
+        public void ShowController(Hand hand)
         {
-            for (int handIndex = 0; handIndex < Player.instance.hands.Length; handIndex++)
-            {
-                Hand hand = Player.instance.hands[handIndex];
-                if (hand != null)
-                {
-                    hand.HideController(false);
-                    hand.SetSkeletonRangeOfMotion(Valve.VR.EVRSkeletalMotionRange.WithController);
-                }
-            }
+            hand.HideController(false);
+            hand.SetSkeletonRangeOfMotion(Valve.VR.EVRSkeletalMotionRange.WithController);
         }
 
         void Update()
@@ -149,10 +172,6 @@ namespace NTNU.CarloMarton.VRLanguage
                 {
                     ChangeHands();
                 }
-            }
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                HideControllers();
             }
         }
 

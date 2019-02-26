@@ -17,7 +17,7 @@ namespace NTNU.CarloMarton.VRLanguage
         [Tooltip("The prefab to use for representing the player")]
         public GameObject avatarPrefab;
 
-        public Valve.VR.InteractionSystem.Player playerInScene;
+        //public Valve.VR.InteractionSystem.Player playerInScene;
 
         public static GameManager Instance;
 
@@ -38,9 +38,23 @@ namespace NTNU.CarloMarton.VRLanguage
 
         #endregion
 
-
         #region Public Methods
 
+        //-------------------------------------------------
+        // Singleton instance of the GameManager. Only one can exist at a time.
+        //-------------------------------------------------
+        private static GameManager _instance;
+        public static GameManager instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = FindObjectOfType<GameManager>();
+                }
+                return _instance;
+            }
+        }
 
         public void LeaveRoom()
         {
@@ -53,7 +67,7 @@ namespace NTNU.CarloMarton.VRLanguage
             Application.Quit();
         }
 
-        public GameObject GetPlayer()
+        public GameObject GetAvatar()
         {
             return instantiatedAvatar;
         }

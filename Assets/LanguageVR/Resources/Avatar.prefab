@@ -1944,6 +1944,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   voiceIndicator: {fileID: 448}
+  scenesToHaveVisibleControllers:
+  - Tutorial
 --- !u!114 &1433
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2014,7 +2016,6 @@ MonoBehaviour:
   leftHand: {fileID: 1295}
   rightHand: {fileID: 1296}
   torso: {fileID: 992}
-  handMat: {fileID: 2100000, guid: 8f32b3d74401443479c643e48c21915a, type: 2}
   photonView: {fileID: 1433}
 --- !u!114 &1423
 MonoBehaviour:
