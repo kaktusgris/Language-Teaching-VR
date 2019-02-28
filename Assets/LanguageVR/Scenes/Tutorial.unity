@@ -137,7 +137,7 @@ PrefabInstance:
     - target: {fileID: 2119419816325776437, guid: 90a55a31bc38cef49bb46bdcc8ffa71e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.7400431
+      value: -0.132
       objectReference: {fileID: 0}
     - target: {fileID: 2119419816325776437, guid: 90a55a31bc38cef49bb46bdcc8ffa71e,
         type: 3}
@@ -489,6 +489,18 @@ MonoBehaviour:
   interactUIAction:
     actionPath: /actions/language/in/InteractUI
     needsReinit: 0
+  touchpadTouchedAction:
+    actionPath: /actions/language/in/TouchpadTouched
+    needsReinit: 0
+  teleportInstructions: Teleporter / Teleport
+  moveToGrabInstructions: Flytt kontrollen til eplet / Move the controller to the
+    apple
+  grabInstructions: Plukk opp eplet / Pick up the apple
+  openMenuInstructions: "\xC5pne menyen / Open the menu"
+  closeMenuInstructions: Lukk menyen / Close the menu
+  interactWithmenuInstructions: Klikk med laser / Click with laser
+  swapMenuInstructions: "Bytt h\xE5nd / Swap hands"
+  scrollInstructions: Bla / Scroll
 --- !u!1001 &1224118798
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -544,6 +556,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11401046, guid: dc06161b6d97feb419f45f03b62e14b9, type: 3}
+      propertyPath: grabPinchAction.actionPath
+      value: /actions/language/in/GrabPinch
+      objectReference: {fileID: 0}
+    - target: {fileID: 11401046, guid: dc06161b6d97feb419f45f03b62e14b9, type: 3}
+      propertyPath: grabGripAction.actionPath
+      value: /actions/language/in/GrabGrip
+      objectReference: {fileID: 0}
+    - target: {fileID: 11401046, guid: dc06161b6d97feb419f45f03b62e14b9, type: 3}
+      propertyPath: hapticAction.actionPath
+      value: /actions/language/out/Haptic
+      objectReference: {fileID: 0}
+    - target: {fileID: 11401046, guid: dc06161b6d97feb419f45f03b62e14b9, type: 3}
+      propertyPath: uiInteractAction.actionPath
+      value: /actions/language/in/InteractUI
+      objectReference: {fileID: 0}
     - target: {fileID: 11450312, guid: dc06161b6d97feb419f45f03b62e14b9, type: 3}
       propertyPath: grabPinchAction.actionPath
       value: /actions/language/in/GrabPinch
@@ -560,21 +588,13 @@ PrefabInstance:
       propertyPath: uiInteractAction.actionPath
       value: /actions/language/in/InteractUI
       objectReference: {fileID: 0}
-    - target: {fileID: 11401046, guid: dc06161b6d97feb419f45f03b62e14b9, type: 3}
-      propertyPath: grabPinchAction.actionPath
-      value: /actions/language/in/GrabPinch
-      objectReference: {fileID: 0}
-    - target: {fileID: 11401046, guid: dc06161b6d97feb419f45f03b62e14b9, type: 3}
-      propertyPath: grabGripAction.actionPath
-      value: /actions/language/in/GrabGrip
-      objectReference: {fileID: 0}
-    - target: {fileID: 11401046, guid: dc06161b6d97feb419f45f03b62e14b9, type: 3}
-      propertyPath: hapticAction.actionPath
+    - target: {fileID: 11489144, guid: dc06161b6d97feb419f45f03b62e14b9, type: 3}
+      propertyPath: hapticFlash.actionPath
       value: /actions/language/out/Haptic
       objectReference: {fileID: 0}
-    - target: {fileID: 11401046, guid: dc06161b6d97feb419f45f03b62e14b9, type: 3}
-      propertyPath: uiInteractAction.actionPath
-      value: /actions/language/in/InteractUI
+    - target: {fileID: 11494192, guid: dc06161b6d97feb419f45f03b62e14b9, type: 3}
+      propertyPath: hapticFlash.actionPath
+      value: /actions/language/out/Haptic
       objectReference: {fileID: 0}
     - target: {fileID: 114000011273627542, guid: dc06161b6d97feb419f45f03b62e14b9,
         type: 3}
@@ -590,14 +610,6 @@ PrefabInstance:
         type: 3}
       propertyPath: actionSet.actionSetPath
       value: /actions/language
-      objectReference: {fileID: 0}
-    - target: {fileID: 11489144, guid: dc06161b6d97feb419f45f03b62e14b9, type: 3}
-      propertyPath: hapticFlash.actionPath
-      value: /actions/language/out/Haptic
-      objectReference: {fileID: 0}
-    - target: {fileID: 11494192, guid: dc06161b6d97feb419f45f03b62e14b9, type: 3}
-      propertyPath: hapticFlash.actionPath
-      value: /actions/language/out/Haptic
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc06161b6d97feb419f45f03b62e14b9, type: 3}

@@ -39,6 +39,8 @@ public class MenuLaser : MonoBehaviour
     private RectTransform scrollContent;
     private ScrollRect scrollRect;
 
+    private bool isClickingButton = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -114,6 +116,7 @@ public class MenuLaser : MonoBehaviour
     void Update()
     {
         RaycastHit raycastHit;
+        isClickingButton = false;
 
         laser.origin = this.transform.position;
         laser.direction = this.transform.forward;
@@ -132,6 +135,7 @@ public class MenuLaser : MonoBehaviour
                     toggleLaser(false);
 
                     clickedButton.GetComponent<Button>().onClick.Invoke();
+                    isClickingButton = true;
                 }
             } else if (Physics.Raycast(laser, out raycastHit, Mathf.Infinity, 1 << LayerMask.NameToLayer("DeletableObjects"), QueryTriggerInteraction.Ignore) && deleteToggle)
             {
@@ -267,5 +271,10 @@ public class MenuLaser : MonoBehaviour
         buttonColor.normalColor = color;
         buttonColor.colorMultiplier = 5;
         button.colors = buttonColor;
+    }
+
+    public bool IsClinkingButton()
+    {
+        return isClickingButton;
     }
 }

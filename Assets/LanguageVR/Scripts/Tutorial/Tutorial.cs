@@ -1,4 +1,5 @@
 ﻿using Photon.Pun;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,18 +10,25 @@ namespace NTNU.CarloMarton.VRLanguage
 {
     public class Tutorial : MonoBehaviour
     {
-        public SteamVR_Action_Boolean grabPinchAction;
-        public SteamVR_Action_Boolean menuAction;
-        public SteamVR_Action_Boolean teleportAction;
-        public SteamVR_Action_Boolean interactUIAction;
+        [Header ("Actions")]
+        [SerializeField] private SteamVR_Action_Boolean grabPinchAction;
+        [SerializeField] private SteamVR_Action_Boolean menuAction;
+        [SerializeField] private SteamVR_Action_Boolean teleportAction;
+        [SerializeField] private SteamVR_Action_Boolean interactUIAction;
+        [SerializeField] private SteamVR_Action_Boolean touchpadTouchedAction;
+
+        [Header("Instructions")]
+        [SerializeField] private string teleportInstructions;
+        [SerializeField] private string moveToGrabInstructions;
+        [SerializeField] private string grabInstructions;
+        [SerializeField] private string openMenuInstructions;
+        [SerializeField] private string closeMenuInstructions;
+        [SerializeField] private string interactWithmenuInstructions;
+        [SerializeField] private string swapMenuInstructions;
+        [SerializeField] private string scrollInstructions;
 
         private Valve.VR.InteractionSystem.Player player;
         private bool isTeacher;
-        private Coroutine hintCoroutine = null;
-
-        private bool hasShownTeleportHint = false;
-        private bool hasShownGrabHint = false;
-        private bool hasShownMenuHint = false;
 
         void Start()
         {
@@ -32,78 +40,106 @@ namespace NTNU.CarloMarton.VRLanguage
 
         private IEnumerator HintManagerCoroutine()
         {
-            int activeHint = 0;
+            int tutorialStep = 0;
 
-            while (activeHint != -1)
+            bool interactedWithMenu = false;
+            Hand handWithLaser = GetHandWithActiveLaser();
+
+            while (tutorialStep != -1)
             {
+                Hand previousHandWithLaser = handWithLaser;
+                handWithLaser = GetHandWithActiveLaser();
+
                 foreach (Hand hand in player.hands)
                 {
-                    switch (activeHint)
+                    switch (tutorialStep)
                     {
-                        // Teleport
+                        #region case 0: Teleport
                         case 0:
-                            ShowButtonHint(hand, teleportAction, "Teleport");
+                            ShowButtonHint(hand, teleportAction, teleportInstructions);
 
-                            if (teleportAction.GetLastStateDown(SteamVR_Input_Sources.Any))
+                            if (teleportAction.GetStateDown(hand.handType))
                             {
-                                activeHint++;
+                                HideAllHints();
+                                tutorialStep++;
                             }
                             break;
+                        #endregion
 
-                        // Grab
+                        #region Case 1: Grab
                         case 1:
-                            ShowButtonHint(hand, grabPinchAction, "Grab");
+                            if (hand.hoveringInteractable != null)
+                            {
+                                HideActionHints(hand, grabPinchAction);
+                                ShowButtonHint(hand, grabPinchAction, grabInstructions);
+                            }
+                            else
+                            {
+                                HideActionHints(hand, grabPinchAction);
+                                ShowButtonHint(hand, grabPinchAction, moveToGrabInstructions);
+                            }
 
                             if (hand.AttachedObjects.Count > 0)
                             {
-                                activeHint++;
+                                HideAllHints();
+                                tutorialStep++;
                             }
                             break;
+                        #endregion
 
-                        // Open menu
+                        #region Case 2: Open menu
                         case 2:
-                            ShowButtonHint(hand, menuAction, "Open menu");
+                            ShowButtonHint(hand, menuAction, openMenuInstructions);
 
-                            if (menuAction.GetLastStateDown(SteamVR_Input_Sources.Any))
+                            if (IsMenuActive())
                             {
-                                activeHint++;
+                                HideAllHints();
+                                tutorialStep++;
                             }
                             break;
+                        #endregion
 
-                        // Interact with menu
+                        #region Case 3: Interact with menu
                         case 3:
-                            Hand handWithLaser = GetHandWithActiveLaser();
-                            Hand handWithMenu = null;
-                            SteamVR_Input_Sources laserHand = SteamVR_Input_Sources.Any;
-                            SteamVR_Input_Sources menuHand = SteamVR_Input_Sources.Any;
-
-                            if (handWithLaser.Equals(player.leftHand))
+                            if (handWithLaser == null)
                             {
-                                handWithMenu = player.rightHand;
-                                laserHand = SteamVR_Input_Sources.LeftHand;
-                                menuHand = SteamVR_Input_Sources.RightHand;
-                            }
-                            else if (handWithLaser.Equals(player.rightHand))
-                            {
-                                handWithMenu = player.leftHand;
-                                laserHand = SteamVR_Input_Sources.RightHand;
-                                menuHand = SteamVR_Input_Sources.LeftHand;
+                                HideAllHints();
+                                if (interactedWithMenu)
+                                {
+                                    tutorialStep = -1;
+                                }
+                                else
+                                {
+                                    tutorialStep--;
+                                }
+                                break;
                             }
 
                             if (hand == handWithLaser)
                             {
-                                ShowButtonHint(handWithLaser, interactUIAction, "Interact with menu");
-                            }
-                            if (hand == handWithMenu)
-                            {
-                                ShowButtonHint(handWithMenu, menuAction, "Close menu");
+                                ShowButtonHint(hand, interactUIAction, interactWithmenuInstructions);
+                                ShowButtonHint(hand, menuAction, swapMenuInstructions);
+                                ShowButtonHint(hand, touchpadTouchedAction, scrollInstructions);
+                                if (handWithLaser != previousHandWithLaser)
+                                {
+                                    HideAllHints();                                
+                                }
+                                string handWithLaserName = hand == player.leftHand ? "HandPrefabL" : "HandPrefabR";
+
+                                MenuLaser menuLaser = GameManager.instance.GetAvatar().transform.Find(handWithLaserName).gameObject.GetComponent<MenuLaser>();
+                                if (menuLaser.IsClinkingButton())
+                                {
+                                    interactedWithMenu = true;
+                                }
                             }
 
-                            if (laserHand != SteamVR_Input_Sources.Any && interactUIAction.GetLastStateDown(menuHand))
+                            if (hand == handWithLaser.otherHand)
                             {
-                                activeHint = -1;
+                                ShowButtonHint(hand, menuAction, closeMenuInstructions);
                             }
+
                             break;
+                            #endregion
                     }
                 }
                 yield return null;
@@ -115,8 +151,6 @@ namespace NTNU.CarloMarton.VRLanguage
         {
             if (!ControllerButtonHints.IsButtonHintActive(hand, action))
             {
-                ControllerButtonHints.HideAllButtonHints(hand);
-                ControllerButtonHints.HideAllTextHints(hand);
                 ControllerButtonHints.ShowButtonHint(hand, action);
                 ControllerButtonHints.ShowTextHint(hand, action, text, true);
             }
@@ -126,9 +160,20 @@ namespace NTNU.CarloMarton.VRLanguage
         {
             foreach (Hand hand in player.hands)
             {
-                ControllerButtonHints.HideAllButtonHints(hand);
-                ControllerButtonHints.HideAllTextHints(hand);
+                HideAllHints(hand);
             }
+        }
+
+        private void HideAllHints(Hand hand)
+        {
+            ControllerButtonHints.HideAllButtonHints(hand);
+            ControllerButtonHints.HideAllTextHints(hand);
+        }
+
+        private void HideActionHints(Hand hand, SteamVR_Action_Boolean action)
+        {
+            ControllerButtonHints.HideButtonHint(hand, action);
+            ControllerButtonHints.HideTextHint(hand, action);
         }
 
         private Hand GetHandWithActiveLaser()
@@ -139,32 +184,28 @@ namespace NTNU.CarloMarton.VRLanguage
             {
                 return player.leftHand;
             }
-            else if (avatar.Find("HandPrefabR").gameObject.GetComponent<MenuLaser>().enabled)
+            if (avatar.Find("HandPrefabR").gameObject.GetComponent<MenuLaser>().enabled)
             {
                 return player.rightHand;
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
 
-        private bool Teleporting(Hand hand)
+        private bool IsMenuActive()
         {
-            if (!hasShownTeleportHint)
+            Transform leftHandMenu = player.leftHand.transform.Find("Menu");
+            Transform rightHandMenu = player.rightHand.transform.Find("Menu");
+            if (leftHandMenu != null && leftHandMenu.gameObject.activeInHierarchy)
             {
-                if (!string.IsNullOrEmpty(ControllerButtonHints.GetActiveHintText(hand, teleportAction)))
-                {
-                    print(ControllerButtonHints.GetActiveHintText(hand, teleportAction));
-                    hasShownTeleportHint = true;
-                }
+                return true;
             }
-            else if (string.IsNullOrEmpty(ControllerButtonHints.GetActiveHintText(hand, teleportAction)))
+            if (rightHandMenu != null && rightHandMenu.gameObject.activeInHierarchy)
             {
-                return false;
+                return true;
             }
-            return true;
+            return false;
         }
+
 
         private bool IsTeacher()
         {
@@ -176,65 +217,6 @@ namespace NTNU.CarloMarton.VRLanguage
             }
             Debug.LogFormat("Admin mode not set already so set to {0} instead", false);
             return false;
-        }
-
-        private bool HasHand(Hand hand)
-        {
-            return hand.gameObject.activeInHierarchy;
-        }
-
-        private IEnumerator GrabHintCoroutine(SteamVR_Action_Boolean action, string hint)
-        {
-            float prevBreakTime = Time.time;
-            float prevHapticPulseTime = Time.time;
-
-            while (true)
-            {
-                bool pulsed = false;
-
-                //Show the hint on each eligible hand
-                foreach (Hand hand in player.hands)
-                {
-                    bool showHint = hand.hoveringInteractable;
-                    bool isShowingHint = !string.IsNullOrEmpty(ControllerButtonHints.GetActiveHintText(hand, action));
-                    if (showHint)
-                    {
-                        if (!isShowingHint)
-                        {
-                            ControllerButtonHints.ShowTextHint(hand, grabPinchAction, "Grab");
-                            prevBreakTime = Time.time;
-                            prevHapticPulseTime = Time.time;
-                        }
-
-                        if (Time.time > prevHapticPulseTime + 0.05f)
-                        {
-                            //Haptic pulse for a few seconds
-                            pulsed = true;
-
-                            hand.TriggerHapticPulse(500);
-                        }
-                    }
-                    else if (!showHint && isShowingHint)
-                    {
-                        ControllerButtonHints.HideTextHint(hand, grabPinchAction);
-                    }
-                }
-
-                if (Time.time > prevBreakTime + 3.0f)
-                {
-                    //Take a break for a few seconds
-                    yield return new WaitForSeconds(3.0f);
-
-                    prevBreakTime = Time.time;
-                }
-
-                if (pulsed)
-                {
-                    prevHapticPulseTime = Time.time;
-                }
-
-                yield return null;
-            }
         }
     }
 }
