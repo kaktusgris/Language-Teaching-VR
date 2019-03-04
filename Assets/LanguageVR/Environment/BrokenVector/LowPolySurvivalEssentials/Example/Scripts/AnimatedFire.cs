@@ -7,8 +7,8 @@ namespace BrokenVector
     public class AnimatedFire : MonoBehaviour
     {
 
-        public float MinIntensity = 4;
-        public float MaxIntensity = 6;
+        public float MinIntensity = 6;
+        public float MaxIntensity = 8;
         public float Speed = 1;
 
         private new Light light;
