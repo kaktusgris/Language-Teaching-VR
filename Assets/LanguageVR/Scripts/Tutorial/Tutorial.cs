@@ -18,9 +18,11 @@ namespace NTNU.CarloMarton.VRLanguage
         [SerializeField] private SteamVR_Action_Boolean touchpadTouchedAction;
 
         [Header("Instructions")]
-        [SerializeField] private string teleportInstructions;
+        [SerializeField] private string teleportHoldInstructions;
+        [SerializeField] private string teleportLetGoInstructions;
         [SerializeField] private string moveToGrabInstructions;
         [SerializeField] private string grabInstructions;
+        [SerializeField] private string letGoInstructions;
         [SerializeField] private string openMenuInstructions;
         [SerializeField] private string closeMenuInstructions;
         [SerializeField] private string interactWithmenuInstructions;
@@ -54,9 +56,9 @@ namespace NTNU.CarloMarton.VRLanguage
                 {
                     switch (tutorialStep)
                     {
-                        #region case 0: Teleport
+                        #region case 0: Teleport start
                         case 0:
-                            ShowButtonHint(hand, teleportAction, teleportInstructions);
+                            ShowButtonHint(hand, teleportAction, teleportHoldInstructions);
 
                             if (teleportAction.GetStateDown(hand.handType))
                             {
@@ -66,8 +68,20 @@ namespace NTNU.CarloMarton.VRLanguage
                             break;
                         #endregion
 
-                        #region Case 1: Grab
+                        #region Case 1: Teleport end
                         case 1:
+                            ShowButtonHint(hand, teleportAction, teleportLetGoInstructions);
+
+                            if (teleportAction.GetStateUp(hand.handType))
+                            {
+                                HideAllHints();
+                                tutorialStep++;
+                            }
+                            break;
+                        #endregion
+
+                        #region Case 2: Grab
+                        case 2:
                             if (hand.hoveringInteractable != null)
                             {
                                 HideActionHints(hand, grabPinchAction);
@@ -87,8 +101,19 @@ namespace NTNU.CarloMarton.VRLanguage
                             break;
                         #endregion
 
-                        #region Case 2: Open menu
-                        case 2:
+                        #region Case 3: Let go
+                        case 3:
+                            ShowButtonHint(hand, grabPinchAction, letGoInstructions);
+                            if (hand.AttachedObjects.Count == 0)
+                            {
+                                HideAllHints();
+                                tutorialStep++;
+                            }
+                            break;
+                        #endregion
+
+                        #region Case 4: Open menu
+                        case 4:
                             ShowButtonHint(hand, menuAction, openMenuInstructions);
 
                             if (IsMenuActive())
@@ -99,8 +124,8 @@ namespace NTNU.CarloMarton.VRLanguage
                             break;
                         #endregion
 
-                        #region Case 3: Interact with menu
-                        case 3:
+                        #region Case 5: Interact with menu
+                        case 5:
                             if (handWithLaser == null)
                             {
                                 HideAllHints();
@@ -126,7 +151,7 @@ namespace NTNU.CarloMarton.VRLanguage
                                 }
                                 string handWithLaserName = hand == player.leftHand ? "HandPrefabL" : "HandPrefabR";
 
-                                MenuLaser menuLaser = GameManager.instance.GetAvatar().transform.Find(handWithLaserName).gameObject.GetComponent<MenuLaser>();
+                                MenuLaser menuLaser = TutorialGameManager.instance.GetPlayerAvatar().transform.Find(handWithLaserName).gameObject.GetComponent<MenuLaser>();
                                 if (menuLaser.IsClinkingButton())
                                 {
                                     interactedWithMenu = true;
@@ -178,7 +203,7 @@ namespace NTNU.CarloMarton.VRLanguage
 
         private Hand GetHandWithActiveLaser()
         {
-            Transform avatar = GameManager.instance.GetAvatar().transform;
+            Transform avatar = TutorialGameManager.instance.GetPlayerAvatar().transform;
 
             if (avatar.Find("HandPrefabL").gameObject.GetComponent<MenuLaser>().enabled)
             {

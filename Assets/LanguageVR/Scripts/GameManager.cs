@@ -19,8 +19,6 @@ namespace NTNU.CarloMarton.VRLanguage
 
         //public Valve.VR.InteractionSystem.Player playerInScene;
 
-        public static GameManager Instance;
-
         [NonSerialized] public GameObject instantiatedAvatar;
 
         [SerializeField] private string startScene;
@@ -58,7 +56,9 @@ namespace NTNU.CarloMarton.VRLanguage
 
         public void LeaveRoom()
         {
+            Destroy(GameObject.FindGameObjectWithTag("Player"));
             PhotonNetwork.LeaveRoom();
+
         }
 
         public void ExitGame()
@@ -67,7 +67,7 @@ namespace NTNU.CarloMarton.VRLanguage
             Application.Quit();
         }
 
-        public GameObject GetAvatar()
+        public GameObject GetPlayerAvatar()
         {
             return instantiatedAvatar;
         }
@@ -78,16 +78,12 @@ namespace NTNU.CarloMarton.VRLanguage
 
         private void Start()
         {
-            Instance = this;
-
             if (PlayerManager.LocalPlayerInstance == null)
             {
                 Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
 
                 // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
                 instantiatedAvatar = PhotonNetwork.Instantiate(this.avatarPrefab.name, ViveManager.Instance.head.transform.position, ViveManager.Instance.head.transform.rotation, 0);
-
-                //instantiatedAvatar.GetComponent<PlayerManager>().InitialisePlayer(playerInScene);
 
                 // Make the local head invisible as to not see the inside of your own head
                 try

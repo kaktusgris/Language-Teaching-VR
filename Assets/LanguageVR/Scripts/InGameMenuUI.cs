@@ -47,8 +47,13 @@ public class InGameMenuUI : MonoBehaviour
         visible = !visible;
         transform.Find("VisibleImage").gameObject.SetActive(visible);
         transform.Find("InvisibleImage").gameObject.SetActive(!visible);
-        PlayerManager playerManager = GameManager.instance.GetAvatar().GetComponent<PlayerManager>();
-        playerManager.SetVisibility(visible);
+        GameObject playerAvatar = GameManager.instance.GetPlayerAvatar();
+        if (playerAvatar == null)
+        {
+            playerAvatar = TutorialGameManager.instance.GetPlayerAvatar();
+        }
+
+        playerAvatar.GetComponent<PlayerManager>().SetVisibility(visible);
     }
 
 
@@ -72,9 +77,13 @@ public class InGameMenuUI : MonoBehaviour
     public void OnPlayAudioButtonClicked()
     {
         string objectName = gameObject.GetComponentInParent<Text>().text;
-        PlayerDictionary dict = GameManager.instance.GetAvatar().GetComponent<PlayerDictionary>();
+        GameObject playerAvatar = GameManager.instance.GetPlayerAvatar();
+        if (playerAvatar == null)
+        {
+            playerAvatar = TutorialGameManager.instance.GetPlayerAvatar();
+        }
         
-        dict.PlayAudio(objectName);
+        playerAvatar.GetComponent<PlayerDictionary>().PlayAudio(objectName);
     }
 
     // Spawns the object between the button and the user's head

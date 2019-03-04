@@ -61,7 +61,11 @@ namespace NTNU.CarloMarton.VRLanguage
             timeLastInteraction = Time.time;
 
             //Add this gameobject to dictionary when it is picked up by the player.
-            GameObject playerAvatar = GameManager.instance.GetAvatar();
+            GameObject playerAvatar = GameManager.instance.GetPlayerAvatar();
+            if (playerAvatar == null)
+            {
+                playerAvatar = TutorialGameManager.instance.GetPlayerAvatar();
+            }
             PlayerDictionary dictionary = playerAvatar.GetComponent<PlayerDictionary>();
             string name = this.gameObject.GetComponentInChildren<TextMesh>(true).text;
 

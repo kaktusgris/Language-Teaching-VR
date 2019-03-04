@@ -2,11 +2,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace NTNU.CarloMarton.VRLanguage
 {
     public class TutorialGameManager : MonoBehaviour
     {
+        private static TutorialGameManager _instance;
+        public static TutorialGameManager instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = FindObjectOfType<TutorialGameManager>();
+                }
+                return _instance;
+            }
+        }
+
         [Tooltip("The prefab to use for representing the player")]
         public GameObject avatarPrefab;
 
@@ -15,7 +29,7 @@ namespace NTNU.CarloMarton.VRLanguage
         private GameObject instantiatedAvatar;
 
 
-        public GameObject GetPlayer()
+        public GameObject GetPlayerAvatar()
         {
             return instantiatedAvatar;
         }
@@ -39,6 +53,13 @@ namespace NTNU.CarloMarton.VRLanguage
             {
                 Debug.LogError("NullReferenceException. Probably because the head component in avatar is not named Head");
             }
+        }
+
+        public void ExitTutorial()
+        {
+            Destroy(GameObject.FindGameObjectWithTag("Avatar"));
+            Destroy(GameObject.FindGameObjectWithTag("Player"));
+            SceneManager.LoadScene(0);
         }
     }
 }
