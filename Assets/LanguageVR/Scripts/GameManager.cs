@@ -19,7 +19,7 @@ namespace NTNU.CarloMarton.VRLanguage
 
         //public Valve.VR.InteractionSystem.Player playerInScene;
 
-        [NonSerialized] public GameObject instantiatedAvatar;
+        private GameObject instantiatedAvatar;
 
         [SerializeField] private string startScene;
 

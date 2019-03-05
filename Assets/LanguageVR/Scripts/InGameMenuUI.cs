@@ -62,7 +62,12 @@ public class InGameMenuUI : MonoBehaviour
         visible = !visible;
         transform.Find("DeleteDefaultImage").gameObject.SetActive(visible);
         transform.Find("DeleteActiveImage").gameObject.SetActive(!visible);
-        MenuLaser menuLaser = GameObject.Find("GameManager").GetComponent<GameManager>().instantiatedAvatar.GetComponent<InGameMenu>().GetLaserHand().GetComponent<MenuLaser>();
+        GameObject playerAvatar = GameManager.instance.GetPlayerAvatar();
+        if (playerAvatar == null)
+        {
+            playerAvatar = TutorialGameManager.instance.GetPlayerAvatar();
+        }
+        MenuLaser menuLaser = playerAvatar.GetComponent<InGameMenu>().GetLaserHand().GetComponent<MenuLaser>();
         menuLaser.toggleDeleteMode(!visible);
     }
 
@@ -101,5 +106,17 @@ public class InGameMenuUI : MonoBehaviour
 
         Debug.LogFormat("Instantiated {0} at {1}", objectName, spawnPosition);
         PhotonNetwork.Instantiate("InteractableObjects/" + objectName, spawnPosition, Quaternion.identity);
+    }
+
+    public void OnExitGameButtonClicked()
+    {
+        if (GameManager.instance.GetPlayerAvatar() != null)
+        {
+            GameManager.instance.ExitGame();
+        }
+        else
+        {
+            TutorialGameManager.instance.ExitTutorial();
+        }
     }
 }

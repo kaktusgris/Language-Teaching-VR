@@ -23,7 +23,7 @@ public class MenuLaser : MonoBehaviour
 
 
     private float timer;
-    private float timerThreshold = 3.0f;
+    private float timerThreshold = 2.0f;
     private bool clickBeingHeld = false;
    
     public SteamVR_Input_Sources handType;
@@ -275,6 +275,8 @@ public class MenuLaser : MonoBehaviour
                 return "Bli usynlig";
             case "DeleteObjectButton":
                 return "Skru av/på slettemodus";
+            case "ExitGameButton":
+                return "Avslutt";
         }
         return "Ikke lagt til hint på knapp";
     }
@@ -294,8 +296,15 @@ public class MenuLaser : MonoBehaviour
         button.colors = buttonColor;
     }
 
-    public bool IsClinkingButton()
+    public GameObject IsClickingButton()
     {
-        return isClickingButton;
+        if (isClickingButton)
+        {
+            return clickedButton;
+        }
+        else
+        {
+            return null;
+        }
     }
 }
