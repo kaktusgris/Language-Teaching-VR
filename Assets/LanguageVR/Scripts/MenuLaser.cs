@@ -220,8 +220,7 @@ public class MenuLaser : MonoBehaviour
                 if (clickedButton.GetComponent<Button>())
                 {
                     SetButtonColor(clickedButton.GetComponent<Button>(), clickedButton.GetComponent<InGameMenuUI>().GetHighlightedColor());
-                    helperUIText.text = clickedButton.name;
-                    print(clickedButton.name);
+                    helperUIText.text = ButtonNameToButtonDescription(clickedButton.name);
                 }
 
             } else if (Physics.Raycast(laser, out raycastHit, Mathf.Infinity, 1 << LayerMask.NameToLayer("DeletableObjects"), QueryTriggerInteraction.Ignore)) {
@@ -262,6 +261,22 @@ public class MenuLaser : MonoBehaviour
             }
         }
 
+    }
+
+    private string ButtonNameToButtonDescription(string buttonName)
+    {
+        switch (buttonName)
+        {
+            case "PlayAudioButton":
+                return "Spill av lyd";
+            case "AddInteractableObjectButton":
+                return "Legg til objekt";
+            case "InvisibilityButton":
+                return "Bli usynlig";
+            case "DeleteObjectButton":
+                return "Skru av/på slettemodus";
+        }
+        return "Ikke lagt til hint på knapp";
     }
 
     private float CalculateHeightOfContent()
