@@ -21,13 +21,9 @@ public class MenuLaser : MonoBehaviour
     private Ray laser;
     private bool deleteToggle;
 
-    public GameObject mainPanel;
-    private GameObject deleteProgressPanel;
-    private GameObject scrollRectPanel;
-    private Slider deleteProgressSlider;
 
     private float timer;
-    private float timerThreshold = 3.0f;
+    private float timerThreshold = 2.0f;
     private bool clickBeingHeld = false;
    
     public SteamVR_Input_Sources handType;
@@ -38,14 +34,24 @@ public class MenuLaser : MonoBehaviour
     public GameObject menu;
     private RectTransform scrollContent;
     private ScrollRect scrollRect;
+    public GameObject mainPanel;
+    private GameObject scrollRectPanel;
+
+    public GameObject HelperUI;
+    private GameObject deleteProgressPanel;
+    private Slider deleteProgressSlider;
+    private TextMesh helperUIText;
+
+    private bool isClickingButton = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        deleteProgressPanel = mainPanel.transform.Find("DeleteProgressBar").gameObject;
+        deleteProgressPanel = HelperUI.transform.Find("CanvasUI/DeleteProgressBar").gameObject;
         scrollRectPanel = mainPanel.transform.Find("ScrollRect").gameObject;
         deleteProgressSlider = deleteProgressPanel.transform.Find("DeleteProgressSlider").GetComponent<Slider>();
         deleteProgressSlider.maxValue = timerThreshold;
+        helperUIText = HelperUI.GetComponent<TextMesh>();
 
         standardLaserColor = new Color(0.46f, 0.98f, 0.56f);
         deleteModeLaserColor = new Color(0.878f, 0.277f, 0.345f);
@@ -114,6 +120,7 @@ public class MenuLaser : MonoBehaviour
     void Update()
     {
         RaycastHit raycastHit;
+        isClickingButton = false;
 
         laser.origin = this.transform.position;
         laser.direction = this.transform.forward;
@@ -132,8 +139,11 @@ public class MenuLaser : MonoBehaviour
                     toggleLaser(false);
 
                     clickedButton.GetComponent<Button>().onClick.Invoke();
+                    isClickingButton = true;
                 }
-            } else if (Physics.Raycast(laser, out raycastHit, Mathf.Infinity, 1 << LayerMask.NameToLayer("DeletableObjects"), QueryTriggerInteraction.Ignore) && deleteToggle)
+            }
+            // Deleting objects
+            else if (Physics.Raycast(laser, out raycastHit, Mathf.Infinity, 1 << LayerMask.NameToLayer("DeletableObjects"), QueryTriggerInteraction.Ignore) && deleteToggle)
             {
                 clickedObject = raycastHit.collider.gameObject;
                 Debug.Log(clickedObject.transform.parent);
@@ -145,7 +155,6 @@ public class MenuLaser : MonoBehaviour
                 clickedObject.GetComponent<PhotonView>().TransferOwnership(PhotonNetwork.LocalPlayer);
                 clickBeingHeld = true;
                 deleteProgressPanel.SetActive(true);
-                scrollRectPanel.SetActive(false);
                 
                 deleteProgressPanel.transform.Find("DeleteProgressText").GetComponent<Text>().text = "Sletter \"" + clickedObject.transform.Find("Text").GetComponent<TextMesh>().text + "\"...";
 
@@ -157,7 +166,6 @@ public class MenuLaser : MonoBehaviour
         {
             clickBeingHeld = false;
             deleteProgressPanel.SetActive(false);
-            scrollRectPanel.SetActive(true);
             timer = 0;
             deleteProgressSlider.value = timer;
         } else if (clickBeingHeld) {
@@ -170,7 +178,6 @@ public class MenuLaser : MonoBehaviour
                 PhotonNetwork.Destroy(clickedObject);
                 clickBeingHeld = false;
                 deleteProgressPanel.SetActive(false);
-                scrollRectPanel.SetActive(true);
                 timer = 0;
                 deleteProgressSlider.value = timer;
             }
@@ -185,6 +192,7 @@ public class MenuLaser : MonoBehaviour
             {
                 SetButtonColor(clickedButton.GetComponent<Button>(), clickedButton.GetComponent<InGameMenuUI>().GetNormalColor());
                 clickedButton = null;
+                helperUIText.text = "";
             } else if (clickedObject != null)
             {
                 clickedButton = null;
@@ -212,6 +220,7 @@ public class MenuLaser : MonoBehaviour
                 if (clickedButton.GetComponent<Button>())
                 {
                     SetButtonColor(clickedButton.GetComponent<Button>(), clickedButton.GetComponent<InGameMenuUI>().GetHighlightedColor());
+                    helperUIText.text = ButtonNameToButtonDescription(clickedButton.name);
                 }
 
             } else if (Physics.Raycast(laser, out raycastHit, Mathf.Infinity, 1 << LayerMask.NameToLayer("DeletableObjects"), QueryTriggerInteraction.Ignore)) {
@@ -254,6 +263,24 @@ public class MenuLaser : MonoBehaviour
 
     }
 
+    private string ButtonNameToButtonDescription(string buttonName)
+    {
+        switch (buttonName)
+        {
+            case "PlayAudioButton":
+                return "Spill av lyd";
+            case "AddInteractableObjectButton":
+                return "Legg til objekt";
+            case "InvisibilityButton":
+                return "Bli usynlig";
+            case "DeleteObjectButton":
+                return "Skru av/på slettemodus";
+            case "ExitGameButton":
+                return "Avslutt";
+        }
+        return "Ikke lagt til hint på knapp";
+    }
+
     private float CalculateHeightOfContent()
     {
         float childHeight = scrollContent.GetChild(0).GetComponent<RectTransform>().rect.height;
@@ -267,5 +294,17 @@ public class MenuLaser : MonoBehaviour
         buttonColor.normalColor = color;
         buttonColor.colorMultiplier = 5;
         button.colors = buttonColor;
+    }
+
+    public GameObject IsClickingButton()
+    {
+        if (isClickingButton)
+        {
+            return clickedButton;
+        }
+        else
+        {
+            return null;
+        }
     }
 }

@@ -23,11 +23,6 @@ public class RandomColour : MonoBehaviour, IPunObservable {
 
     private List<Color> colours { get; set; }
 
-    // Could not change instance material on own hands, therefore changing the material itself
-    // Optimally not used, but done now as a lack of time.
-    // TODO: Change to use if handMaterial and only change instance of material
-    public Material handMat;
-
     [SerializeField] private PhotonView photonView;
 
     private System.Random rng = new System.Random();
@@ -64,17 +59,17 @@ public class RandomColour : MonoBehaviour, IPunObservable {
     {
         Transform rHandTransform = Player.instance.rightHand.transform;
         Transform lHandTransform = Player.instance.leftHand.transform;
-        bool lhandChanged = false;
+        bool lHandChanged = false;
         bool rHandChanged = false;
 
         while (true)
         {
             //print(lHandTransform.Find("RightRenderModel Slim(Clone)"));
-            if (!lhandChanged && lHandTransform.Find("LeftRenderModel Slim(Clone)"))
+            if (!lHandChanged && lHandTransform.Find("LeftRenderModel Slim(Clone)"))
             {
                 Material lHand = lHandTransform.Find("LeftRenderModel Slim(Clone)/vr_glove_left_model_slim(Clone)/slim_l/vr_glove_right_slim").GetComponent<SkinnedMeshRenderer>().material;
                 UpdateColourOnMaterial(lHand, generatedColour);
-                lhandChanged = true;
+                lHandChanged = true;
             }
             if (!rHandChanged && rHandTransform.Find("RightRenderModel Slim(Clone)"))
             {
@@ -82,7 +77,7 @@ public class RandomColour : MonoBehaviour, IPunObservable {
                 UpdateColourOnMaterial(rhand, generatedColour);
                 rHandChanged = true;
             }
-            if (lhandChanged && rHandChanged)
+            if (lHandChanged && rHandChanged)
             {
                 break;
             }

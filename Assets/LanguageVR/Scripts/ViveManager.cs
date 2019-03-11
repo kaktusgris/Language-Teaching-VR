@@ -2,27 +2,35 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ViveManager : MonoBehaviour {
+namespace NTNU.CarloMarton.VRLanguage
+{
+    public class ViveManager : MonoBehaviour {
 
-    public GameObject head;
-    public GameObject leftHand;
-    public GameObject rightHand;
+        [Tooltip ("Player's VRCamera")]
+        public GameObject head;
 
-    public static ViveManager Instance;
+        [Tooltip("Player's LeftHand")]
+        public GameObject leftHand;
 
-    void Awake()
-    {
-        if (Instance == null)
+        [Tooltip("Player's RightHand")]
+        public GameObject rightHand;
+
+        public static ViveManager Instance;
+
+        void Awake()
         {
-            Instance = this; 
+            if (Instance == null)
+            {
+                Instance = this; 
+            }
         }
+
+        void OnDestroy()
+        {
+            if (Instance == this)
+            {
+                Instance = null;
+            }
+        } 
     }
-
-    void OnDestroy()
-    {
-        if (Instance == this)
-        {
-            Instance = null;
-        }
-    } 
 }

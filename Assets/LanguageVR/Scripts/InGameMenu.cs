@@ -13,6 +13,7 @@ public class InGameMenu : MonoBehaviour
     public SteamVR_Action_Boolean menuButtonAction;
 
     public GameObject menu;
+    public GameObject helperUI;
 
     private GameObject leftHand;
     private GameObject rightHand;
@@ -56,6 +57,7 @@ public class InGameMenu : MonoBehaviour
             SetEnablelaserOnHand(handPrefabR, false);
             SetEnablelaserOnHand(handPrefabL, false);
             menu.SetActive(false);
+            helperUI.SetActive(false);
         }
         else
         {
@@ -63,6 +65,8 @@ public class InGameMenu : MonoBehaviour
             {
                 currentHandParent = SteamVR_Input_Sources.RightHand;
                 menu.transform.SetParent(rightHand.transform);
+                helperUI.transform.SetParent(leftHand.transform);
+
                 laserHand = handPrefabL;
                 SetEnablelaserOnHand(handPrefabL, true);
                 SetEnablelaserOnHand(handPrefabR, false);
@@ -71,7 +75,8 @@ public class InGameMenu : MonoBehaviour
             {
                 currentHandParent = SteamVR_Input_Sources.LeftHand;
                 menu.transform.SetParent(leftHand.transform);
-                
+                helperUI.transform.SetParent(rightHand.transform);
+
                 laserHand = handPrefabR;
                 SetEnablelaserOnHand(handPrefabR, true);
                 SetEnablelaserOnHand(handPrefabL, false);
@@ -85,6 +90,10 @@ public class InGameMenu : MonoBehaviour
             menu.transform.localRotation = Quaternion.Euler(60, 0, 0);
             menu.transform.Find("TopPanel").transform.Find("DeleteObjectButton").GetComponent<InGameMenuUI>().resetDeleteObjectMode();
             menu.SetActive(true);
+
+            helperUI.transform.localPosition = new Vector3(0, 0, 0.01f);
+            helperUI.transform.localRotation = Quaternion.Euler(60, 0, 0);
+            helperUI.SetActive(true);
         }
     }
 

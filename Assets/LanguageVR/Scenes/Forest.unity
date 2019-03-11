@@ -5645,10 +5645,6 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 191996, guid: dc06161b6d97feb419f45f03b62e14b9, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 447954, guid: dc06161b6d97feb419f45f03b62e14b9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -5742,6 +5738,10 @@ PrefabInstance:
         type: 3}
       propertyPath: poseAction.actionPath
       value: /actions/language/in/Pose
+      objectReference: {fileID: 0}
+    - target: {fileID: 191996, guid: dc06161b6d97feb419f45f03b62e14b9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2014920, guid: dc06161b6d97feb419f45f03b62e14b9, type: 3}
       propertyPath: near clip plane
@@ -7819,11 +7819,6 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 6
       objectReference: {fileID: 0}
-    - target: {fileID: 114952266245917622, guid: 4981a22c6a0117a4ab030ca6000fa4db,
-        type: 3}
-      propertyPath: avatarPrefab
-      value: 
-      objectReference: {fileID: 443, guid: 1b51142c5a4db674bb164c81e77c48ba, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4981a22c6a0117a4ab030ca6000fa4db, type: 3}
 --- !u!114 &1246098415 stripped
@@ -7888,7 +7883,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -7896,7 +7891,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 253eb4f81b3a5264099f294bfc0fbb8c, type: 3}
     m_FontSize: 14
     m_FontStyle: 0
     m_BestFit: 0
@@ -7908,7 +7903,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Leave Game
+  m_Text: Forlat rom
 --- !u!222 &1266104904
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8558,14 +8553,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.31764707, g: 0.3372549, b: 0.38431373, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -14967,11 +14962,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1620397380}
     m_Modifications:
-    - target: {fileID: 173601458194272955, guid: cfee32963329f1145b0c30e51eca1dda,
-        type: 3}
-      propertyPath: m_Name
-      value: Flower(Clone)
-      objectReference: {fileID: 0}
     - target: {fileID: 173601458194272952, guid: cfee32963329f1145b0c30e51eca1dda,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -15032,6 +15022,11 @@ PrefabInstance:
       propertyPath: viewIdField
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 173601458194272955, guid: cfee32963329f1145b0c30e51eca1dda,
+        type: 3}
+      propertyPath: m_Name
+      value: Flower(Clone)
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cfee32963329f1145b0c30e51eca1dda, type: 3}
 --- !u!1001 &698579347193234359
@@ -15041,10 +15036,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1288515654}
     m_Modifications:
-    - target: {fileID: 698579347587714808, guid: 58f9beb90a5d27648b7e4a1a23811d16,
+    - target: {fileID: 698579347587714790, guid: 58f9beb90a5d27648b7e4a1a23811d16,
         type: 3}
-      propertyPath: m_Name
-      value: camera_props_unity(Clone)
+      propertyPath: viewIdField
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 698579347587714791, guid: 58f9beb90a5d27648b7e4a1a23811d16,
         type: 3}
@@ -15101,10 +15096,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 698579347587714790, guid: 58f9beb90a5d27648b7e4a1a23811d16,
+    - target: {fileID: 698579347587714808, guid: 58f9beb90a5d27648b7e4a1a23811d16,
         type: 3}
-      propertyPath: viewIdField
-      value: 6
+      propertyPath: m_Name
+      value: camera_props_unity(Clone)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 58f9beb90a5d27648b7e4a1a23811d16, type: 3}
@@ -15194,6 +15189,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: backpack_low(Clone)
       objectReference: {fileID: 0}
+    - target: {fileID: 3177199159436717788, guid: 5bf1d061f8d087241919cd1815f053e9,
+        type: 3}
+      propertyPath: viewIdField
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 3177199159436717788, guid: 5bf1d061f8d087241919cd1815f053e9,
+        type: 3}
+      propertyPath: InstantiationId
+      value: 16
+      objectReference: {fileID: 0}
     - target: {fileID: 3177199159436717789, guid: 5bf1d061f8d087241919cd1815f053e9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -15249,16 +15254,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3177199159436717788, guid: 5bf1d061f8d087241919cd1815f053e9,
-        type: 3}
-      propertyPath: viewIdField
-      value: 16
-      objectReference: {fileID: 0}
-    - target: {fileID: 3177199159436717788, guid: 5bf1d061f8d087241919cd1815f053e9,
-        type: 3}
-      propertyPath: InstantiationId
-      value: 16
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5bf1d061f8d087241919cd1815f053e9, type: 3}
 --- !u!1001 &4288656374449663829
@@ -15272,6 +15267,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: team2_porter_Thermos(Clone)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4288656374343504542, guid: a06b0c5f109c317468e251ca40c85075,
+        type: 3}
+      propertyPath: viewIdField
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 4288656374343504543, guid: a06b0c5f109c317468e251ca40c85075,
         type: 3}
@@ -15328,11 +15328,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4288656374343504542, guid: a06b0c5f109c317468e251ca40c85075,
-        type: 3}
-      propertyPath: viewIdField
-      value: 12
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a06b0c5f109c317468e251ca40c85075, type: 3}
 --- !u!1001 &4496869803018690658
@@ -15342,6 +15337,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1822747240}
     m_Modifications:
+    - target: {fileID: 4496869802907074128, guid: 8397bd73170b8c3459fa3c39bdc49523,
+        type: 3}
+      propertyPath: viewIdField
+      value: 14
+      objectReference: {fileID: 0}
     - target: {fileID: 4496869802907074130, guid: 8397bd73170b8c3459fa3c39bdc49523,
         type: 3}
       propertyPath: m_Name
@@ -15402,11 +15402,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4496869802907074128, guid: 8397bd73170b8c3459fa3c39bdc49523,
-        type: 3}
-      propertyPath: viewIdField
-      value: 14
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8397bd73170b8c3459fa3c39bdc49523, type: 3}
 --- !u!1001 &4524439032984417748
@@ -15416,11 +15411,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 46361710}
     m_Modifications:
-    - target: {fileID: 4524439033782956759, guid: 3210d9e2bc62e0b4dafb3a1cfcbcb2f8,
-        type: 3}
-      propertyPath: m_Name
-      value: apple_high_poly(Clone)
-      objectReference: {fileID: 0}
     - target: {fileID: 4524439033782956752, guid: 3210d9e2bc62e0b4dafb3a1cfcbcb2f8,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -15480,6 +15470,11 @@ PrefabInstance:
         type: 3}
       propertyPath: viewIdField
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4524439033782956759, guid: 3210d9e2bc62e0b4dafb3a1cfcbcb2f8,
+        type: 3}
+      propertyPath: m_Name
+      value: apple_high_poly(Clone)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3210d9e2bc62e0b4dafb3a1cfcbcb2f8, type: 3}
@@ -15564,6 +15559,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 254689291}
     m_Modifications:
+    - target: {fileID: 5044440771567221184, guid: c28fa4620574e73498bfac7396cf901f,
+        type: 3}
+      propertyPath: viewIdField
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5044440771567221186, guid: c28fa4620574e73498bfac7396cf901f,
         type: 3}
       propertyPath: m_Name
@@ -15624,11 +15624,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5044440771567221184, guid: c28fa4620574e73498bfac7396cf901f,
-        type: 3}
-      propertyPath: viewIdField
-      value: 3
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c28fa4620574e73498bfac7396cf901f, type: 3}
 --- !u!1001 &5795138025064309293
@@ -15642,6 +15637,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BusseGrooveMasterKnife(Clone)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5795138023272579022, guid: 50005832861ffa641b220a0f2a9252ae,
+        type: 3}
+      propertyPath: viewIdField
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5795138023272579023, guid: 50005832861ffa641b220a0f2a9252ae,
         type: 3}
@@ -15698,11 +15698,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5795138023272579022, guid: 50005832861ffa641b220a0f2a9252ae,
-        type: 3}
-      propertyPath: viewIdField
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 50005832861ffa641b220a0f2a9252ae, type: 3}
 --- !u!1001 &6214258418054842587
@@ -15712,11 +15707,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 64639415}
     m_Modifications:
-    - target: {fileID: 8354454333114357140, guid: 0d7ba0b505b17d14cbf44d7692bdf0b4,
-        type: 3}
-      propertyPath: m_Name
-      value: bottle(Clone)
-      objectReference: {fileID: 0}
     - target: {fileID: 655190871337544189, guid: 0d7ba0b505b17d14cbf44d7692bdf0b4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -15781,6 +15771,11 @@ PrefabInstance:
         type: 3}
       propertyPath: InstantiationId
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8354454333114357140, guid: 0d7ba0b505b17d14cbf44d7692bdf0b4,
+        type: 3}
+      propertyPath: m_Name
+      value: bottle(Clone)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0d7ba0b505b17d14cbf44d7692bdf0b4, type: 3}
@@ -15865,10 +15860,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1766858888}
     m_Modifications:
-    - target: {fileID: 8194474616304312206, guid: 8c4a7f80d53a4874fb017687e448d066,
+    - target: {fileID: 8194474616304312204, guid: 8c4a7f80d53a4874fb017687e448d066,
         type: 3}
-      propertyPath: m_Name
-      value: Tent(Clone)
+      propertyPath: viewIdField
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8194474616304312205, guid: 8c4a7f80d53a4874fb017687e448d066,
         type: 3}
@@ -15925,10 +15920,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8194474616304312204, guid: 8c4a7f80d53a4874fb017687e448d066,
+    - target: {fileID: 8194474616304312206, guid: 8c4a7f80d53a4874fb017687e448d066,
         type: 3}
-      propertyPath: viewIdField
-      value: 8
+      propertyPath: m_Name
+      value: Tent(Clone)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c4a7f80d53a4874fb017687e448d066, type: 3}
