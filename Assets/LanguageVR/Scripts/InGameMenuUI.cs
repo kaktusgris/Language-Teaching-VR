@@ -112,7 +112,7 @@ public class InGameMenuUI : MonoBehaviour
     {
         if (GameManager.instance.GetPlayerAvatar() != null)
         {
-            GameManager.instance.ExitGame();
+            GameManager.instance.LeaveRoom();
         }
         else
         {
