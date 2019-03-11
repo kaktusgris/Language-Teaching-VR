@@ -48,6 +48,10 @@ namespace NTNU.CarloMarton.VRLanguage
         public GameObject PlayerListEntryPrefab;
         public Text roomNameText;
 
+        [Header("Loading panel")]
+        public GameObject LoadingPanel;
+        public Text LoadingText;
+
         [Header("Tutorial Panel")]
         public GameObject TutorialPanel;
         public InputField TutorialAdminPasswordInput;
@@ -316,7 +320,8 @@ namespace NTNU.CarloMarton.VRLanguage
         {
             //PhotonNetwork.CurrentRoom.IsOpen = false;
             //PhotonNetwork.CurrentRoom.IsVisible = false;
-
+            SetActivePanel(LoadingPanel.name);
+            LoadingText.text = "Loading " + sceneToLoadString + "...";
             PhotonNetwork.LoadLevel(sceneToLoadString);
         }
 
@@ -412,6 +417,7 @@ namespace NTNU.CarloMarton.VRLanguage
             RoomListPanel.SetActive(activePanel.Equals(RoomListPanel.name));    // UI should call OnRoomListButtonClicked() to activate this
             InsideRoomPanel.SetActive(activePanel.Equals(InsideRoomPanel.name));
             TutorialPanel.SetActive(activePanel.Equals(TutorialPanel.name));
+            LoadingPanel.SetActive(activePanel.Equals(LoadingPanel.name));
         }
 
         private void UpdateCachedRoomList(List<RoomInfo> roomList)
