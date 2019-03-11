@@ -799,13 +799,13 @@ MonoBehaviour:
   deleteInstructions: "Fullf\xF8r sletting av kamera ved \xE5 peke laseren p\xE5 kameraet
     for s\xE5 \xE5 holde nede klikkeknappen i to sekunder.\\nDu vil da se et vindu
     komme opp og etter de to sekundene vil kameraet forsvinne.\\nAlle objekter som
-    kan interageres med kan slettes.\\nLukk menyen n\xE5r du er ferdig, dette vil
-    ogs\xE5 fjerne slettelaseren"
+    kan interageres med kan slettes.\\nLukking av menyen vil ogs\xE5 fjerne slettelaseren"
   invisibleInstructions: "Bli usynlig ved \xE5 trykke p\xE5 \xF8yeikonet.\\nS\xE5
     lenge du er usynlig vil ingen andre kunne se deg, men du kan fortsatt interagere
     med objekter og observere.\\nTrykk p\xE5 knappen igjen for \xE5 bli synlig igjen."
-  exitGameInstructions: "Avslutt spillet ved \xE5 trykke p\xE5 krysset.\\n --------
-    \\nExit the game by pressing the cross."
+  exitGameInstructions: "Avslutt spillet ved \xE5 trykke p\xE5 utgangsknappknappen
+    oppe til venstre.\\n -------- \\nExit the game by pressing the \"Exit\" button
+    in the top left corner."
 --- !u!1 &1066523121
 GameObject:
   m_ObjectHideFlags: 0

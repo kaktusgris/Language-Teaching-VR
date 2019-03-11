@@ -131,10 +131,12 @@ namespace NTNU.CarloMarton.VRLanguage
         }
 
         // Toggle the shader on hands between standard and a wireframe look
-        private void ChangeHands()
+        private void ToggleWireframeOnHands()
         {
-            SkinnedMeshRenderer rightRenderer = GameObject.FindGameObjectWithTag("MainCamera").transform.Find("RightHand").Find("RightRenderModel Slim(Clone)").Find("vr_glove_right_model_slim(Clone)").Find("slim_r").Find("vr_glove_right_slim").gameObject.GetComponent<SkinnedMeshRenderer>();
-            SkinnedMeshRenderer leftRenderer = GameObject.FindGameObjectWithTag("MainCamera").transform.Find("LeftHand").Find("LeftRenderModel Slim(Clone)").Find("vr_glove_left_model_slim(Clone)").Find("slim_l").Find("vr_glove_right_slim").gameObject.GetComponent<SkinnedMeshRenderer>();
+            Player player = Player.instance;
+
+            SkinnedMeshRenderer rightRenderer = player.rightHand.transform.Find("RightRenderModel Slim(Clone)/vr_glove_right_model_slim(Clone)/slim_r/vr_glove_right_slim").gameObject.GetComponent<SkinnedMeshRenderer>();
+            SkinnedMeshRenderer leftRenderer = player.leftHand.transform.Find("LeftRenderModel Slim(Clone)/vr_glove_left_model_slim(Clone)/slim_l/vr_glove_right_slim").gameObject.GetComponent<SkinnedMeshRenderer>();
             handsChanged = !handsChanged;
 
             Shader newShader;
@@ -170,7 +172,7 @@ namespace NTNU.CarloMarton.VRLanguage
 
                 if (visible && handsChanged || !visible && !handsChanged)
                 {
-                    ChangeHands();
+                    ToggleWireframeOnHands();
                 }
             }
         }

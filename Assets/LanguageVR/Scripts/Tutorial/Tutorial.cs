@@ -248,6 +248,12 @@ namespace NTNU.CarloMarton.VRLanguage
                             break;
                         }
 
+                        if (objectToInteractWith == null)
+                        {
+                            tutorialStep += 2;
+                            break;
+                        }
+
                         if (handWithLaser != previousHandWithLaser)
                         {
                             HideAllHints();
