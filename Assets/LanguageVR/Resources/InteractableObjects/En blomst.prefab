@@ -325,8 +325,8 @@ GameObject:
   - component: {fileID: 173601458194272958}
   - component: {fileID: 173601458194272953}
   m_Layer: 10
-  m_Name: en_blomst
-  m_TagString: Untagged
+  m_Name: En blomst
+  m_TagString: InteractableObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

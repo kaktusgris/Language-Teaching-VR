@@ -107,8 +107,8 @@ GameObject:
   - component: {fileID: 7566067319597460446}
   - component: {fileID: 3594011732361159775}
   m_Layer: 10
-  m_Name: ei_vannflaske
-  m_TagString: Untagged
+  m_Name: Ei vannflaske
+  m_TagString: InteractableObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

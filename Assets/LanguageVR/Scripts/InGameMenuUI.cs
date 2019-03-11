@@ -108,6 +108,11 @@ public class InGameMenuUI : MonoBehaviour
         PhotonNetwork.Instantiate("InteractableObjects/" + objectName, spawnPosition, Quaternion.identity);
     }
 
+    public void OnSaveEnvironmentStateButtonClicked()
+    {
+        EnvironmentState.SaveEnvironmentState("test");
+    }
+
     public void OnExitGameButtonClicked()
     {
         if (GameManager.instance.GetPlayerAvatar() != null)

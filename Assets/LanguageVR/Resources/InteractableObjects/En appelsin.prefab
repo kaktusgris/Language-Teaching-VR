@@ -125,7 +125,7 @@ GameObject:
   - component: {fileID: 6695155643387432046}
   m_Layer: 10
   m_Name: En appelsin
-  m_TagString: Untagged
+  m_TagString: InteractableObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

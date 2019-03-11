@@ -123,8 +123,8 @@ GameObject:
   - component: {fileID: 4524439033782956754}
   - component: {fileID: 4524439033782956753}
   m_Layer: 10
-  m_Name: et_eple
-  m_TagString: Untagged
+  m_Name: Et eple
+  m_TagString: InteractableObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

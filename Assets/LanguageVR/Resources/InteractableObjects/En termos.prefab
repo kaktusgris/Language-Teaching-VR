@@ -107,8 +107,8 @@ GameObject:
   - component: {fileID: 4288656374343504537}
   - component: {fileID: 4288656374343504542}
   m_Layer: 10
-  m_Name: en_termos
-  m_TagString: Untagged
+  m_Name: En termos
+  m_TagString: InteractableObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

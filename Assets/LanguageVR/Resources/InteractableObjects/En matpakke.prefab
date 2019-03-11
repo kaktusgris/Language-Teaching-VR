@@ -107,8 +107,8 @@ GameObject:
   - component: {fileID: 8919402392800664232}
   - component: {fileID: 8919402392800664235}
   m_Layer: 10
-  m_Name: en_matpakke
-  m_TagString: Untagged
+  m_Name: En matpakke
+  m_TagString: InteractableObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

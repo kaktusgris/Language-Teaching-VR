@@ -488,8 +488,8 @@ GameObject:
   - component: {fileID: 3177199159436717791}
   - component: {fileID: 3177199159436717788}
   m_Layer: 10
-  m_Name: en_sekk
-  m_TagString: Untagged
+  m_Name: En sekk
+  m_TagString: InteractableObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -212,8 +212,8 @@ GameObject:
   - component: {fileID: 1858306532074174806}
   - component: {fileID: 1858306532074174805}
   m_Layer: 10
-  m_Name: en_sovepose
-  m_TagString: Untagged
+  m_Name: En sovepose
+  m_TagString: InteractableObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
