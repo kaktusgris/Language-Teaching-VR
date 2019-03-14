@@ -105,12 +105,18 @@ public class InGameMenuUI : MonoBehaviour
         Vector3 spawnPosition = new Vector3(spawnX, spawnY, spawnZ);
 
         Debug.LogFormat("Instantiated {0} at {1}", objectName, spawnPosition);
-        PhotonNetwork.Instantiate("InteractableObjects/" + objectName, spawnPosition, Quaternion.identity);
+        GameObject interactableObject = PhotonNetwork.Instantiate("InteractableObjects/" + objectName, spawnPosition, Quaternion.identity);
+        interactableObject.name = objectName;
     }
 
     public void OnSaveEnvironmentStateButtonClicked()
     {
         EnvironmentState.SaveEnvironmentState("test");
+    }
+
+    public void OnLoadEnvironmentStateButtonClicked()
+    {
+        EnvironmentState.LoadEnvironmentState("test");
     }
 
     public void OnExitGameButtonClicked()

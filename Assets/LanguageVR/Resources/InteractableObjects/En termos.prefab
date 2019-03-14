@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4288656374307993287}
   - component: {fileID: 4288656374307993284}
   - component: {fileID: 4288656374307993285}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: pCube1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -279,7 +279,7 @@ GameObject:
   - component: {fileID: 4288656374837920123}
   - component: {fileID: 4288656374837920120}
   - component: {fileID: 4288656374837920121}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -384,7 +384,7 @@ GameObject:
   - component: {fileID: 4288656376272299527}
   - component: {fileID: 4288656376272299524}
   - component: {fileID: 4288656376272299525}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: pCylinder1
   m_TagString: Untagged
   m_Icon: {fileID: 0}

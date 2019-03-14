@@ -23,7 +23,7 @@ public class MenuLaser : MonoBehaviour
 
 
     private float timer;
-    private float timerThreshold = 2.0f;
+    private float timerThreshold = 1.0f; // How many seconds must the delete button be held to delete object
     private bool clickBeingHeld = false;
    
     public SteamVR_Input_Sources handType;
@@ -143,7 +143,7 @@ public class MenuLaser : MonoBehaviour
                 }
             }
             // Deleting objects
-            else if (Physics.Raycast(laser, out raycastHit, Mathf.Infinity, 1 << LayerMask.NameToLayer("DeletableObjects"), QueryTriggerInteraction.Ignore) && deleteToggle)
+            else if (deleteToggle && Physics.Raycast(laser, out raycastHit, Mathf.Infinity, 1 << LayerMask.NameToLayer("DeletableObjects"), QueryTriggerInteraction.Ignore))
             {
                 clickedObject = raycastHit.collider.gameObject;
                 Debug.Log(clickedObject.transform.parent);
@@ -277,6 +277,10 @@ public class MenuLaser : MonoBehaviour
                 return "Skru av/på slettemodus";
             case "ExitGameButton":
                 return "Avslutt";
+            case "SaveStateButton":
+                return "Lagre verden";
+            case "LoadStateButton":
+                return "Last inn verden";
         }
         return "Ikke lagt til hint på knapp";
     }

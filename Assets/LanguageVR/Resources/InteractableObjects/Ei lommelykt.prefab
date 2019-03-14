@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4899027905495497049}
   - component: {fileID: 4899027905495497048}
   - component: {fileID: 4899027905495497047}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ GameObject:
   - component: {fileID: 4899027905722081749}
   - component: {fileID: 4899027905722081748}
   - component: {fileID: 4899027905722081747}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Object001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -384,7 +384,7 @@ GameObject:
   - component: {fileID: 4899027907270426728}
   - component: {fileID: 4899027907270426727}
   - component: {fileID: 4899027907270426726}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Flashlight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
