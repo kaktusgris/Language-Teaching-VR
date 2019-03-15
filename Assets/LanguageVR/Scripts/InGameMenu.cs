@@ -15,6 +15,16 @@ public class InGameMenu : MonoBehaviour
     public GameObject menu;
     public GameObject helperUI;
 
+    [Header("Entry prefabs")]
+    public GameObject menuObjectEntry;
+    public GameObject loadStateEntry;
+
+    [Header("Menu elements")]
+    public RectTransform scrollContent;
+    public GameObject contentPanel;
+    public GameObject loadStatePanel;
+    public GameObject exitGamePanel;
+
     private GameObject leftHand;
     private GameObject rightHand;
     private SteamVR_Input_Sources currentHandParent;
@@ -22,8 +32,8 @@ public class InGameMenu : MonoBehaviour
     private GameObject handPrefabL;
     private GameObject handPrefabR;
 
-    public RectTransform myPanel;
-    public GameObject menuTextPrefab;
+    private bool isExitGamePanelActive = false;
+    private bool isLoadStatePanelActive = false;
 
     private void Awake()
     {
@@ -43,7 +53,7 @@ public class InGameMenu : MonoBehaviour
         handPrefabR = transform.Find("HandPrefabR").gameObject;
     }
 
-    private void ToggleMenu(SteamVR_Input_Sources hand)
+    private void FixActiveMenu(SteamVR_Input_Sources hand)
     {
         // Don't do anything if it is not your own menu
         if (!gameObject.GetComponent<PhotonView>().IsMine && PhotonNetwork.IsConnected)
@@ -94,7 +104,41 @@ public class InGameMenu : MonoBehaviour
             helperUI.transform.localPosition = new Vector3(0, 0, 0.01f);
             helperUI.transform.localRotation = Quaternion.Euler(60, 0, 0);
             helperUI.SetActive(true);
+
+            SetPanelActive(contentPanel.name);
         }
+    }
+
+    public void ToggleExitGamePanelActive()
+    {
+        isExitGamePanelActive = !isExitGamePanelActive;
+        if (exitGamePanel.activeInHierarchy)
+        {
+            SetPanelActive(contentPanel.name);
+        }
+        else
+        {
+            SetPanelActive(exitGamePanel.name);
+        }
+    }
+
+    public void ToggleLoadStatePanelActive()
+    {
+        if (loadStatePanel.activeInHierarchy)
+        {
+            SetPanelActive(contentPanel.name);
+        }
+        else
+        {
+            SetPanelActive(loadStatePanel.name);
+        }
+    }
+
+    public void SetPanelActive(string panelName)
+    {
+        contentPanel.SetActive(contentPanel.name.Equals(panelName));
+        exitGamePanel.SetActive(exitGamePanel.name.Equals(panelName));
+        loadStatePanel.SetActive(loadStatePanel.name.Equals(panelName));
     }
 
     private void SetEnablelaserOnHand(GameObject hand, bool enabled)
@@ -114,10 +158,16 @@ public class InGameMenu : MonoBehaviour
         return laserHand;
     }
 
-    public void AddTextBlock(string text)
+    public void AddMenuObjectEntry(string text)
     {
-        GameObject newText = (GameObject)Instantiate(menuTextPrefab, myPanel.transform);
-        newText.GetComponent<Text>().text = text;
+        GameObject newEntry = (GameObject)Instantiate(menuObjectEntry, scrollContent.transform);
+        newEntry.GetComponent<Text>().text = text;
+    }
+
+    public void AddLoadStateEntry(string name)
+    {
+        GameObject newEntry = (GameObject)Instantiate(loadStateEntry, loadStatePanel.transform.Find("ScrollContent"));
+        newEntry.GetComponentInChildren<Text>().text = name;
     }
 
     private void Update()
@@ -126,10 +176,10 @@ public class InGameMenu : MonoBehaviour
         {
             if (menuButtonAction.GetStateDown(SteamVR_Input_Sources.LeftHand))
             {
-                ToggleMenu(SteamVR_Input_Sources.LeftHand);
+                FixActiveMenu(SteamVR_Input_Sources.LeftHand);
             }
             else if (menuButtonAction.GetStateDown(SteamVR_Input_Sources.RightHand)) {
-                ToggleMenu(SteamVR_Input_Sources.RightHand);
+                FixActiveMenu(SteamVR_Input_Sources.RightHand);
             }
         }
     }

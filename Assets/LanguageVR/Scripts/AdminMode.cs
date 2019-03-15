@@ -10,6 +10,9 @@ namespace NTNU.CarloMarton.VRLanguage
         [SerializeField]
         private PlayerDictionary playerDictionary;
 
+        [SerializeField]
+        private InGameMenu inGameMenu;
+
         private bool isAdmin;
 
         void Start()
@@ -17,6 +20,7 @@ namespace NTNU.CarloMarton.VRLanguage
             isAdmin = (bool) PhotonNetwork.LocalPlayer.CustomProperties["admin"];
 
             InitialiseAdmin();
+            FillLoadStateList();
         }
 
         private void InitialiseAdmin()
@@ -37,6 +41,17 @@ namespace NTNU.CarloMarton.VRLanguage
                 GameObject item = (GameObject) ob;
                 string name = item.GetComponentInChildren<TextMesh>().text;
                 playerDictionary.AddItemToDictionary(name, item);
+            }
+        }
+
+        private void FillLoadStateList()
+        {
+            List<string> saveFiles = EnvironmentState.GetAllSaveFileNames();
+
+            foreach (string fileName in saveFiles)
+            {
+                string nameWithoutExtension = fileName.Substring(0, fileName.Length - 4);
+                inGameMenu.AddLoadStateEntry(nameWithoutExtension);
             }
         }
     }

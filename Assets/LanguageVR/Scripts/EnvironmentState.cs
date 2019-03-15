@@ -16,12 +16,18 @@ namespace NTNU.CarloMarton.VRLanguage
 
         public static void SaveEnvironmentState(string saveName)
         {
-            string savepath = savePath + saveName + ".dat";
+            string filePath = savePath + saveName + ".dat";
 
             BinaryFormatter bf = new BinaryFormatter();
 
-            System.IO.Directory.CreateDirectory(savePath); // create the directory if it does not exists
-            FileStream file = File.Open(savepath, FileMode.OpenOrCreate);
+            if (!Directory.Exists(savePath))
+                Directory.CreateDirectory(savePath);
+
+            FileStream file;
+            if (false||File.Exists(filePath))
+                file = File.Open(filePath, FileMode.Open, FileAccess.Write);
+            else
+                file = File.Open(filePath, FileMode.Create, FileAccess.Write);
 
             EnvironmentInfo environmentInfo = new EnvironmentInfo();
             List<GameObject> interactables = GetAllInteractableGameObjectsInScene();
@@ -40,7 +46,7 @@ namespace NTNU.CarloMarton.VRLanguage
             if (File.Exists(filePath))
             {
                 BinaryFormatter bf = new BinaryFormatter();
-                FileStream file = File.Open(filePath, FileMode.Open);
+                FileStream file = File.Open(filePath, FileMode.Open, FileAccess.Read);
                 EnvironmentInfo info = (EnvironmentInfo)bf.Deserialize(file);
                 file.Close();
 
@@ -53,11 +59,24 @@ namespace NTNU.CarloMarton.VRLanguage
             }
         }
 
+        public static List<string> GetAllSaveFileNames()
+        {
+            DirectoryInfo d = new DirectoryInfo(@savePath);
+            FileInfo[] files = d.GetFiles("*.dat"); //Getting Text files
+            List<string> filenames = new List<string>();
+            foreach (FileInfo file in files)
+            {
+                filenames.Add(file.Name);
+            }
+            return filenames;
+        }
+
         private static void DestroyAllInteractableObjectsInScene()
         {
             foreach (GameObject go in GetAllInteractableGameObjectsInScene())
             {
-                GameObject.Destroy(go);
+                Photon.Pun.PhotonNetwork.Destroy(go);
+                //GameObject.Destroy(go);
             }
         }
 

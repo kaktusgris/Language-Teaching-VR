@@ -19,12 +19,22 @@ public class InGameMenuUI : MonoBehaviour
     [SerializeField]
     private Color pressedColor = Color.green;
 
+    private GameObject playerAvatar;
+    private InGameMenu inGameMenu;
+
     private void Start()
     {
         if (onlyAdmin)
         {
             gameObject.SetActive((bool) PhotonNetwork.LocalPlayer.CustomProperties["admin"]);
         }
+
+        playerAvatar = GameManager.instance.GetPlayerAvatar();
+        if (playerAvatar == null)
+        {
+            playerAvatar = TutorialGameManager.instance.GetPlayerAvatar();
+        }
+        inGameMenu = playerAvatar.GetComponent<InGameMenu>();
     }
 
     public Color GetNormalColor()
@@ -47,11 +57,6 @@ public class InGameMenuUI : MonoBehaviour
         visible = !visible;
         transform.Find("VisibleImage").gameObject.SetActive(visible);
         transform.Find("InvisibleImage").gameObject.SetActive(!visible);
-        GameObject playerAvatar = GameManager.instance.GetPlayerAvatar();
-        if (playerAvatar == null)
-        {
-            playerAvatar = TutorialGameManager.instance.GetPlayerAvatar();
-        }
 
         playerAvatar.GetComponent<PlayerManager>().SetVisibility(visible);
     }
@@ -62,11 +67,7 @@ public class InGameMenuUI : MonoBehaviour
         visible = !visible;
         transform.Find("DeleteDefaultImage").gameObject.SetActive(visible);
         transform.Find("DeleteActiveImage").gameObject.SetActive(!visible);
-        GameObject playerAvatar = GameManager.instance.GetPlayerAvatar();
-        if (playerAvatar == null)
-        {
-            playerAvatar = TutorialGameManager.instance.GetPlayerAvatar();
-        }
+
         MenuLaser menuLaser = playerAvatar.GetComponent<InGameMenu>().GetLaserHand().GetComponent<MenuLaser>();
         menuLaser.toggleDeleteMode(!visible);
     }
@@ -82,11 +83,6 @@ public class InGameMenuUI : MonoBehaviour
     public void OnPlayAudioButtonClicked()
     {
         string objectName = gameObject.GetComponentInParent<Text>().text;
-        GameObject playerAvatar = GameManager.instance.GetPlayerAvatar();
-        if (playerAvatar == null)
-        {
-            playerAvatar = TutorialGameManager.instance.GetPlayerAvatar();
-        }
         
         playerAvatar.GetComponent<PlayerDictionary>().PlayAudio(objectName);
     }
@@ -111,12 +107,26 @@ public class InGameMenuUI : MonoBehaviour
 
     public void OnSaveEnvironmentStateButtonClicked()
     {
-        EnvironmentState.SaveEnvironmentState("test");
+        string timeNow = System.DateTime.Now.ToString("hh.mm dd.MM.yy");
+        string stateName = SceneManagerHelper.ActiveSceneName + " " + timeNow;
+        EnvironmentState.SaveEnvironmentState(stateName);
+        inGameMenu.AddLoadStateEntry(stateName);
     }
 
     public void OnLoadEnvironmentStateButtonClicked()
     {
-        EnvironmentState.LoadEnvironmentState("test");
+        string stateName = transform.parent.GetComponentInChildren<Text>().text;
+        EnvironmentState.LoadEnvironmentState(stateName);
+    }
+
+    public void OnToggleLoadStatePanelButtonClicked()
+    {
+        inGameMenu.ToggleLoadStatePanelActive();
+    }
+
+    public void OnToggleExitGamePanelButtonClicked()
+    {
+        inGameMenu.ToggleExitGamePanelActive();
     }
 
     public void OnExitGameButtonClicked()

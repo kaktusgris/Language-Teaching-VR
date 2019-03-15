@@ -48,7 +48,7 @@ public class MenuLaser : MonoBehaviour
     void Start()
     {
         deleteProgressPanel = HelperUI.transform.Find("CanvasUI/DeleteProgressBar").gameObject;
-        scrollRectPanel = mainPanel.transform.Find("ScrollRect").gameObject;
+        scrollRectPanel = mainPanel.transform.Find("ContentPanel").gameObject;
         deleteProgressSlider = deleteProgressPanel.transform.Find("DeleteProgressSlider").GetComponent<Slider>();
         deleteProgressSlider.maxValue = timerThreshold;
         helperUIText = HelperUI.GetComponent<TextMesh>();
@@ -63,8 +63,8 @@ public class MenuLaser : MonoBehaviour
        
         SetLaserColor(standardLaserColor);
 
-        scrollContent = menu.transform.Find("MainPanel").Find("ScrollRect").Find("ScrollContent").GetComponent<RectTransform>();
-        scrollRect = menu.transform.Find("MainPanel").Find("ScrollRect").GetComponent<ScrollRect>();
+        scrollContent = menu.transform.Find("MainPanel").Find("ContentPanel").Find("ScrollContent").GetComponent<RectTransform>();
+        scrollRect = menu.transform.Find("MainPanel").Find("ContentPanel").GetComponent<ScrollRect>();
     }
 
     
