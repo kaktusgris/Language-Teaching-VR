@@ -55,7 +55,7 @@ public class RandomColour : MonoBehaviour, IPunObservable {
     }
 
     // Sets the colours on the player's hands when they are conected to the base stations
-    private IEnumerator Start()
+    public IEnumerator Start()
     {
         Transform rHandTransform = Player.instance.rightHand.transform;
         Transform lHandTransform = Player.instance.leftHand.transform;
@@ -114,6 +114,7 @@ public class RandomColour : MonoBehaviour, IPunObservable {
             UpdateColourOnMaterial(rightHandMaterial, colour);
         }
         UpdateColourOnMaterial(torsoMaterial, colour);
+        print("Changed player colour to " + colour);
     }
 
     public void UpdateColourOnMaterial(Material material, Color colour)

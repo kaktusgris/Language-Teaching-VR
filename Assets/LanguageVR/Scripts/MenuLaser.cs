@@ -16,7 +16,6 @@ public class MenuLaser : MonoBehaviour
     private Color clickedColor = Color.red;
     private GameObject clickedButton;
     private GameObject clickedObject;
-    private ColorBlock buttonColor;
     private LineRenderer lr;
     private Ray laser;
     private bool deleteToggle;
@@ -48,7 +47,7 @@ public class MenuLaser : MonoBehaviour
     void Start()
     {
         deleteProgressPanel = HelperUI.transform.Find("CanvasUI/DeleteProgressBar").gameObject;
-        scrollRectPanel = mainPanel.transform.Find("ContentPanel").gameObject;
+        scrollRectPanel = mainPanel.transform.Find("DictionaryPanel").gameObject;
         deleteProgressSlider = deleteProgressPanel.transform.Find("DeleteProgressSlider").GetComponent<Slider>();
         deleteProgressSlider.maxValue = timerThreshold;
         helperUIText = HelperUI.GetComponent<TextMesh>();
@@ -63,8 +62,8 @@ public class MenuLaser : MonoBehaviour
        
         SetLaserColor(standardLaserColor);
 
-        scrollContent = menu.transform.Find("MainPanel").Find("ContentPanel").Find("ScrollContent").GetComponent<RectTransform>();
-        scrollRect = menu.transform.Find("MainPanel").Find("ContentPanel").GetComponent<ScrollRect>();
+        scrollContent = menu.transform.Find("MainPanel").Find("DictionaryPanel").Find("ScrollContent").GetComponent<RectTransform>();
+        scrollRect = menu.transform.Find("MainPanel").Find("DictionaryPanel").GetComponent<ScrollRect>();
     }
 
     
@@ -294,10 +293,10 @@ public class MenuLaser : MonoBehaviour
 
     private void SetButtonColor(Button button, Color color)
     {
-        //button.image.color = color;
-        buttonColor.normalColor = color;
-        buttonColor.colorMultiplier = 5;
-        button.colors = buttonColor;
+        ColorBlock colorBlock = new ColorBlock();
+        colorBlock.normalColor = color;
+        colorBlock.colorMultiplier = 1;
+        button.colors = colorBlock;
     }
 
     public GameObject IsClickingButton()

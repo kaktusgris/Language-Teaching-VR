@@ -119,14 +119,24 @@ public class InGameMenuUI : MonoBehaviour
         EnvironmentState.LoadEnvironmentState(stateName);
     }
 
+    public void OnToggleSettingsPanelButtonClicked()
+    {
+        inGameMenu.TogglePanel(inGameMenu.settingsPanel);
+    }
+
     public void OnToggleLoadStatePanelButtonClicked()
     {
-        inGameMenu.ToggleLoadStatePanelActive();
+        inGameMenu.TogglePanel(inGameMenu.loadStatePanel);
+    }
+
+    public void OnToggleChangeColorPanelButtonClicked()
+    {
+        inGameMenu.TogglePanel(inGameMenu.changeColorPanel);
     }
 
     public void OnToggleExitGamePanelButtonClicked()
     {
-        inGameMenu.ToggleExitGamePanelActive();
+        inGameMenu.TogglePanel(inGameMenu.exitGamePanel);
     }
 
     public void OnExitGameButtonClicked()

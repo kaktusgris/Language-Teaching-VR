@@ -20,10 +20,13 @@ public class InGameMenu : MonoBehaviour
     public GameObject loadStateEntry;
 
     [Header("Menu elements")]
-    public RectTransform scrollContent;
-    public GameObject contentPanel;
+    public GameObject dictionaryPanel;
+    public GameObject settingsPanel;
     public GameObject loadStatePanel;
+    public GameObject changeColorPanel;
     public GameObject exitGamePanel;
+
+    private GameObject defaultPanel;
 
     private GameObject leftHand;
     private GameObject rightHand;
@@ -32,11 +35,11 @@ public class InGameMenu : MonoBehaviour
     private GameObject handPrefabL;
     private GameObject handPrefabR;
 
-    private bool isExitGamePanelActive = false;
-    private bool isLoadStatePanelActive = false;
-
     private void Awake()
     {
+        defaultPanel = dictionaryPanel; // Set which panel will be the default
+        SetPanelActive(defaultPanel.name);
+
         // Force admin mode on user if not set before. Most likely cause it was launched in editor. Neccessary to be able to play straight in scene
         if (PhotonNetwork.LocalPlayer.CustomProperties["admin"] == null)
         {
@@ -57,9 +60,7 @@ public class InGameMenu : MonoBehaviour
     {
         // Don't do anything if it is not your own menu
         if (!gameObject.GetComponent<PhotonView>().IsMine && PhotonNetwork.IsConnected)
-        {
             return;
-        }
 
         // Only deactivate the menu if the same button is pressed twice, swap hand if not
         if (menu.activeInHierarchy && hand.Equals(currentHandParent))
@@ -105,40 +106,57 @@ public class InGameMenu : MonoBehaviour
             helperUI.transform.localRotation = Quaternion.Euler(60, 0, 0);
             helperUI.SetActive(true);
 
-            SetPanelActive(contentPanel.name);
+            SetPanelActive(defaultPanel.name);
         }
     }
 
-    public void ToggleExitGamePanelActive()
-    {
-        isExitGamePanelActive = !isExitGamePanelActive;
-        if (exitGamePanel.activeInHierarchy)
-        {
-            SetPanelActive(contentPanel.name);
-        }
-        else
-        {
-            SetPanelActive(exitGamePanel.name);
-        }
-    }
+    //public void ToggleSettingsPanelActive()
+    //{
+    //    if (settingsPanel.activeInHierarchy)
+    //        SetPanelActive(dictionaryPanel.name);
+    //    else
+    //        SetPanelActive(settingsPanel.name);
+    //}
 
-    public void ToggleLoadStatePanelActive()
+    //public void ToggleExitGamePanelActive()
+    //{
+    //    if (exitGamePanel.activeInHierarchy)
+    //        SetPanelActive(dictionaryPanel.name);
+    //    else
+    //        SetPanelActive(exitGamePanel.name);
+    //}
+
+    //public void ToggleLoadStatePanelActive()
+    //{
+    //    if (loadStatePanel.activeInHierarchy)
+    //        SetPanelActive(dictionaryPanel.name);
+    //    else
+    //        SetPanelActive(loadStatePanel.name);
+    //}
+
+    //public void ToggleChangeColorPanelActive()
+    //{
+    //    if (changeColorPanel.activeInHierarchy)
+    //        SetPanelActive(dictionaryPanel.name);
+    //    else
+    //        SetPanelActive(changeColorPanel.name);
+    //}
+
+    public void TogglePanel(GameObject panel)
     {
-        if (loadStatePanel.activeInHierarchy)
-        {
-            SetPanelActive(contentPanel.name);
-        }
+        if (panel.activeInHierarchy)
+            SetPanelActive(defaultPanel.name);
         else
-        {
-            SetPanelActive(loadStatePanel.name);
-        }
+            SetPanelActive(panel.name);
     }
 
     public void SetPanelActive(string panelName)
     {
-        contentPanel.SetActive(contentPanel.name.Equals(panelName));
+        dictionaryPanel.SetActive(dictionaryPanel.name.Equals(panelName));
         exitGamePanel.SetActive(exitGamePanel.name.Equals(panelName));
         loadStatePanel.SetActive(loadStatePanel.name.Equals(panelName));
+        settingsPanel.SetActive(settingsPanel.name.Equals(panelName));
+        changeColorPanel.SetActive(changeColorPanel.name.Equals(panelName));
     }
 
     private void SetEnablelaserOnHand(GameObject hand, bool enabled)
@@ -160,7 +178,7 @@ public class InGameMenu : MonoBehaviour
 
     public void AddMenuObjectEntry(string text)
     {
-        GameObject newEntry = (GameObject)Instantiate(menuObjectEntry, scrollContent.transform);
+        GameObject newEntry = (GameObject)Instantiate(menuObjectEntry, dictionaryPanel.transform.Find("ScrollContent"));
         newEntry.GetComponent<Text>().text = text;
     }
 

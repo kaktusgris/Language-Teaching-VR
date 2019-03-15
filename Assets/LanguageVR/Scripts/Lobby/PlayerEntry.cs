@@ -18,13 +18,10 @@ namespace NTNU.CarloMarton.VRLanguage
         public Button PlayerReadyButton;
         public Image PlayerReadyImage;
 
-        public Button ColorPickerPutton;
-        public GameObject ColorPicker;
+        public ColourPicker colourPicker;
 
         private int ownerId;
         private bool isPlayerReady;
-
-        private System.Random rng = new System.Random();
 
         #region UNITY
 
@@ -49,10 +46,7 @@ namespace NTNU.CarloMarton.VRLanguage
                         FindObjectOfType<MainPanel>().LocalPlayerPropertiesUpdated();
                     }
                 });
-                ColorPickerPutton.onClick.AddListener(OnPlayerColorClicked);
-
-
-                InitialiseColor();
+                colourPicker.InitialiseColor();
             }
         }
 
@@ -66,11 +60,11 @@ namespace NTNU.CarloMarton.VRLanguage
                     // Find the player owning this entry
                     if (p.ActorNumber == ownerId)
                     {
-                        Color playerColor = GetColorOnPlayer(p);
+                        Color playerColor = colourPicker.GetColorOnPlayer(p);
                         // Only change if the colour is different
                         if (!playerColor.Equals(PlayerColorImage.color))
                         {
-                            ChangeColor(playerColor);
+                            colourPicker.ChangeColor(PlayerColorImage, playerColor, ownerId);
                         }
                     }
                 }
@@ -91,96 +85,6 @@ namespace NTNU.CarloMarton.VRLanguage
             PlayerReadyImage.enabled = playerReady;
         }
 
-        private void InitialiseColor()
-        {
-            List<Color> availableColors = new List<Color>();
-            List<Color> takenColors = new List<Color>();
-            foreach (Player player in PhotonNetwork.PlayerList)
-            {
-                object colorObject = GetColorOnPlayer(player);
-                if (colorObject != null)
-                {
-                    takenColors.Add((Color)colorObject);
-                }
-            }
-
-            foreach (Transform colorTransform in ColorPicker.transform)
-            {
-                Color usedColor = colorTransform.GetComponent<Image>().color;
-                if (!takenColors.Contains(usedColor))
-                {
-                    availableColors.Add(usedColor);
-                }
-            }
-
-            Color color = availableColors[rng.Next(availableColors.Count)];
-            ChangeColor(color);
-        }
-
-        public void OnPlayerColorClicked()
-        {
-            UpdateAvailableColors();
-            ColorPicker.SetActive(!ColorPicker.activeSelf);
-        }
-
-        public void OnColorPickerColorClicked(Image img)
-        {
-            Color color = img.color;
-            string colorName = img.gameObject.name;
-            print("Changed player colour to " + colorName);
-            if (!ColorPicker.transform.Find(colorName).Find("DisabledImage").gameObject.activeSelf)
-            {
-                ChangeColor(color);
-                ColorPicker.SetActive(false);
-            }
-        }
-
-        private void ChangeColor(Color color)
-        {
-            PlayerColorImage.color = color;
-            float[] colorAsList = { color.r, color.g, color.b, color.a };
-            if (PhotonNetwork.LocalPlayer.ActorNumber == ownerId)
-            {
-                Hashtable hash = new Hashtable() { { "Color", colorAsList } };
-                PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
-            }
-            UpdateAvailableColors();
-        }
-
-        private void UpdateAvailableColors()
-        {
-            List<Color> takenColors = new List<Color>();
-            foreach (Player player in PhotonNetwork.PlayerList)
-            {
-                Color colorObject = GetColorOnPlayer(player);
-                if (colorObject != null)
-                {
-                    takenColors.Add(colorObject);
-                }
-            }
-
-            foreach (Transform colorTransform in ColorPicker.transform)
-            {
-                Color usedColor = colorTransform.GetComponent<Image>().color;
-                GameObject disabledImageObject = colorTransform.Find("DisabledImage").gameObject;
-                disabledImageObject.SetActive(takenColors.Contains(usedColor));
-            }
-        }
-
-        private Color GetColorOnPlayer(Player p)
-        {
-            float[] colorAsFloat = (float[])p.CustomProperties["Color"];
-            if (colorAsFloat == null)
-            {
-                return Color.black;
-            }
-
-            float r = colorAsFloat[0];
-            float g = colorAsFloat[1];
-            float b = colorAsFloat[2];
-            float a = colorAsFloat[3];
-
-            return new Color(r, g, b, a);
-        }
+       
     }
 }

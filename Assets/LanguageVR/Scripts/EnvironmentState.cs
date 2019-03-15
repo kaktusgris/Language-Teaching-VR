@@ -61,6 +61,9 @@ namespace NTNU.CarloMarton.VRLanguage
 
         public static List<string> GetAllSaveFileNames()
         {
+            if (!Directory.Exists(savePath))
+                return new List<string>();
+
             DirectoryInfo d = new DirectoryInfo(@savePath);
             FileInfo[] files = d.GetFiles("*.dat"); //Getting Text files
             List<string> filenames = new List<string>();
