@@ -10,18 +10,34 @@ namespace NTNU.CarloMarton.VRLanguage
     public class ColourPicker : MonoBehaviour
     {
         public Image imageResult;
-        public bool hidePickerAfterChosenColor = false;
+        public bool inLobby = false;
 
         private RandomColour randomColour;
         private System.Random rng = new System.Random();
 
         private void Start()
         {
-            GameObject playerAvatar = GameManager.instance.GetPlayerAvatar();
-            if (playerAvatar == null)
-                playerAvatar = TutorialGameManager.instance.GetPlayerAvatar();
+            if (inLobby)
+            {
+                foreach (InGameMenuUI ui in gameObject.GetComponentsInChildren<InGameMenuUI>())
+                {
+                    ui.enabled = false;
+                }
+            }
+            else
+            {
+                GameObject playerAvatar = GameManager.instance.GetPlayerAvatar();
+                if (playerAvatar == null)
+                    playerAvatar = TutorialGameManager.instance.GetPlayerAvatar();
 
-            randomColour = playerAvatar.GetComponent<RandomColour>();
+                randomColour = playerAvatar.GetComponent<RandomColour>();
+
+            }
+        }
+
+        private void Update()
+        {
+            UpdateAvailableColors();
         }
 
         public void InitialiseColor()
@@ -52,7 +68,7 @@ namespace NTNU.CarloMarton.VRLanguage
 
         public void OnPlayerColorClicked()
         {
-            UpdateAvailableColors();
+            //UpdateAvailableColors();
             gameObject.SetActive(!gameObject.activeSelf);
         }
 
@@ -63,7 +79,7 @@ namespace NTNU.CarloMarton.VRLanguage
             if (!gameObject.transform.Find(colorName).Find("DisabledImage").gameObject.activeSelf)
             {
                 ChangeColor(imageResult, color, PhotonNetwork.LocalPlayer.ActorNumber);
-                gameObject.SetActive(!hidePickerAfterChosenColor);
+                gameObject.SetActive(!inLobby);
             }
         }
 
@@ -79,7 +95,7 @@ namespace NTNU.CarloMarton.VRLanguage
             if (randomColour != null)
                 randomColour.UpdateColour(color);
 
-            UpdateAvailableColors();
+            //UpdateAvailableColors();
         }
 
         private void UpdateAvailableColors()

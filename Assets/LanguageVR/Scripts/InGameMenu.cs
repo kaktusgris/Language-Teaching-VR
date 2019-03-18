@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 public class InGameMenu : MonoBehaviour
 {
@@ -15,18 +16,23 @@ public class InGameMenu : MonoBehaviour
     public GameObject menu;
     public GameObject helperUI;
 
-    [Header("Entry prefabs")]
-    public GameObject menuObjectEntry;
-    public GameObject loadStateEntry;
-
-    [Header("Menu elements")]
+    [Header("Panels")]
     public GameObject dictionaryPanel;
     public GameObject settingsPanel;
     public GameObject loadStatePanel;
     public GameObject changeColorPanel;
     public GameObject exitGamePanel;
-
+    public GameObject stateSavedPanel;
     private GameObject defaultPanel;
+
+
+    [Header("Entry prefabs")]
+    public GameObject menuObjectEntry;
+    public GameObject loadStateEntry;
+
+    [Header("Menu elements")]
+    public Image currentColorImage;
+    public Text topPanelTitle;
 
     private GameObject leftHand;
     private GameObject rightHand;
@@ -54,6 +60,8 @@ public class InGameMenu : MonoBehaviour
 
         handPrefabL = transform.Find("HandPrefabL").gameObject;
         handPrefabR = transform.Find("HandPrefabR").gameObject;
+
+        currentColorImage.color = gameObject.GetComponent<RandomColour>().colour;
     }
 
     private void FixActiveMenu(SteamVR_Input_Sources hand)
@@ -110,53 +118,49 @@ public class InGameMenu : MonoBehaviour
         }
     }
 
-    //public void ToggleSettingsPanelActive()
-    //{
-    //    if (settingsPanel.activeInHierarchy)
-    //        SetPanelActive(dictionaryPanel.name);
-    //    else
-    //        SetPanelActive(settingsPanel.name);
-    //}
-
-    //public void ToggleExitGamePanelActive()
-    //{
-    //    if (exitGamePanel.activeInHierarchy)
-    //        SetPanelActive(dictionaryPanel.name);
-    //    else
-    //        SetPanelActive(exitGamePanel.name);
-    //}
-
-    //public void ToggleLoadStatePanelActive()
-    //{
-    //    if (loadStatePanel.activeInHierarchy)
-    //        SetPanelActive(dictionaryPanel.name);
-    //    else
-    //        SetPanelActive(loadStatePanel.name);
-    //}
-
-    //public void ToggleChangeColorPanelActive()
-    //{
-    //    if (changeColorPanel.activeInHierarchy)
-    //        SetPanelActive(dictionaryPanel.name);
-    //    else
-    //        SetPanelActive(changeColorPanel.name);
-    //}
-
     public void TogglePanel(GameObject panel)
     {
+        TogglePanel(panel, defaultPanel);
+    }
+
+    public void TogglePanel(GameObject panel, GameObject otherPanel)
+    {
         if (panel.activeInHierarchy)
-            SetPanelActive(defaultPanel.name);
+            SetPanelActive(otherPanel.name);
         else
             SetPanelActive(panel.name);
     }
 
     public void SetPanelActive(string panelName)
     {
+        SetTitleOnTopPanel(panelName);
+
         dictionaryPanel.SetActive(dictionaryPanel.name.Equals(panelName));
         exitGamePanel.SetActive(exitGamePanel.name.Equals(panelName));
         loadStatePanel.SetActive(loadStatePanel.name.Equals(panelName));
         settingsPanel.SetActive(settingsPanel.name.Equals(panelName));
         changeColorPanel.SetActive(changeColorPanel.name.Equals(panelName));
+        stateSavedPanel.SetActive(stateSavedPanel.name.Equals(panelName));
+    }
+
+    public void SetTitleOnTopPanel(string panelName)
+    {
+        if (panelName.Equals(dictionaryPanel.name))
+            topPanelTitle.text = "Ordbok";
+        else if (panelName.Equals(exitGamePanel.name))
+            topPanelTitle.text = "Avslutt";
+        else if (panelName.Equals(settingsPanel.name))
+            topPanelTitle.text = "Instillinger";
+        else if (panelName.Equals(loadStatePanel.name))
+            topPanelTitle.text = "Last inn";
+        else if (panelName.Equals(changeColorPanel.name))
+            topPanelTitle.text = "Endre farge";
+    }
+
+    public void SetStateSavedName(string stateName)
+    {
+        string text = "Rom lagret som " + stateName;
+        stateSavedPanel.GetComponentInChildren<Text>().text = text;
     }
 
     private void SetEnablelaserOnHand(GameObject hand, bool enabled)

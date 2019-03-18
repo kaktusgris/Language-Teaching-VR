@@ -14,20 +14,16 @@ namespace NTNU.CarloMarton.VRLanguage
 
         private static readonly string savePath = Application.persistentDataPath + "/EnvironmentStateSaves/";
 
-        public static void SaveEnvironmentState(string saveName)
+        public static string SaveEnvironmentState(string saveName)
         {
-            string filePath = savePath + saveName + ".dat";
-
             BinaryFormatter bf = new BinaryFormatter();
 
             if (!Directory.Exists(savePath))
                 Directory.CreateDirectory(savePath);
 
-            FileStream file;
-            if (false||File.Exists(filePath))
-                file = File.Open(filePath, FileMode.Open, FileAccess.Write);
-            else
-                file = File.Open(filePath, FileMode.Create, FileAccess.Write);
+            string fileName = GetValidFileName(savePath, saveName, ".dat");
+            string filePath = savePath + fileName + ".dat";
+            FileStream file = File.Open(filePath, FileMode.Create, FileAccess.Write);
 
             EnvironmentInfo environmentInfo = new EnvironmentInfo();
             List<GameObject> interactables = GetAllInteractableGameObjectsInScene();
@@ -37,7 +33,9 @@ namespace NTNU.CarloMarton.VRLanguage
 
             bf.Serialize(file, environmentInfo);
             file.Close();
-            Debug.Log("Saved");
+            Debug.LogFormat("State saved at {0}", filePath);
+
+            return fileName;
         }
 
         public static void LoadEnvironmentState(string saveName)
@@ -81,6 +79,19 @@ namespace NTNU.CarloMarton.VRLanguage
                 Photon.Pun.PhotonNetwork.Destroy(go);
                 //GameObject.Destroy(go);
             }
+        }
+
+        private static string GetValidFileName(string path, string name, string extension)
+        {
+            string fileName = name;
+            int counter = 0;
+
+            while (File.Exists(path + fileName + extension))
+            {
+                counter++;
+                fileName = name + " (" + counter + ")";
+            }
+            return fileName;
         }
 
         private static void SpawnAllInteractableObjects(EnvironmentInfo info)

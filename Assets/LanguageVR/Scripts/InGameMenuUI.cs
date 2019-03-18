@@ -107,10 +107,13 @@ public class InGameMenuUI : MonoBehaviour
 
     public void OnSaveEnvironmentStateButtonClicked()
     {
-        string timeNow = System.DateTime.Now.ToString("hh.mm dd.MM.yy");
-        string stateName = SceneManagerHelper.ActiveSceneName + " " + timeNow;
-        EnvironmentState.SaveEnvironmentState(stateName);
-        inGameMenu.AddLoadStateEntry(stateName);
+        //string timeNow = System.DateTime.Now.ToString("hh.mm dd.MM.yy");
+        //string stateName = SceneManagerHelper.ActiveSceneName + " " + timeNow;
+        string stateName = SceneManagerHelper.ActiveSceneName + ", " + PhotonNetwork.LocalPlayer.NickName;
+        string fileName = EnvironmentState.SaveEnvironmentState(stateName);
+        inGameMenu.AddLoadStateEntry(fileName);
+        inGameMenu.SetStateSavedName(fileName);
+        inGameMenu.TogglePanel(inGameMenu.stateSavedPanel);
     }
 
     public void OnLoadEnvironmentStateButtonClicked()
@@ -131,7 +134,15 @@ public class InGameMenuUI : MonoBehaviour
 
     public void OnToggleChangeColorPanelButtonClicked()
     {
-        inGameMenu.TogglePanel(inGameMenu.changeColorPanel);
+        Transform disabledImageTransform = transform.Find("DisabledImage");
+        if (disabledImageTransform == null)
+        {
+            inGameMenu.TogglePanel(inGameMenu.changeColorPanel);
+        }
+        else if (!disabledImageTransform.gameObject.activeSelf)
+        {
+            inGameMenu.TogglePanel(inGameMenu.changeColorPanel, inGameMenu.settingsPanel);
+        }
     }
 
     public void OnToggleExitGamePanelButtonClicked()

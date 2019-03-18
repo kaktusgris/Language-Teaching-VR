@@ -20,7 +20,6 @@ namespace NTNU.CarloMarton.VRLanguage
             isAdmin = (bool) PhotonNetwork.LocalPlayer.CustomProperties["admin"];
 
             InitialiseAdmin();
-            FillLoadStateList();
         }
 
         private void InitialiseAdmin()
@@ -28,6 +27,7 @@ namespace NTNU.CarloMarton.VRLanguage
             if (isAdmin)
             {
                 FillDictionary();
+                FillLoadStateList();
             }
         }
 
@@ -35,18 +35,28 @@ namespace NTNU.CarloMarton.VRLanguage
         {
             print("Filling dictionary with all interactable objects from Resources/InteractableObjects");
             Object[] objects = Resources.LoadAll("InteractableObjects");
-        
-            foreach (Object ob in objects)
+            string[] objectNames = new string[objects.Length];
+            Dictionary<string, GameObject> nameObjectPairs = new Dictionary<string, GameObject>();
+
+            for (int i = 0; i < objects.Length; i++)
             {
-                GameObject item = (GameObject) ob;
+                GameObject item = (GameObject) objects[i];
                 string name = item.GetComponentInChildren<TextMesh>().text;
-                playerDictionary.AddItemToDictionary(name, item);
+                objectNames[i] = name;
+                nameObjectPairs.Add(name, item);
+            }
+
+            System.Array.Sort(objectNames);
+            foreach (string name in objectNames)
+            {
+                playerDictionary.AddItemToDictionary(name, nameObjectPairs[name]);
             }
         }
 
         private void FillLoadStateList()
         {
             List<string> saveFiles = EnvironmentState.GetAllSaveFileNames();
+            saveFiles.Sort();
 
             foreach (string fileName in saveFiles)
             {

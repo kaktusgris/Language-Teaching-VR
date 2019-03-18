@@ -15,6 +15,7 @@ namespace NTNU.CarloMarton.VRLanguage
         public Text PlayerNameText;
 
         public Image PlayerColorImage;
+        public Image DropdownImage;
         public Button PlayerReadyButton;
         public Image PlayerReadyImage;
 
@@ -30,6 +31,7 @@ namespace NTNU.CarloMarton.VRLanguage
             if (PhotonNetwork.LocalPlayer.ActorNumber != ownerId)
             {
                 PlayerReadyButton.gameObject.SetActive(false);
+                DropdownImage.gameObject.SetActive(false);
             }
             else
             {
