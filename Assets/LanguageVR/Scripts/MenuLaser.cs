@@ -16,14 +16,13 @@ public class MenuLaser : MonoBehaviour
     private Color clickedColor = Color.red;
     private GameObject clickedButton;
     private GameObject clickedObject;
-    private ColorBlock buttonColor;
     private LineRenderer lr;
     private Ray laser;
     private bool deleteToggle;
 
 
     private float timer;
-    private float timerThreshold = 2.0f;
+    private float timerThreshold = 1.0f; // How many seconds must the delete button be held to delete object
     private bool clickBeingHeld = false;
    
     public SteamVR_Input_Sources handType;
@@ -32,10 +31,16 @@ public class MenuLaser : MonoBehaviour
     public SteamVR_Action_Vector2 touchDirectionInput;
 
     public GameObject menu;
-    private RectTransform scrollContent;
-    private ScrollRect scrollRect;
     public GameObject mainPanel;
-    private GameObject scrollRectPanel;
+
+    private GameObject dictionaryPanel;
+    private RectTransform dictionaryScrollContent;
+    private ScrollRect dictionaryScrollRect;
+
+    private GameObject loadStatePanel;
+    private RectTransform loadStateScrollContent;
+    private ScrollRect loadStateScrollRect;
+
 
     public GameObject HelperUI;
     private GameObject deleteProgressPanel;
@@ -48,7 +53,9 @@ public class MenuLaser : MonoBehaviour
     void Start()
     {
         deleteProgressPanel = HelperUI.transform.Find("CanvasUI/DeleteProgressBar").gameObject;
-        scrollRectPanel = mainPanel.transform.Find("ScrollRect").gameObject;
+        dictionaryPanel = mainPanel.transform.Find("DictionaryPanel").gameObject;
+        loadStatePanel = mainPanel.transform.Find("LoadStatePanel").gameObject;
+
         deleteProgressSlider = deleteProgressPanel.transform.Find("DeleteProgressSlider").GetComponent<Slider>();
         deleteProgressSlider.maxValue = timerThreshold;
         helperUIText = HelperUI.GetComponent<TextMesh>();
@@ -63,8 +70,10 @@ public class MenuLaser : MonoBehaviour
        
         SetLaserColor(standardLaserColor);
 
-        scrollContent = menu.transform.Find("MainPanel").Find("ScrollRect").Find("ScrollContent").GetComponent<RectTransform>();
-        scrollRect = menu.transform.Find("MainPanel").Find("ScrollRect").GetComponent<ScrollRect>();
+        dictionaryScrollContent = dictionaryPanel.transform.Find("ScrollContent").GetComponent<RectTransform>();
+        dictionaryScrollRect = dictionaryPanel.transform.GetComponent<ScrollRect>();
+        loadStateScrollContent = loadStatePanel.transform.Find("ScrollContent").GetComponent<RectTransform>();
+        loadStateScrollRect = loadStatePanel.transform.GetComponent<ScrollRect>();
     }
 
     
@@ -143,7 +152,7 @@ public class MenuLaser : MonoBehaviour
                 }
             }
             // Deleting objects
-            else if (Physics.Raycast(laser, out raycastHit, Mathf.Infinity, 1 << LayerMask.NameToLayer("DeletableObjects"), QueryTriggerInteraction.Ignore) && deleteToggle)
+            else if (deleteToggle && Physics.Raycast(laser, out raycastHit, Mathf.Infinity, 1 << LayerMask.NameToLayer("DeletableObjects"), QueryTriggerInteraction.Ignore))
             {
                 clickedObject = raycastHit.collider.gameObject;
                 Debug.Log(clickedObject.transform.parent);
@@ -243,24 +252,32 @@ public class MenuLaser : MonoBehaviour
         // Scrolling in the menu
         if (GetTrackpadTouched())
         {
-            float currentPosY = scrollContent.GetComponent<RectTransform>().localPosition.y;
-            float threshold = 0f;
-            float yDirection = GetTouchDirection().y;
-            float moveSpeed = 5f;
-
-            float contentHeight = CalculateHeightOfContent();
-            float mainPanelHeight = scrollContent.GetComponent<RectTransform>().rect.height;
-
-            if (yDirection < -threshold && currentPosY + mainPanelHeight < contentHeight) // Down
-            {
-                scrollContent.transform.localPosition -= new Vector3(0f, moveSpeed * yDirection, 0f);
-            }
-            else if (yDirection > threshold && currentPosY > 0) // Up
-            {
-                scrollContent.transform.localPosition -= new Vector3(0f, moveSpeed * yDirection, 0f);
-            }
+            if (dictionaryScrollContent.gameObject.activeInHierarchy)
+                ScrollScrollContent(dictionaryScrollContent);
+            if (loadStateScrollContent.gameObject.activeInHierarchy)
+                ScrollScrollContent(loadStateScrollContent);
         }
 
+    }
+
+    private void ScrollScrollContent(RectTransform scrollContent)
+    {
+        float currentPosY = scrollContent.GetComponent<RectTransform>().localPosition.y;
+        float threshold = 0f;
+        float yDirection = GetTouchDirection().y;
+        float moveSpeed = 5f;
+
+        float contentHeight = CalculateHeightOfContent(scrollContent);
+        float mainPanelHeight = scrollContent.GetComponent<RectTransform>().rect.height;
+
+        if (yDirection < -threshold && currentPosY + mainPanelHeight < contentHeight) // Down
+        {
+            scrollContent.transform.localPosition -= new Vector3(0f, moveSpeed * yDirection, 0f);
+        }
+        else if (yDirection > threshold && currentPosY > 0) // Up
+        {
+            scrollContent.transform.localPosition -= new Vector3(0f, moveSpeed * yDirection, 0f);
+        }
     }
 
     private string ButtonNameToButtonDescription(string buttonName)
@@ -270,30 +287,105 @@ public class MenuLaser : MonoBehaviour
             case "PlayAudioButton":
                 return "Spill av lyd";
             case "AddInteractableObjectButton":
-                return "Legg til objekt";
+                string interactableObjectName = clickedButton.transform.parent.GetComponentInChildren<Text>().text;
+                return "Legg til " + interactableObjectName;
             case "InvisibilityButton":
                 return "Bli usynlig";
             case "DeleteObjectButton":
                 return "Skru av/på slettemodus";
+            case "SettingsButton":
+                return "Innstillinger";
             case "ExitGameButton":
                 return "Avslutt";
+            case "SaveStateButton":
+                return "Lagre verden";
+            case "LoadStateButton":
+                return "Last inn verden";
+            case "ChangeColourButton":
+                return "Endre farge på avatar";
+            case "Navy":
+            case "Blue":
+            case "Aqua":
+            case "Teal":
+            case "Olive":
+            case "Green":
+            case "Lime":
+            case "Yellow":
+            case "Orange":
+            case "Red":
+            case "Chocolate":
+            case "Maroon":
+            case "Fuchsia":
+            case "Purple":
+            case "Black":
+            case "Grey":
+            case "Silver":
+            case "White":
+                return "Endre farge til " + TranslateColorToNorwegian(buttonName);
+            default:
+                return "Ikke lagt til hint på knapp";
         }
-        return "Ikke lagt til hint på knapp";
     }
 
-    private float CalculateHeightOfContent()
+    private string TranslateColorToNorwegian(string englishColor)
+    {
+        switch (englishColor)
+        {
+            case "Navy":
+                return "marineblå";
+            case "Blue":
+                return "blå";
+            case "Aqua":
+                return "cyan";
+            case "Teal":
+                return "grønnblå";
+            case "Olive":
+                return "olivengrønn";
+            case "Green":
+                return "grønn";
+            case "Lime":
+                return "limegrønn";
+            case "Yellow":
+                return "gul";
+            case "Orange":
+                return "oransje";
+            case "Red":
+                return "rød";
+            case "Chocolate":
+                return "sjokoladebrunt";
+            case "Maroon":
+                return "rødbrun";
+            case "Fuchsia":
+                return "magentarød";
+            case "Purple":
+                return "lilla";
+            case "Black":
+                return "svart";
+            case "Grey":
+                return "grå";
+            case "Silver":
+                return "sølv";
+            case "White":
+                return "hvit";
+            default:
+                return "ukjent";
+        }
+    }
+
+    private float CalculateHeightOfContent(RectTransform scrollContent)
     {
         float childHeight = scrollContent.GetChild(0).GetComponent<RectTransform>().rect.height;
-        float padding = scrollContent.GetComponent<VerticalLayoutGroup>().padding.bottom;
-        return scrollContent.childCount * (childHeight);
+        float paddingBottom = scrollContent.GetComponent<VerticalLayoutGroup>().padding.bottom;
+        float paddingTop = scrollContent.GetComponent<VerticalLayoutGroup>().padding.top;
+        return scrollContent.childCount * (childHeight) + paddingBottom + paddingTop;
     }
 
     private void SetButtonColor(Button button, Color color)
     {
-        //button.image.color = color;
-        buttonColor.normalColor = color;
-        buttonColor.colorMultiplier = 5;
-        button.colors = buttonColor;
+        ColorBlock colorBlock = new ColorBlock();
+        colorBlock.normalColor = color;
+        colorBlock.colorMultiplier = 1;
+        button.colors = colorBlock;
     }
 
     public GameObject IsClickingButton()

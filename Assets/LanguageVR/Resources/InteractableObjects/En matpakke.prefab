@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8919402392578736877}
   - component: {fileID: 8919402392578736876}
   - component: {fileID: 8919402392578736879}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Lunchbox_01 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -107,8 +107,8 @@ GameObject:
   - component: {fileID: 8919402392800664232}
   - component: {fileID: 8919402392800664235}
   m_Layer: 10
-  m_Name: en_matpakke
-  m_TagString: Untagged
+  m_Name: En matpakke
+  m_TagString: InteractableObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -280,7 +280,7 @@ GameObject:
   - component: {fileID: 8919402393369269643}
   - component: {fileID: 8919402393369269642}
   - component: {fileID: 8919402393369269637}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Lunchbox_Lid_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -372,7 +372,7 @@ GameObject:
   - component: {fileID: 8919402393580557586}
   - component: {fileID: 8919402393580557581}
   - component: {fileID: 8919402393580557580}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -477,7 +477,7 @@ GameObject:
   - component: {fileID: 8919402393677556552}
   - component: {fileID: 8919402393677556555}
   - component: {fileID: 8919402393677556554}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SubSandwich
   m_TagString: Untagged
   m_Icon: {fileID: 0}

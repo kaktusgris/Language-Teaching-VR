@@ -1565,6 +1565,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 698579347587714808, guid: 58f9beb90a5d27648b7e4a1a23811d16,
+        type: 3}
+      propertyPath: m_Name
+      value: Et kamera
+      objectReference: {fileID: 0}
     - target: {fileID: 698579347587714790, guid: 58f9beb90a5d27648b7e4a1a23811d16,
         type: 3}
       propertyPath: viewIdField
@@ -1629,11 +1634,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -144.543
-      objectReference: {fileID: 0}
-    - target: {fileID: 698579347587714808, guid: 58f9beb90a5d27648b7e4a1a23811d16,
-        type: 3}
-      propertyPath: m_Name
-      value: Et kamera
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 58f9beb90a5d27648b7e4a1a23811d16, type: 3}

@@ -36,6 +36,10 @@ namespace NTNU.CarloMarton.VRLanguage
                 if (go != null)
                 {
                     go = InstantiateText(go);
+
+                    go.tag = "InteractableObject";
+                    ChangeLayersRecursively(go.transform, "DeletableObjects");
+
                     SaveToResources(go);
                 }
                 instantiatePrefab = false;
@@ -61,9 +65,9 @@ namespace NTNU.CarloMarton.VRLanguage
             #endif
 
             GameObject instantiatedObject = Instantiate(physicalObject);
+            instantiatedObject.name = name;
             instantiatedObject.transform.parent = this.transform;
             instantiatedObject.transform.localPosition = Vector3.zero;
-            instantiatedObject.layer = LayerMask.NameToLayer("DeletableObjects");
             instantiatedObject.AddComponent<Rigidbody>();
 
             int numberOfChildren = instantiatedObject.transform.childCount;
@@ -121,10 +125,20 @@ namespace NTNU.CarloMarton.VRLanguage
             return instantiatedObject;
         }
 
+        private void ChangeLayersRecursively(Transform trans, string layerName)
+        {
+            trans.gameObject.layer = LayerMask.NameToLayer(layerName);
+            foreach (Transform child in trans)
+            {
+                ChangeLayersRecursively(child, layerName);
+            }
+        }
+
         private void SaveToResources(GameObject instantiatedObject)
         {
-            Debug.LogError("Cannot create prefab of interactable object."); // A bug in unity 2018.3.5
-            //PrefabUtility.SaveAsPrefabAsset(instantiatedObject, "Assets/LanguageVR/Resources/InteractableObjects/" + textMesh.text + ".prefab");
+            string path = "Assets/LanguageVR/Resources/InteractableObjects/";
+            Debug.LogErrorFormat("Cannot create prefab of interactable object. Add it manually to {0}", path); // A bug in unity 2018.3.5
+            //PrefabUtility.SaveAsPrefabAsset(instantiatedObject, path + textMesh.text + ".prefab");
         }
 
 

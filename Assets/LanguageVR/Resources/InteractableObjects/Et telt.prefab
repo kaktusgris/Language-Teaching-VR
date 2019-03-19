@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8194474616064977104}
   - component: {fileID: 8194474616064977105}
   - component: {fileID: 8194474616064977106}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -123,8 +123,8 @@ GameObject:
   - component: {fileID: 8194474616304312195}
   - component: {fileID: 8194474616304312204}
   m_Layer: 10
-  m_Name: et_telt
-  m_TagString: Untagged
+  m_Name: Et telt
+  m_TagString: InteractableObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

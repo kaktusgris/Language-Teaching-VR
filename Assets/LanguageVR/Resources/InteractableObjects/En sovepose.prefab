@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1858306531039086169}
   - component: {fileID: 1858306531039086168}
   - component: {fileID: 1858306531039086175}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube_2_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -104,7 +104,7 @@ GameObject:
   - component: {fileID: 1858306531218483568}
   - component: {fileID: 1858306531218483575}
   - component: {fileID: 1858306531218483574}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -212,8 +212,8 @@ GameObject:
   - component: {fileID: 1858306532074174806}
   - component: {fileID: 1858306532074174805}
   m_Layer: 10
-  m_Name: en_sovepose
-  m_TagString: Untagged
+  m_Name: En sovepose
+  m_TagString: InteractableObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

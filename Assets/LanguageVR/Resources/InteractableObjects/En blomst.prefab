@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 173601457126341246}
   - component: {fileID: 173601457126341241}
   - component: {fileID: 173601457126341240}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Flower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,7 +109,7 @@ GameObject:
   - component: {fileID: 173601457775907931}
   - component: {fileID: 173601457775907930}
   - component: {fileID: 173601457775907909}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -215,7 +215,7 @@ GameObject:
   - component: {fileID: 173601457958727001}
   - component: {fileID: 173601457958727000}
   - component: {fileID: 173601457958727003}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Flower (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -325,8 +325,8 @@ GameObject:
   - component: {fileID: 173601458194272958}
   - component: {fileID: 173601458194272953}
   m_Layer: 10
-  m_Name: en_blomst
-  m_TagString: Untagged
+  m_Name: En blomst
+  m_TagString: InteractableObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

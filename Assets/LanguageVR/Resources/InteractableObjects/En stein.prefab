@@ -18,8 +18,8 @@ GameObject:
   - component: {fileID: 5044440771567221185}
   - component: {fileID: 5044440771567221184}
   m_Layer: 10
-  m_Name: en_stein
-  m_TagString: Untagged
+  m_Name: En stein
+  m_TagString: InteractableObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -247,7 +247,7 @@ GameObject:
   - component: {fileID: 5044440771605016965}
   - component: {fileID: 5044440771605016964}
   - component: {fileID: 5044440771605016967}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
