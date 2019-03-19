@@ -55,7 +55,7 @@ namespace NTNU.CarloMarton.VRLanguage
 
         private void FillLoadStateList()
         {
-            List<string> saveFiles = EnvironmentState.GetAllSaveFileNames();
+            List<string> saveFiles = EnvironmentState.GetAllSaveFileNames(SceneManagerHelper.ActiveSceneName);
             saveFiles.Sort();
 
             foreach (string fileName in saveFiles)

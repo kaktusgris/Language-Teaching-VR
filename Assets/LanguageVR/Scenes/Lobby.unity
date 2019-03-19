@@ -5121,7 +5121,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Voice: {fileID: 1530952949223954, guid: 710c5f628b16ddd4ab3aa4e290fcc9a1, type: 3}
-  sceneToLoadString: Empty Forest
+  sceneToLoadString: Forest
   tutorialToLoadString: Tutorial
   LoginPanel: {fileID: 964844637}
   PlayerNameInput: {fileID: 328590478}

@@ -19,10 +19,10 @@ public class InGameMenu : MonoBehaviour
     [Header("Panels")]
     public GameObject dictionaryPanel;
     public GameObject settingsPanel;
+    public GameObject stateSavedPanel;
     public GameObject loadStatePanel;
     public GameObject changeColorPanel;
     public GameObject exitGamePanel;
-    public GameObject stateSavedPanel;
     private GameObject defaultPanel;
 
 
@@ -183,7 +183,7 @@ public class InGameMenu : MonoBehaviour
     public void AddMenuObjectEntry(string text)
     {
         GameObject newEntry = (GameObject)Instantiate(menuObjectEntry, dictionaryPanel.transform.Find("ScrollContent"));
-        newEntry.GetComponent<Text>().text = text;
+        newEntry.GetComponentInChildren<Text>().text = text;
     }
 
     public void AddLoadStateEntry(string name)

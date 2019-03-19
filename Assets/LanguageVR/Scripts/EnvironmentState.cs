@@ -12,10 +12,11 @@ namespace NTNU.CarloMarton.VRLanguage
     public static class EnvironmentState
     {
 
-        private static readonly string savePath = Application.persistentDataPath + "/EnvironmentStateSaves/";
+        private static readonly string statesSavePath = Application.persistentDataPath + "/EnvironmentStateSaves/";
 
-        public static string SaveEnvironmentState(string saveName)
+        public static string SaveEnvironmentState(string sceneName, string saveName)
         {
+            string savePath = statesSavePath + sceneName + "/";
             BinaryFormatter bf = new BinaryFormatter();
 
             if (!Directory.Exists(savePath))
@@ -38,9 +39,9 @@ namespace NTNU.CarloMarton.VRLanguage
             return fileName;
         }
 
-        public static void LoadEnvironmentState(string saveName)
+        public static void LoadEnvironmentState(string sceneName, string saveName)
         {
-            string filePath = savePath + saveName + ".dat";
+            string filePath = statesSavePath + sceneName + "/" + saveName + ".dat";
             if (File.Exists(filePath))
             {
                 BinaryFormatter bf = new BinaryFormatter();
@@ -57,8 +58,9 @@ namespace NTNU.CarloMarton.VRLanguage
             }
         }
 
-        public static List<string> GetAllSaveFileNames()
+        public static List<string> GetAllSaveFileNames(string sceneName)
         {
+            string savePath = statesSavePath + sceneName + "/";
             if (!Directory.Exists(savePath))
                 return new List<string>();
 

@@ -90,7 +90,7 @@ public class InGameMenuUI : MonoBehaviour
     // Spawns the object between the button and the user's head
     public void OnAddInteractableObjectButtonClicked()
     {
-        string objectName = gameObject.GetComponentInParent<Text>().text;
+        string objectName = transform.parent.GetComponentInChildren<Text>().text;
         Vector3 headPosition = ViveManager.Instance.head.transform.position;
         Vector3 buttonPosition = transform.position;
 
@@ -109,8 +109,9 @@ public class InGameMenuUI : MonoBehaviour
     {
         //string timeNow = System.DateTime.Now.ToString("hh.mm dd.MM.yy");
         //string stateName = SceneManagerHelper.ActiveSceneName + " " + timeNow;
-        string stateName = SceneManagerHelper.ActiveSceneName + ", " + PhotonNetwork.LocalPlayer.NickName;
-        string fileName = EnvironmentState.SaveEnvironmentState(stateName);
+        string sceneName = SceneManagerHelper.ActiveSceneName;
+        string stateName = PhotonNetwork.CurrentRoom.Name + ", " + PhotonNetwork.LocalPlayer.NickName;
+        string fileName = EnvironmentState.SaveEnvironmentState(sceneName, stateName);
         inGameMenu.AddLoadStateEntry(fileName);
         inGameMenu.SetStateSavedName(fileName);
         inGameMenu.TogglePanel(inGameMenu.stateSavedPanel);
@@ -118,8 +119,9 @@ public class InGameMenuUI : MonoBehaviour
 
     public void OnLoadEnvironmentStateButtonClicked()
     {
+        string sceneName = SceneManagerHelper.ActiveSceneName;
         string stateName = transform.parent.GetComponentInChildren<Text>().text;
-        EnvironmentState.LoadEnvironmentState(stateName);
+        EnvironmentState.LoadEnvironmentState(sceneName, stateName);
     }
 
     public void OnToggleSettingsPanelButtonClicked()

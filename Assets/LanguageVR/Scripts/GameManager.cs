@@ -14,8 +14,8 @@ namespace NTNU.CarloMarton.VRLanguage
 {
     public class GameManager : MonoBehaviourPunCallbacks
     {
-        [Tooltip("The prefab to use for representing the player")]
-        public GameObject avatarPrefab;
+        [Tooltip("The prefab to use for representing the player")][SerializeField]
+        private GameObject avatarPrefab;
 
         //public Valve.VR.InteractionSystem.Player playerInScene;
 

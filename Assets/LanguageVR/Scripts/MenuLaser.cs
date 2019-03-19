@@ -287,7 +287,8 @@ public class MenuLaser : MonoBehaviour
             case "PlayAudioButton":
                 return "Spill av lyd";
             case "AddInteractableObjectButton":
-                return "Legg til objekt";
+                string interactableObjectName = clickedButton.transform.parent.GetComponentInChildren<Text>().text;
+                return "Legg til " + interactableObjectName;
             case "InvisibilityButton":
                 return "Bli usynlig";
             case "DeleteObjectButton":
@@ -374,8 +375,9 @@ public class MenuLaser : MonoBehaviour
     private float CalculateHeightOfContent(RectTransform scrollContent)
     {
         float childHeight = scrollContent.GetChild(0).GetComponent<RectTransform>().rect.height;
-        float padding = scrollContent.GetComponent<VerticalLayoutGroup>().padding.bottom;
-        return scrollContent.childCount * (childHeight);
+        float paddingBottom = scrollContent.GetComponent<VerticalLayoutGroup>().padding.bottom;
+        float paddingTop = scrollContent.GetComponent<VerticalLayoutGroup>().padding.top;
+        return scrollContent.childCount * (childHeight) + paddingBottom + paddingTop;
     }
 
     private void SetButtonColor(Button button, Color color)
