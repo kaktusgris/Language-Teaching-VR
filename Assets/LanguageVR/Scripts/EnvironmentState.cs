@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Photon.Pun;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -78,8 +79,9 @@ namespace NTNU.CarloMarton.VRLanguage
         {
             foreach (GameObject go in GetAllInteractableGameObjectsInScene())
             {
-                Photon.Pun.PhotonNetwork.Destroy(go);
-                //GameObject.Destroy(go);
+                GameManager.instance.DestroySomething(go);
+                //MonoBehaviour mb = new MonoBehaviour();
+                //mb.StartCoroutine(DestroyInteractableGameObject(go));
             }
         }
 
@@ -103,7 +105,7 @@ namespace NTNU.CarloMarton.VRLanguage
                 string name = info.interactables[i];
                 Vector3 position = FloatToVector3(info.positions[i]);
                 Quaternion rotation = FloatToQuaternion(info.rotations[i]);
-                GameObject go = Photon.Pun.PhotonNetwork.Instantiate("InteractableObjects/" + name, position, rotation);
+                GameObject go = PhotonNetwork.Instantiate("InteractableObjects/" + name, position, rotation);
                 go.name = name;
             }
         }
@@ -122,14 +124,22 @@ namespace NTNU.CarloMarton.VRLanguage
 
         private static List<string> GetNamesFromGameObjects(List<GameObject> interactables)
         {
-            List<string> gameObjects = new List<string>();
+            List<string> gameObjectNames = new List<string>();
 
             foreach (GameObject interactable in GameObject.FindGameObjectsWithTag("InteractableObject"))
             {
-                gameObjects.Add(interactable.name);
+                if (interactable.name.Contains("(Clone)"))
+                {
+                    int substringLength = interactable.name.Length - "(Clone)".Length;
+                    gameObjectNames.Add(interactable.name.Substring(0, substringLength));
+                }
+                else
+                {
+                    gameObjectNames.Add(interactable.name);
+                }
             }
 
-            return gameObjects;
+            return gameObjectNames;
         }
 
         private static List<float[]> GetAllInteractablePositions(List<GameObject> interactables)

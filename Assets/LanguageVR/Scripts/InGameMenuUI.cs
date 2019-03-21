@@ -82,7 +82,7 @@ public class InGameMenuUI : MonoBehaviour
 
     public void OnPlayAudioButtonClicked()
     {
-        string objectName = gameObject.GetComponentInParent<Text>().text;
+        string objectName = transform.parent.GetComponentInChildren<Text>().text;
         
         playerAvatar.GetComponent<PlayerDictionary>().PlayAudio(objectName);
     }
@@ -102,7 +102,7 @@ public class InGameMenuUI : MonoBehaviour
 
         Debug.LogFormat("Instantiated {0} at {1}", objectName, spawnPosition);
         GameObject interactableObject = PhotonNetwork.Instantiate("InteractableObjects/" + objectName, spawnPosition, Quaternion.identity);
-        interactableObject.name = objectName;
+        //interactableObject.name = objectName;
     }
 
     public void OnSaveEnvironmentStateButtonClicked()

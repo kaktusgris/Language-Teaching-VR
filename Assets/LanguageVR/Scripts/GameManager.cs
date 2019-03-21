@@ -140,6 +140,23 @@ namespace NTNU.CarloMarton.VRLanguage
         }
 
         #endregion
+
+        public void DestroySomething(GameObject go)
+        {
+            StartCoroutine(DestroyInteractableGameObject(go));
+        }
+
+        private IEnumerator DestroyInteractableGameObject(GameObject go)
+        {
+            go.GetPhotonView().TransferOwnership(PhotonNetwork.LocalPlayer);
+            while (!go.GetPhotonView().IsMine)
+            {
+                print(go.name + " is not owner's");
+                //print(go.GetPhotonView().Owner + ", " + PhotonNetwork.LocalPlayer);
+                yield return null;
+            }
+            PhotonNetwork.Destroy(go);
+        }
     }
 
 }
