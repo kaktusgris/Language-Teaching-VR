@@ -36,6 +36,10 @@ namespace NTNU.CarloMarton.VRLanguage
                 if (go != null)
                 {
                     go = InstantiateText(go);
+
+                    go.tag = "InteractableObject";
+                    ChangeLayersRecursively(go.transform, "DeletableObjects");
+
                     SaveToResources(go);
                 }
                 instantiatePrefab = false;
@@ -45,7 +49,7 @@ namespace NTNU.CarloMarton.VRLanguage
         // Instansiates the given gameobject
         private GameObject InstantiatePhysicalObject()
         {
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             // Destroy previous object if a new one is selected
             if (transform.childCount > 0)
             {
@@ -58,12 +62,12 @@ namespace NTNU.CarloMarton.VRLanguage
                     return null;
                 }
             }
-            #endif
+#endif
 
             GameObject instantiatedObject = Instantiate(physicalObject);
+            instantiatedObject.name = name;
             instantiatedObject.transform.parent = this.transform;
             instantiatedObject.transform.localPosition = Vector3.zero;
-            instantiatedObject.layer = LayerMask.NameToLayer("DeletableObjects");
             instantiatedObject.AddComponent<Rigidbody>();
 
             int numberOfChildren = instantiatedObject.transform.childCount;
@@ -119,6 +123,15 @@ namespace NTNU.CarloMarton.VRLanguage
             //textMesh.font = font;
 
             return instantiatedObject;
+        }
+
+        private void ChangeLayersRecursively(Transform trans, string layerName)
+        {
+            trans.gameObject.layer = LayerMask.NameToLayer(layerName);
+            foreach (Transform child in trans)
+            {
+                ChangeLayersRecursively(child, layerName);
+            }
         }
 
         private void SaveToResources(GameObject instantiatedObject)

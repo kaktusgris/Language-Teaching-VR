@@ -4363,7 +4363,7 @@ MonoBehaviour:
   StartGameButton: {fileID: 800069350}
   PlayerListEntryPrefab: {fileID: 195212, guid: b818de21c8cf3664789351478974d3bc,
     type: 3}
-  sceneToLoadString: Forest
+  sceneToLoadString: Urban
   roomNameText: {fileID: 1020082201}
 --- !u!222 &1310044698
 CanvasRenderer:
