@@ -73,6 +73,7 @@ namespace NTNU.CarloMarton.VRLanguage
             imageViewer.sprite = sceneScreenshots[sceneNumber];
             string name = sceneNames[sceneNumber];
             sceneNameViewer.text = name;
+            mainPanel.SetStateToLoad("Standard");
             return name;
         }
 

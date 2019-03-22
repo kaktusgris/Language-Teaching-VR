@@ -85,7 +85,7 @@ namespace NTNU.CarloMarton.VRLanguage
 
             SetStateToLoad("Standard");
 
-            //SetActivePanel(LoginPanel.name);
+            SetActivePanel(LoginPanel.name);
         }
 
         #endregion
