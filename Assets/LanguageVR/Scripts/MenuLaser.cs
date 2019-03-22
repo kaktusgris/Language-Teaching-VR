@@ -301,6 +301,8 @@ public class MenuLaser : MonoBehaviour
                 return "Lagre verden";
             case "LoadStateButton":
                 return "Last inn verden";
+            case "DeleteStateButton":
+                return "Slett lagret verden";
             case "ChangeColourButton":
                 return "Endre farge på avatar";
             case "Navy":
@@ -322,6 +324,8 @@ public class MenuLaser : MonoBehaviour
             case "Silver":
             case "White":
                 return "Endre farge til " + TranslateColorToNorwegian(buttonName);
+            case "CancelButton":
+                return "Avbryt";
             default:
                 return "Ikke lagt til hint på knapp";
         }

@@ -110,7 +110,12 @@ public class InGameMenuUI : MonoBehaviour
         //string timeNow = System.DateTime.Now.ToString("hh.mm dd.MM.yy");
         //string stateName = SceneManagerHelper.ActiveSceneName + " " + timeNow;
         string sceneName = SceneManagerHelper.ActiveSceneName;
-        string stateName = PhotonNetwork.CurrentRoom.Name + ", " + PhotonNetwork.LocalPlayer.NickName;
+        string stateName;
+        if (PhotonNetwork.IsConnected)
+            stateName = PhotonNetwork.CurrentRoom.Name + ", " + PhotonNetwork.LocalPlayer.NickName;
+        else
+            stateName = "Offline, Anon";
+
         string fileName = EnvironmentState.SaveEnvironmentState(sceneName, stateName);
         inGameMenu.AddLoadStateEntry(fileName);
         inGameMenu.SetStateSavedName(fileName);
@@ -122,6 +127,23 @@ public class InGameMenuUI : MonoBehaviour
         string sceneName = SceneManagerHelper.ActiveSceneName;
         string stateName = transform.parent.GetComponentInChildren<Text>().text;
         EnvironmentState.LoadEnvironmentState(sceneName, stateName);
+    }
+
+    public void OnDeleteStateButtonClicked()
+    {
+        string sceneName = SceneManagerHelper.ActiveSceneName;
+        string stateName = transform.parent.GetComponentInChildren<Text>().gameObject.name;
+        EnvironmentState.DeleteSaveFile(sceneName, stateName);
+        inGameMenu.DeleteLoadStateEntry();
+        inGameMenu.TogglePanel(inGameMenu.loadStatePanel);
+    }
+
+    public void OnDeleteStatePanelButtonClicked()
+    {
+        string stateName = transform.parent.GetComponentInChildren<Text>().text;
+        inGameMenu.SetEntryToBeDeleted(transform.parent.gameObject);
+        inGameMenu.SetStateDeleteName(stateName);
+        inGameMenu.TogglePanel(inGameMenu.deleteStatePanel);
     }
 
     public void OnToggleSettingsPanelButtonClicked()

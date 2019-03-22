@@ -52,6 +52,8 @@ namespace NTNU.CarloMarton.VRLanguage
 
                 DestroyAllInteractableObjectsInScene();
                 SpawnAllInteractableObjects(info);
+
+                Debug.LogFormat("Loaded interactable objects from {0}", filePath);
             }
             else
             {
@@ -75,7 +77,17 @@ namespace NTNU.CarloMarton.VRLanguage
             return filenames;
         }
 
-        private static void DestroyAllInteractableObjectsInScene()
+        public static void DeleteSaveFile(string sceneName, string saveFile)
+        {
+            string filePath = statesSavePath + sceneName + "/" + saveFile + ".dat";
+
+            if (File.Exists(filePath))
+                File.Delete(filePath);
+            else
+                Debug.LogErrorFormat("Tried to delete {0} from {1}, but file did not exist", saveFile, filePath);
+        }
+
+        public static void DestroyAllInteractableObjectsInScene()
         {
             foreach (GameObject go in GetAllInteractableGameObjectsInScene())
             {

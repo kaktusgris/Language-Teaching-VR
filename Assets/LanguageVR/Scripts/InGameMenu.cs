@@ -21,6 +21,7 @@ public class InGameMenu : MonoBehaviour
     public GameObject settingsPanel;
     public GameObject stateSavedPanel;
     public GameObject loadStatePanel;
+    public GameObject deleteStatePanel;
     public GameObject changeColorPanel;
     public GameObject exitGamePanel;
     private GameObject defaultPanel;
@@ -40,6 +41,8 @@ public class InGameMenu : MonoBehaviour
     private GameObject laserHand;
     private GameObject handPrefabL;
     private GameObject handPrefabR;
+
+    private GameObject entryToDelete;
 
     private void Awake()
     {
@@ -141,6 +144,7 @@ public class InGameMenu : MonoBehaviour
         settingsPanel.SetActive(settingsPanel.name.Equals(panelName));
         changeColorPanel.SetActive(changeColorPanel.name.Equals(panelName));
         stateSavedPanel.SetActive(stateSavedPanel.name.Equals(panelName));
+        deleteStatePanel.SetActive(deleteStatePanel.name.Equals(panelName));
     }
 
     public void SetTitleOnTopPanel(string panelName)
@@ -161,6 +165,13 @@ public class InGameMenu : MonoBehaviour
     {
         string text = "Rom lagret som " + stateName;
         stateSavedPanel.GetComponentInChildren<Text>().text = text;
+    }
+
+    public void SetStateDeleteName(string stateName)
+    {
+        string text = "Er du sikker på at du vil slette " + stateName + "?";
+        deleteStatePanel.GetComponentInChildren<Text>().gameObject.name = stateName;
+        deleteStatePanel.GetComponentInChildren<Text>().text = text;
     }
 
     private void SetEnablelaserOnHand(GameObject hand, bool enabled)
@@ -190,6 +201,16 @@ public class InGameMenu : MonoBehaviour
     {
         GameObject newEntry = (GameObject)Instantiate(loadStateEntry, loadStatePanel.transform.Find("ScrollContent"));
         newEntry.GetComponentInChildren<Text>().text = name;
+    }
+
+    public void SetEntryToBeDeleted(GameObject entry)
+    {
+        entryToDelete = entry;
+    }
+
+    public void DeleteLoadStateEntry()
+    {
+        GameObject.Destroy(entryToDelete);
     }
 
     private void Update()
