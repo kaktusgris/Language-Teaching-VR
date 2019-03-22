@@ -38,7 +38,7 @@ public class LoginPanel : MonoBehaviourPunCallbacks
             PhotonNetwork.LocalPlayer.SetCustomProperties(hash);
 
             PhotonNetwork.CreateRoom("test" + Random.value.ToString(), new Photon.Realtime.RoomOptions { MaxPlayers = 1 }, null);
-            PhotonNetwork.LoadLevel(mainPanel.sceneToLoadString);
+            PhotonNetwork.LoadLevel(mainPanel.GetSceneToLoad());
         }
         else
         {

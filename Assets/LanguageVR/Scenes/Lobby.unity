@@ -4298,7 +4298,7 @@ GameObject:
   - component: {fileID: 903663195}
   - component: {fileID: 903663194}
   m_Layer: 5
-  m_Name: Text
+  m_Name: SceneNameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4337,7 +4337,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Scene name
+  m_Text: Skog
 --- !u!222 &903663195
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6306,7 +6306,7 @@ GameObject:
   - component: {fileID: 1297848777}
   - component: {fileID: 1297848776}
   m_Layer: 5
-  m_Name: Image
+  m_Name: SceneImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6428,7 +6428,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Voice: {fileID: 1530952949223954, guid: 710c5f628b16ddd4ab3aa4e290fcc9a1, type: 3}
-  sceneToLoadString: Forest
   tutorialToLoadString: Tutorial
   LoginPanel: {fileID: 964844637}
   PlayerNameInput: {fileID: 328590478}
@@ -6438,6 +6437,7 @@ MonoBehaviour:
   CreateRoomPanel: {fileID: 1406502566}
   RoomNameInputField: {fileID: 1541721128}
   MaxPlayersInputField: {fileID: 1856119463}
+  SceneName: {fileID: 903663194}
   StateFileName: {fileID: 230496674}
   LoadStatePanel: {fileID: 1755766013}
   JoinRandomRoomPanel: {fileID: 751292280}
@@ -6812,8 +6812,8 @@ MonoBehaviour:
   stateEntryPrefab: {fileID: 6346255013306424095, guid: 262580f4d84304a42a9a77891d760737,
     type: 3}
   sceneNames:
-  - Forest
-  - Cafe
+  - Skog
+  - "Kaf\xE9"
   sceneScreenshots:
   - {fileID: 21300000, guid: 48233d4cc9cf3a7469065f1d8f4fab8d, type: 3}
   - {fileID: 21300000, guid: 91fb4b20167fdf147bcb0a16cd790fd5, type: 3}

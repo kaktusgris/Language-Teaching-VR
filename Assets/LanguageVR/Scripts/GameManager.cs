@@ -135,8 +135,8 @@ namespace NTNU.CarloMarton.VRLanguage
             }
             else
             {
-                Debug.LogFormat("PhotonNetwork : Loading Level : {0}", startScene);
-                PhotonNetwork.LoadLevel(startScene);
+                //Debug.LogFormat("PhotonNetwork : Loading Level : {0}", startScene);
+                //PhotonNetwork.LoadLevel(startScene);
             }
 
         }

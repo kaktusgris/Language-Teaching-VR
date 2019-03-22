@@ -6,9 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/LanguageVR/Scenes/DemoLobby.unity
+    path: Assets/LanguageVR/Scenes/Lobby.unity
     guid: ce19825e327767849af2a77c9cc16a5e
   - enabled: 1
-    path: Assets/LanguageVR/Scenes/Forest.unity
+    path: Assets/LanguageVR/Scenes/Skog.unity
     guid: 6606bae8cdc4a484d84ec28cd5022c5c
+  - enabled: 1
+    path: "Assets/LanguageVR/Scenes/Kaf\xE9.unity"
+    guid: 95390c5ca91e1174bbeec5d603649cdc
   m_configObjects: {}

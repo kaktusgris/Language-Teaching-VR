@@ -49,7 +49,7 @@ namespace NTNU.CarloMarton.VRLanguage
         // Instansiates the given gameobject
         private GameObject InstantiatePhysicalObject()
         {
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             // Destroy previous object if a new one is selected
             if (transform.childCount > 0)
             {
@@ -62,7 +62,7 @@ namespace NTNU.CarloMarton.VRLanguage
                     return null;
                 }
             }
-            #endif
+#endif
 
             GameObject instantiatedObject = Instantiate(physicalObject);
             instantiatedObject.name = name;
