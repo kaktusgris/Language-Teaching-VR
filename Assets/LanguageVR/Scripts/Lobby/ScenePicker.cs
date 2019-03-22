@@ -32,17 +32,15 @@ namespace NTNU.CarloMarton.VRLanguage
         {
             ClearStates();
             string sceneName = sceneNames[currentScene];
-            int numberOfStates = 0;
+            int numberOfStates = 2;
+
+            AddState("Standard");
+            AddState("Ingenting");
+
             foreach (string state in EnvironmentState.GetAllSaveFileNames(sceneName))
             {
-                numberOfStates+=7;
+                numberOfStates++;
                 string stateWithoutExtension = state.Substring(0, state.Length - ".dat".Length);
-                AddState(stateWithoutExtension);
-                AddState(stateWithoutExtension);
-                AddState(stateWithoutExtension);
-                AddState(stateWithoutExtension);
-                AddState(stateWithoutExtension);
-                AddState(stateWithoutExtension);
                 AddState(stateWithoutExtension);
             }
             UpdateRectSize(numberOfStates);
@@ -57,7 +55,6 @@ namespace NTNU.CarloMarton.VRLanguage
 
             stateEntry.GetComponent<Button>().onClick.AddListener(() =>
             {
-                print(state);
                 mainPanel.SetStateToLoad(state);
                 mainPanel.SetActivePanel(mainPanel.CreateRoomPanel.name);
             });

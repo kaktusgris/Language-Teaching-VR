@@ -146,7 +146,13 @@ namespace NTNU.CarloMarton.VRLanguage
             object stateObject;
             if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("Load", out stateObject))
             {
-                EnvironmentState.LoadEnvironmentState(SceneManager.GetActiveScene().name, (string)stateObject);
+                string state = (string) stateObject;
+                if (state.Equals("Standard"))
+                    return;
+                else if (state.Equals("Ingenting"))
+                    EnvironmentState.DestroyAllInteractableObjectsInScene();
+                else
+                    EnvironmentState.LoadEnvironmentState(SceneManager.GetActiveScene().name, state);
             }
         }
 

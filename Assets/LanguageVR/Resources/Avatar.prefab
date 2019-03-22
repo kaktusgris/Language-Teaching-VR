@@ -2055,6 +2055,7 @@ MonoBehaviour:
   settingsPanel: {fileID: 303085407218748459}
   stateSavedPanel: {fileID: 2234551703143584452}
   loadStatePanel: {fileID: 649304629490419463}
+  deleteStatePanel: {fileID: 7193969895012822160}
   changeColorPanel: {fileID: 1222040275318320752}
   exitGamePanel: {fileID: 6202999097261131016}
   menuObjectEntry: {fileID: 1511298223660246780, guid: 4fc36d3106da2c04db3d73512e31bd4a,
@@ -3952,9 +3953,9 @@ MonoBehaviour:
   m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &5218165945232157379 stripped
+--- !u!1 &1054110687254935386 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 1035672811902514165, guid: 177f633357b2a5641bc1238d640be254,
+  m_CorrespondingSourceObject: {fileID: 5230122538845417068, guid: 177f633357b2a5641bc1238d640be254,
     type: 3}
   m_PrefabInstance: {fileID: 5059183577936222518}
   m_PrefabAsset: {fileID: 0}
@@ -3982,15 +3983,21 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 5059183577936222518}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &7193969895012822160 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2730246980360418726, guid: 177f633357b2a5641bc1238d640be254,
+    type: 3}
+  m_PrefabInstance: {fileID: 5059183577936222518}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &649304629490419463 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5708065919791259185, guid: 177f633357b2a5641bc1238d640be254,
     type: 3}
   m_PrefabInstance: {fileID: 5059183577936222518}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1054110687254935386 stripped
+--- !u!1 &5218165945232157379 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 5230122538845417068, guid: 177f633357b2a5641bc1238d640be254,
+  m_CorrespondingSourceObject: {fileID: 1035672811902514165, guid: 177f633357b2a5641bc1238d640be254,
     type: 3}
   m_PrefabInstance: {fileID: 5059183577936222518}
   m_PrefabAsset: {fileID: 0}
