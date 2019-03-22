@@ -24,7 +24,7 @@ namespace NTNU.CarloMarton.VRLanguage
             if (!IsAdded(word))
             {
                 wordDictionary.Add(word, item);
-                inGameMenu.AddTextBlock(word);
+                inGameMenu.AddMenuObjectEntry(word);
                 return true;
             }
             return false;

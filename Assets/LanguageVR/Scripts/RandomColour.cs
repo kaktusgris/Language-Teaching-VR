@@ -6,7 +6,7 @@ using Valve.VR.InteractionSystem;
 
 public class RandomColour : MonoBehaviour, IPunObservable {
 
-    private Color colour { get; set; }
+    public Color colour { get; set; }
 
     [Tooltip ("Select if the random colour should be totally random or chosen from a list of colours (wich will result in different colours for each user)")]
     [SerializeField] private bool randomFromList = true;
@@ -23,15 +23,9 @@ public class RandomColour : MonoBehaviour, IPunObservable {
 
     private List<Color> colours { get; set; }
 
-    // Could not change instance material on own hands, therefore changing the material itself
-    // Optimally not used, but done now as a lack of time.
-    // TODO: Change to use if handMaterial and only change instance of material
-    public Material handMat;
-
     [SerializeField] private PhotonView photonView;
 
     private System.Random rng = new System.Random();
-    private Color generatedColour;
 
 
     public void Awake()
@@ -60,29 +54,29 @@ public class RandomColour : MonoBehaviour, IPunObservable {
     }
 
     // Sets the colours on the player's hands when they are conected to the base stations
-    private IEnumerator Start()
+    public IEnumerator Start()
     {
         Transform rHandTransform = Player.instance.rightHand.transform;
         Transform lHandTransform = Player.instance.leftHand.transform;
-        bool lhandChanged = false;
+        bool lHandChanged = false;
         bool rHandChanged = false;
 
         while (true)
         {
             //print(lHandTransform.Find("RightRenderModel Slim(Clone)"));
-            if (!lhandChanged && lHandTransform.Find("LeftRenderModel Slim(Clone)"))
+            if (!lHandChanged && lHandTransform.Find("LeftRenderModel Slim(Clone)"))
             {
                 Material lHand = lHandTransform.Find("LeftRenderModel Slim(Clone)/vr_glove_left_model_slim(Clone)/slim_l/vr_glove_right_slim").GetComponent<SkinnedMeshRenderer>().material;
-                UpdateColourOnMaterial(lHand, generatedColour);
-                lhandChanged = true;
+                UpdateColourOnMaterial(lHand, this.colour);
+                lHandChanged = true;
             }
             if (!rHandChanged && rHandTransform.Find("RightRenderModel Slim(Clone)"))
             {
                 Material rhand = rHandTransform.Find("RightRenderModel Slim(Clone)/vr_glove_right_model_slim(Clone)/slim_r/vr_glove_right_slim").GetComponent<SkinnedMeshRenderer>().material;
-                UpdateColourOnMaterial(rhand, generatedColour);
+                UpdateColourOnMaterial(rhand, this.colour);
                 rHandChanged = true;
             }
-            if (lhandChanged && rHandChanged)
+            if (lHandChanged && rHandChanged)
             {
                 break;
             }
@@ -93,6 +87,7 @@ public class RandomColour : MonoBehaviour, IPunObservable {
 
     public void UpdateColour()
     {
+        Color generatedColour;
         //generatedColour = randomFromList ? GetSemiRandomColour() : GetRandomColour();
         if (PhotonNetwork.LocalPlayer.CustomProperties["Color"] != null)
         {
@@ -117,6 +112,7 @@ public class RandomColour : MonoBehaviour, IPunObservable {
         {
             UpdateColourOnMaterial(leftHandMaterial, colour);
             UpdateColourOnMaterial(rightHandMaterial, colour);
+            StartCoroutine("Start");
         }
         UpdateColourOnMaterial(torsoMaterial, colour);
     }
@@ -162,7 +158,7 @@ public class RandomColour : MonoBehaviour, IPunObservable {
     {
         if (stream.IsWriting)
         {
-            stream.SendNext(ColorToString(generatedColour));
+            stream.SendNext(ColorToString(this.colour));
         }
         else
         {

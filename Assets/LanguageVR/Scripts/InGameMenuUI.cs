@@ -19,12 +19,22 @@ public class InGameMenuUI : MonoBehaviour
     [SerializeField]
     private Color pressedColor = Color.green;
 
+    private GameObject playerAvatar;
+    private InGameMenu inGameMenu;
+
     private void Start()
     {
         if (onlyAdmin)
         {
             gameObject.SetActive((bool) PhotonNetwork.LocalPlayer.CustomProperties["admin"]);
         }
+
+        playerAvatar = GameManager.instance.GetPlayerAvatar();
+        if (playerAvatar == null)
+        {
+            playerAvatar = TutorialGameManager.instance.GetPlayerAvatar();
+        }
+        inGameMenu = playerAvatar.GetComponent<InGameMenu>();
     }
 
     public Color GetNormalColor()
@@ -47,8 +57,8 @@ public class InGameMenuUI : MonoBehaviour
         visible = !visible;
         transform.Find("VisibleImage").gameObject.SetActive(visible);
         transform.Find("InvisibleImage").gameObject.SetActive(!visible);
-        PlayerManager playerManager = GameObject.Find("GameManager").GetComponent<GameManager>().GetPlayer().GetComponent<PlayerManager>();
-        playerManager.SetVisibility(visible);
+
+        playerAvatar.GetComponent<PlayerManager>().SetVisibility(visible);
     }
 
 
@@ -57,7 +67,8 @@ public class InGameMenuUI : MonoBehaviour
         visible = !visible;
         transform.Find("DeleteDefaultImage").gameObject.SetActive(visible);
         transform.Find("DeleteActiveImage").gameObject.SetActive(!visible);
-        MenuLaser menuLaser = GameObject.Find("GameManager").GetComponent<GameManager>().instantiatedAvatar.GetComponent<InGameMenu>().GetLaserHand().GetComponent<MenuLaser>();
+
+        MenuLaser menuLaser = playerAvatar.GetComponent<InGameMenu>().GetLaserHand().GetComponent<MenuLaser>();
         menuLaser.toggleDeleteMode(!visible);
     }
 
@@ -71,16 +82,15 @@ public class InGameMenuUI : MonoBehaviour
 
     public void OnPlayAudioButtonClicked()
     {
-        string objectName = gameObject.GetComponentInParent<Text>().text;
-        PlayerDictionary dict = GameObject.Find("GameManager").GetComponent<GameManager>().GetPlayer().GetComponent<PlayerDictionary>();
+        string objectName = transform.parent.GetComponentInChildren<Text>().text;
         
-        dict.PlayAudio(objectName);
+        playerAvatar.GetComponent<PlayerDictionary>().PlayAudio(objectName);
     }
 
     // Spawns the object between the button and the user's head
     public void OnAddInteractableObjectButtonClicked()
     {
-        string objectName = gameObject.GetComponentInParent<Text>().text;
+        string objectName = transform.parent.GetComponentInChildren<Text>().text;
         Vector3 headPosition = ViveManager.Instance.head.transform.position;
         Vector3 buttonPosition = transform.position;
 
@@ -91,6 +101,88 @@ public class InGameMenuUI : MonoBehaviour
         Vector3 spawnPosition = new Vector3(spawnX, spawnY, spawnZ);
 
         Debug.LogFormat("Instantiated {0} at {1}", objectName, spawnPosition);
-        PhotonNetwork.Instantiate("InteractableObjects/" + objectName, spawnPosition, Quaternion.identity);
+        GameObject interactableObject = PhotonNetwork.Instantiate("InteractableObjects/" + objectName, spawnPosition, Quaternion.identity);
+        //interactableObject.name = objectName;
+    }
+
+    public void OnSaveEnvironmentStateButtonClicked()
+    {
+        //string timeNow = System.DateTime.Now.ToString("hh.mm dd.MM.yy");
+        //string stateName = SceneManagerHelper.ActiveSceneName + " " + timeNow;
+        string sceneName = SceneManagerHelper.ActiveSceneName;
+        string stateName;
+        if (PhotonNetwork.IsConnected)
+            stateName = PhotonNetwork.CurrentRoom.Name + ", " + PhotonNetwork.LocalPlayer.NickName;
+        else
+            stateName = "Offline, Anon";
+
+        string fileName = EnvironmentState.SaveEnvironmentState(sceneName, stateName);
+        inGameMenu.AddLoadStateEntry(fileName);
+        inGameMenu.SetStateSavedName(fileName);
+        inGameMenu.TogglePanel(inGameMenu.stateSavedPanel);
+    }
+
+    public void OnLoadEnvironmentStateButtonClicked()
+    {
+        string sceneName = SceneManagerHelper.ActiveSceneName;
+        string stateName = transform.parent.GetComponentInChildren<Text>().text;
+        EnvironmentState.LoadEnvironmentState(sceneName, stateName);
+    }
+
+    public void OnDeleteStateButtonClicked()
+    {
+        string sceneName = SceneManagerHelper.ActiveSceneName;
+        string stateName = transform.parent.GetComponentInChildren<Text>().gameObject.name;
+        EnvironmentState.DeleteSaveFile(sceneName, stateName);
+        inGameMenu.DeleteLoadStateEntry();
+        inGameMenu.TogglePanel(inGameMenu.loadStatePanel);
+    }
+
+    public void OnDeleteStatePanelButtonClicked()
+    {
+        string stateName = transform.parent.GetComponentInChildren<Text>().text;
+        inGameMenu.SetEntryToBeDeleted(transform.parent.gameObject);
+        inGameMenu.SetStateDeleteName(stateName);
+        inGameMenu.TogglePanel(inGameMenu.deleteStatePanel);
+    }
+
+    public void OnToggleSettingsPanelButtonClicked()
+    {
+        inGameMenu.TogglePanel(inGameMenu.settingsPanel);
+    }
+
+    public void OnToggleLoadStatePanelButtonClicked()
+    {
+        inGameMenu.TogglePanel(inGameMenu.loadStatePanel);
+    }
+
+    public void OnToggleChangeColorPanelButtonClicked()
+    {
+        Transform disabledImageTransform = transform.Find("DisabledImage");
+        if (disabledImageTransform == null)
+        {
+            inGameMenu.TogglePanel(inGameMenu.changeColorPanel);
+        }
+        else if (!disabledImageTransform.gameObject.activeSelf)
+        {
+            inGameMenu.TogglePanel(inGameMenu.changeColorPanel, inGameMenu.settingsPanel);
+        }
+    }
+
+    public void OnToggleExitGamePanelButtonClicked()
+    {
+        inGameMenu.TogglePanel(inGameMenu.exitGamePanel);
+    }
+
+    public void OnExitGameButtonClicked()
+    {
+        if (GameManager.instance.GetPlayerAvatar() != null)
+        {
+            GameManager.instance.LeaveRoom();
+        }
+        else
+        {
+            TutorialGameManager.instance.ExitTutorial();
+        }
     }
 }

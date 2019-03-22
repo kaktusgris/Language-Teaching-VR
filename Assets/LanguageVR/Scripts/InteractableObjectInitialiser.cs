@@ -136,8 +136,9 @@ namespace NTNU.CarloMarton.VRLanguage
 
         private void SaveToResources(GameObject instantiatedObject)
         {
-            Debug.LogError("Cannot create prefab of interactable object."); // A bug in unity 2018.3.5
-            //PrefabUtility.SaveAsPrefabAsset(instantiatedObject, "Assets/LanguageVR/Resources/InteractableObjects/" + textMesh.text + ".prefab");
+            string path = "Assets/LanguageVR/Resources/InteractableObjects/";
+            Debug.LogErrorFormat("Cannot create prefab of interactable object. Add it manually to {0}", path); // A bug in unity 2018.3.5
+            //PrefabUtility.SaveAsPrefabAsset(instantiatedObject, path + textMesh.text + ".prefab");
         }
 
 

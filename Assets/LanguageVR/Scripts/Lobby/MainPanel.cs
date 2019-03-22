@@ -11,9 +11,11 @@ namespace NTNU.CarloMarton.VRLanguage
 {
     public class MainPanel : MonoBehaviourPunCallbacks
     {
-
         [Tooltip("The prefab for Voice")]
         public GameObject Voice;
+
+        public string sceneToLoadString = "Forest";
+        public string tutorialToLoadString = "Tutorial";
 
         [Header("Login Panel")]
         public GameObject LoginPanel;
@@ -27,9 +29,12 @@ namespace NTNU.CarloMarton.VRLanguage
 
         [Header("Create Room Panel")]
         public GameObject CreateRoomPanel;
-
         public InputField RoomNameInputField;
         public InputField MaxPlayersInputField;
+        public Text StateFileName;
+
+        [Header("Load State Panel")]
+        public GameObject LoadStatePanel;
 
         [Header("Join Random Room Panel")]
         public GameObject JoinRandomRoomPanel;
@@ -42,9 +47,17 @@ namespace NTNU.CarloMarton.VRLanguage
 
         [Header("Inside Room Panel")]
         public GameObject InsideRoomPanel;
-
         public Button StartGameButton;
         public GameObject PlayerListEntryPrefab;
+        public Text roomNameText;
+
+        [Header("Loading panel")]
+        public GameObject LoadingPanel;
+        public Text LoadingText;
+
+        [Header("Tutorial Panel")]
+        public GameObject TutorialPanel;
+        public InputField TutorialAdminPasswordInput;
 
         private Dictionary<string, RoomInfo> cachedRoomList;
         private Dictionary<string, GameObject> roomListEntries;
@@ -52,11 +65,8 @@ namespace NTNU.CarloMarton.VRLanguage
 
         private bool adminMode = false;
 
-        public string sceneToLoadString = "Forest";
-
-        public Text roomNameText;
-
         string gameVersion = "1";
+
 
         #region UNITY
 
@@ -72,6 +82,10 @@ namespace NTNU.CarloMarton.VRLanguage
 
             cachedRoomList = new Dictionary<string, RoomInfo>();
             roomListEntries = new Dictionary<string, GameObject>();
+
+            SetStateToLoad("Standard");
+
+            SetActivePanel(LoginPanel.name);
         }
 
         #endregion
@@ -214,10 +228,6 @@ namespace NTNU.CarloMarton.VRLanguage
             StartGameButton.gameObject.SetActive(CheckPlayersReady());
         }
 
-        public void OnAdminToggleClicked(bool toggleValue)
-        {
-            AdminPasswordInput.gameObject.SetActive(toggleValue);
-        }
 
         #endregion
 
@@ -236,18 +246,28 @@ namespace NTNU.CarloMarton.VRLanguage
             byte maxPlayers;
             byte.TryParse(MaxPlayersInputField.text, out maxPlayers);
 
-            if (maxPlayers < 2 || maxPlayers > 8)
+            if (maxPlayers < 1 || maxPlayers > 8)
             {
                 // The user entered 0 or not a number
                 CreateRoomPanel.transform.Find("WrongNumberText").gameObject.SetActive(true);
                 return;
             }
 
-            maxPlayers = (byte)Mathf.Clamp(maxPlayers, 2, 8);
+            maxPlayers = (byte)Mathf.Clamp(maxPlayers, 1, 8);
 
             RoomOptions options = new RoomOptions { MaxPlayers = maxPlayers };
 
             PhotonNetwork.CreateRoom(roomName, options, null);
+        }
+
+        public void OnLoadStateButtonClicked()
+        {
+            SetActivePanel(LoadStatePanel.name);
+        }
+
+        public void OnBackToMakeRoomButtonClicked()
+        {
+            SetActivePanel(CreateRoomPanel.name);
         }
 
         public void OnJoinRandomRoomButtonClicked()
@@ -314,13 +334,62 @@ namespace NTNU.CarloMarton.VRLanguage
 
         public void OnStartGameButtonClicked()
         {
-            //PhotonNetwork.CurrentRoom.IsOpen = false;
-            //PhotonNetwork.CurrentRoom.IsVisible = false;
-
+            string loadingText = "Laster inn " + sceneToLoadString + "...";
+            ActivateLoadingScreen(loadingText);
+            string stateToLoad = StateFileName.text;
+            PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable() { { "Load", stateToLoad } });
             PhotonNetwork.LoadLevel(sceneToLoadString);
         }
 
+        public void OnTutorialButtonClicked()
+        {
+            SetActivePanel(TutorialPanel.name);
+        }
+
+        public void OnStartTutorialButtonClicked()
+        {
+            if (TutorialPanel.GetComponentInChildren<Toggle>().isOn)
+            {
+                if (TutorialAdminPasswordInput.text.Equals(adminPassword))
+                {
+                    PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable() { { "admin", true } });
+                }
+                else
+                {
+                    TutorialPanel.transform.Find("IncorrectPasswordLabel").gameObject.SetActive(true);
+                    return;
+                }
+            }
+            else
+            {
+                PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable() { { "admin", false } });
+            }
+            string loadingText = "Laster inn " + tutorialToLoadString + "...";
+            ActivateLoadingScreen(loadingText);
+            SceneManager.LoadScene(tutorialToLoadString);
+        }
+
+        public void OnBackToLoginButtonClicked()
+        {
+            SetActivePanel(LoginPanel.name);
+        }
+
+        public void OnAdminToggleClicked(bool toggleValue)
+        {
+            AdminPasswordInput.gameObject.SetActive(toggleValue);
+        }
+
+        public void OnAdminTutorialToggleClicked(bool toggleValue)
+        {
+            TutorialAdminPasswordInput.gameObject.SetActive(toggleValue);
+        }
         #endregion
+
+        public void ActivateLoadingScreen(string loadingText)
+        {
+            SetActivePanel(LoadingPanel.name);
+            LoadingText.text = loadingText;
+        }
 
         private bool CheckPlayersReady()
         {
@@ -363,14 +432,17 @@ namespace NTNU.CarloMarton.VRLanguage
             StartGameButton.gameObject.SetActive(CheckPlayersReady());
         }
 
-        private void SetActivePanel(string activePanel)
+        public void SetActivePanel(string activePanel)
         {
             LoginPanel.SetActive(activePanel.Equals(LoginPanel.name));
             SelectionPanel.SetActive(activePanel.Equals(SelectionPanel.name));
             CreateRoomPanel.SetActive(activePanel.Equals(CreateRoomPanel.name));
             JoinRandomRoomPanel.SetActive(activePanel.Equals(JoinRandomRoomPanel.name));
+            LoadStatePanel.SetActive(activePanel.Equals(LoadStatePanel.name));
             RoomListPanel.SetActive(activePanel.Equals(RoomListPanel.name));    // UI should call OnRoomListButtonClicked() to activate this
             InsideRoomPanel.SetActive(activePanel.Equals(InsideRoomPanel.name));
+            TutorialPanel.SetActive(activePanel.Equals(TutorialPanel.name));
+            LoadingPanel.SetActive(activePanel.Equals(LoadingPanel.name));
         }
 
         private void UpdateCachedRoomList(List<RoomInfo> roomList)
@@ -412,6 +484,12 @@ namespace NTNU.CarloMarton.VRLanguage
 
                 roomListEntries.Add(info.Name, entry);
             }
+        }
+
+        public void SetStateToLoad(string stateToLoad)
+        {
+            StateFileName.text = stateToLoad;
+            PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable() { { "Load", stateToLoad } });
         }
 
         public void Exit()
