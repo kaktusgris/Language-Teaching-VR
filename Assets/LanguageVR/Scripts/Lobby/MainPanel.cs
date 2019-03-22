@@ -14,7 +14,6 @@ namespace NTNU.CarloMarton.VRLanguage
         [Tooltip("The prefab for Voice")]
         public GameObject Voice;
 
-        public string sceneToLoadString = "Forest";
         public string tutorialToLoadString = "Tutorial";
 
         [Header("Login Panel")]
@@ -31,6 +30,7 @@ namespace NTNU.CarloMarton.VRLanguage
         public GameObject CreateRoomPanel;
         public InputField RoomNameInputField;
         public InputField MaxPlayersInputField;
+        public Text SceneName;
         public Text StateFileName;
 
         [Header("Load State Panel")]
@@ -240,7 +240,7 @@ namespace NTNU.CarloMarton.VRLanguage
 
         public void OnCreateRoomButtonClicked()
         {
-            string roomName = RoomNameInputField.text;
+            string roomName = GetSceneToLoad();
             roomName = (roomName.Equals(string.Empty)) ? "Room " + Random.Range(1000, 10000) : roomName;
 
             byte maxPlayers;
@@ -334,11 +334,16 @@ namespace NTNU.CarloMarton.VRLanguage
 
         public void OnStartGameButtonClicked()
         {
-            string loadingText = "Laster inn " + sceneToLoadString + "...";
+            string loadingText = "Laster inn " + GetSceneToLoad() + "...";
             ActivateLoadingScreen(loadingText);
             string stateToLoad = StateFileName.text;
             PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable() { { "Load", stateToLoad } });
-            PhotonNetwork.LoadLevel(sceneToLoadString);
+            PhotonNetwork.LoadLevel(GetSceneToLoad());
+        }
+
+        public string GetSceneToLoad()
+        {
+            return SceneName.text;
         }
 
         public void OnTutorialButtonClicked()
