@@ -52,6 +52,8 @@ namespace NTNU.CarloMarton.VRLanguage
 
                 DestroyAllInteractableObjectsInScene();
                 SpawnAllInteractableObjects(info);
+
+                Debug.LogFormat("Loaded interactable objects from {0}", filePath);
             }
             else
             {

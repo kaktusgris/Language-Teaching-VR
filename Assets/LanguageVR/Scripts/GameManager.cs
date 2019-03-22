@@ -112,6 +112,8 @@ namespace NTNU.CarloMarton.VRLanguage
                 voiceRecorder.TransmitEnabled = true;
                 GameObject.FindGameObjectWithTag("Voice").GetComponent<Photon.Voice.PUN.PhotonVoiceNetwork>().SpeakerPrefab = instantiatedAvatar;
             }
+
+            LoadState();
         }
 
         void Update()
@@ -139,6 +141,15 @@ namespace NTNU.CarloMarton.VRLanguage
 
         }
 
+        private void LoadState()
+        {
+            object stateObject;
+            if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("Load", out stateObject))
+            {
+                EnvironmentState.LoadEnvironmentState(SceneManager.GetActiveScene().name, (string)stateObject);
+            }
+        }
+
         #endregion
 
         public void DestroySomething(GameObject go)
@@ -151,8 +162,6 @@ namespace NTNU.CarloMarton.VRLanguage
             go.GetPhotonView().TransferOwnership(PhotonNetwork.LocalPlayer);
             while (!go.GetPhotonView().IsMine)
             {
-                print(go.name + " is not owner's");
-                //print(go.GetPhotonView().Owner + ", " + PhotonNetwork.LocalPlayer);
                 yield return null;
             }
             PhotonNetwork.Destroy(go);
