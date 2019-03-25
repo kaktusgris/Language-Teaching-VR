@@ -43,7 +43,6 @@ namespace NTNU.CarloMarton.VRLanguage
                 GameObject item = (GameObject) objects[i];
                 string name = item.name;// GetComponentInChildren<TextMesh>().text;
                 objectNames[i] = name;
-                print(name);
                 nameObjectPairs.Add(name, item);
             }
 
