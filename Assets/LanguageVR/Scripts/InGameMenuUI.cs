@@ -105,6 +105,12 @@ public class InGameMenuUI : MonoBehaviour
         //interactableObject.name = objectName;
     }
 
+    public void OnVoiceRecognitionButtonClicked()
+    {
+        string objectName = transform.parent.GetComponentInChildren<Text>().text;
+        
+
+    }
     public void OnSaveEnvironmentStateButtonClicked()
     {
         //string timeNow = System.DateTime.Now.ToString("hh.mm dd.MM.yy");
