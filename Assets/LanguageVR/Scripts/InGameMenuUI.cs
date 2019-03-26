@@ -29,11 +29,11 @@ public class InGameMenuUI : MonoBehaviour
             gameObject.SetActive((bool) PhotonNetwork.LocalPlayer.CustomProperties["admin"]);
         }
 
-        playerAvatar = GameManager.instance.GetPlayerAvatar();
-        if (playerAvatar == null)
-        {
+        if (GameManager.instance != null)
+            playerAvatar = GameManager.instance.GetPlayerAvatar();
+        else
             playerAvatar = TutorialGameManager.instance.GetPlayerAvatar();
-        }
+
         inGameMenu = playerAvatar.GetComponent<InGameMenu>();
     }
 
@@ -176,7 +176,7 @@ public class InGameMenuUI : MonoBehaviour
 
     public void OnExitGameButtonClicked()
     {
-        if (GameManager.instance.GetPlayerAvatar() != null)
+        if (GameManager.instance != null)
         {
             GameManager.instance.LeaveRoom();
         }
