@@ -1,6 +1,7 @@
-﻿using NTNU.CarloMarton.VRLanguage;
+﻿using ExitGames.Client.Photon;
+using NTNU.CarloMarton.VRLanguage;
 using Photon.Pun;
-using System.Collections;
+using Photon.Realtime;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -145,6 +146,19 @@ public class InGameMenuUI : MonoBehaviour
         inGameMenu.SetStateDeleteName(stateName);
         inGameMenu.TogglePanel(inGameMenu.deleteStatePanel);
     }
+
+	public void OnToggleObjectTextButtonClicked()
+	{
+		string textVisible = "Skru av objekttekst";
+		string textHidden = "Skru på objekttekst";
+
+		bool showObjectText = (bool)PhotonNetwork.LocalPlayer.CustomProperties["ShowObjectText"];
+
+		transform.GetComponentInChildren<Text>().text = showObjectText ? textHidden : textVisible;
+		foreach (Player player in PhotonNetwork.PlayerList) {
+			player.SetCustomProperties(new Hashtable() { { "ShowObjectText", !showObjectText } });
+		}
+	}
 
     public void OnToggleSettingsPanelButtonClicked()
     {

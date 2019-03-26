@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR.InteractionSystem;
@@ -22,7 +23,7 @@ namespace NTNU.CarloMarton.VRLanguage
         void Update()
         {
             // Only shows the text if the user is picking up the object
-            if (throwable.IsAttached() && !textRenderer.enabled && throwable.IsMine())
+            if (throwable.IsAttached() && !textRenderer.enabled && throwable.IsMine() && (bool)PhotonNetwork.LocalPlayer.CustomProperties["ShowObjectText"])
             {
                 textRenderer.enabled = true;
             }

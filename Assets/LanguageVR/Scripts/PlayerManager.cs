@@ -58,6 +58,11 @@ namespace NTNU.CarloMarton.VRLanguage
                 Destroy(GetComponentInChildren<AudioListener>());
             }
 
+			if (photonView.IsMine || !PhotonNetwork.IsConnected)
+			{
+				PhotonNetwork.LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { "ShowObjectText", true } });
+			}
+
             if (photonView.IsMine)
             {
                 gameObject.GetComponentInChildren<AudioSource>().spatialBlend = 1.0f;
