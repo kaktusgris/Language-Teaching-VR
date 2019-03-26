@@ -110,7 +110,8 @@ public class InGameMenu : MonoBehaviour
 
             menu.transform.localPosition = new Vector3(0, -0.25f, 0.25f);
             menu.transform.localRotation = Quaternion.Euler(60, 0, 0);
-            menu.transform.Find("TopPanel").transform.Find("DeleteObjectButton").GetComponent<InGameMenuUI>().resetDeleteObjectMode();
+            menu.transform.Find("TopPanel").transform.Find("DeleteObjectButton").GetComponent<InGameMenuUI>().ResetDeleteObjectMode();
+			menu.transform.Find("TopPanel/EditObjectButton").GetComponent<InGameMenuUI>().ResetEditObjectMode();
             menu.SetActive(true);
 
             helperUI.transform.localPosition = new Vector3(0, 0, 0.01f);
@@ -180,7 +181,7 @@ public class InGameMenu : MonoBehaviour
         {
             LineRenderer lr = hand.GetComponent<LineRenderer>();
             MenuLaser menuLaser = hand.GetComponent<MenuLaser>();
-            menuLaser.toggleDeleteMode(false);
+            menuLaser.ToggleDeleteMode(false);
             lr.enabled = enabled;
             menuLaser.enabled = enabled;
         }

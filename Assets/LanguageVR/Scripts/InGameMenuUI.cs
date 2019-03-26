@@ -62,7 +62,7 @@ public class InGameMenuUI : MonoBehaviour
         playerAvatar.GetComponent<PlayerManager>().SetVisibility(visible);
     }
 
-
+	// Add ResetEditObjectMode to same button to run on EditObjectButton
     public void OnDeleteObjectToggleClicked()
     {
         visible = !visible;
@@ -70,16 +70,31 @@ public class InGameMenuUI : MonoBehaviour
         transform.Find("DeleteActiveImage").gameObject.SetActive(!visible);
 
         MenuLaser menuLaser = playerAvatar.GetComponent<InGameMenu>().GetLaserHand().GetComponent<MenuLaser>();
-        menuLaser.toggleDeleteMode(!visible);
-    }
+        menuLaser.ToggleDeleteMode(!visible);
+	}
 
-    public void resetDeleteObjectMode()
-    {
-        if (transform.Find("DeleteActiveImage").gameObject.activeSelf)
-        {
-            OnDeleteObjectToggleClicked();
-        }
-    }
+	// Add ResetDeleteObjectMode to same button to run on DeleteObjectButton
+	public void OnEditObjectToggleClicked()
+	{
+		visible = !visible;
+		transform.GetChild(0).GetComponent<Image>().color = visible ? new Color(93f/255f, 93f/255f, 93f/255f) : Color.blue;
+
+		MenuLaser menuLaser = playerAvatar.GetComponent<InGameMenu>().GetLaserHand().GetComponent<MenuLaser>();
+		menuLaser.ToggleEditMode(!visible);
+	}
+
+	public void ResetEditObjectMode()
+	{
+		visible = true;
+		transform.GetChild(0).GetComponent<Image>().color = new Color(93f / 255f, 93f / 255f, 93f / 255f);
+	}
+
+	public void ResetDeleteObjectMode()
+	{
+		visible = true;
+		transform.Find("DeleteDefaultImage").gameObject.SetActive(true);
+		transform.Find("DeleteActiveImage").gameObject.SetActive(false);
+	}
 
     public void OnPlayAudioButtonClicked()
     {
