@@ -34,6 +34,7 @@ public class InGameMenu : MonoBehaviour
     [Header("Menu elements")]
     public Image currentColorImage;
     public Text topPanelTitle;
+    public GameObject deleteStateButton;
 
     private GameObject leftHand;
     private GameObject rightHand;
@@ -170,7 +171,26 @@ public class InGameMenu : MonoBehaviour
 
     public void SetStateDeleteName(string stateName)
     {
-        string text = "Er du sikker på at du vil slette " + stateName + "?";
+        string text;
+        bool activeDeleteButton;
+
+        if (stateName.Equals(EnvironmentState.DEFAULT_SAVE_NAME))
+        {
+            text = "Er du sikker på at du vil slette " + stateName + "?\n Den vil automatisk lages på nytt neste gang du åpner applikasjonen.";
+            activeDeleteButton = true;
+        }
+        else if (stateName.Equals(EnvironmentState.EMPTY_SAVE_NAME))
+        {
+            text = "Kan ikke slette " + stateName + ".";
+            activeDeleteButton = false;
+        }
+        else
+        {
+            text = "Er du sikker på at du vil slette " + stateName + "?";
+            activeDeleteButton = true;
+        }
+        print(gameObject.name);
+        deleteStateButton.SetActive(activeDeleteButton);
         deleteStatePanel.GetComponentInChildren<Text>().gameObject.name = stateName;
         deleteStatePanel.GetComponentInChildren<Text>().text = text;
     }

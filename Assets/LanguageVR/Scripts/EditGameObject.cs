@@ -21,9 +21,9 @@ namespace NTNU.CarloMarton.VRLanguage
 
 		private void Start()
         {
-            normalisedScale = gameObject.transform.localScale.x;
+            normalisedScale = GetDefaultScale();
             scales = new List<float>() { { 1f } };
-			colors = new List<Color>() { { meshRenderersToChange[0].material.color } };
+			colors = new List<Color>() { { GetDefaultColor() } };
 			scales.AddRange(customScales);
 			colors.AddRange(customColors);
 		}
@@ -44,6 +44,47 @@ namespace NTNU.CarloMarton.VRLanguage
                 return colors[0];
 		}
 
+        public int GetVariation()
+        {
+            return currentVariation;
+        }
+
+        // Must be able to run before Start
+        public void SetVariation(int newVariation)
+        {
+            if (newVariation < System.Math.Max(customScales.Count, customColors.Count) + 1)
+                currentVariation = newVariation;
+
+            transform.position += new Vector3(0, 0.1f, 0);
+
+            float scale;
+            Color color;
+
+            if (currentVariation == 0)
+            {
+                scale = GetDefaultScale();
+                color = GetDefaultColor();
+            }
+            else
+            {
+                if (currentVariation - 1 < customScales.Count)
+                    scale = customScales[currentVariation - 1];
+                else
+                    scale = GetDefaultScale();
+                if (currentVariation - 1 < customColors.Count)
+                    color = customColors[currentVariation - 1];
+                else
+                    color = GetDefaultColor();
+            }
+
+            transform.localScale = new Vector3(scale, scale, scale);
+
+            foreach (MeshRenderer mr in meshRenderersToChange)
+            {
+                mr.material.color = color;
+            }
+        }
+
 		public void NextVariation()
         {
 			currentVariation++;
@@ -57,5 +98,15 @@ namespace NTNU.CarloMarton.VRLanguage
                 mr.material.color = GetColor();
             }
 		}
+
+        private float GetDefaultScale()
+        {
+            return gameObject.transform.localScale.x;
+        }
+
+        private Color GetDefaultColor()
+        {
+            return meshRenderersToChange[0].material.color;
+        }
 	}
 }

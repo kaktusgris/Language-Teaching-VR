@@ -34,8 +34,8 @@ namespace NTNU.CarloMarton.VRLanguage
             string sceneName = sceneNames[currentScene];
             int numberOfStates = 2;
 
-            AddState("Standard");
-            AddState("Ingenting");
+            AddState(EnvironmentState.DEFAULT_SAVE_NAME);
+            AddState(EnvironmentState.EMPTY_SAVE_NAME);
 
             foreach (string state in EnvironmentState.GetAllSaveFileNames(sceneName))
             {

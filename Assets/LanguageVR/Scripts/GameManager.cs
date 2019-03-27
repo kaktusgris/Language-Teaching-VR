@@ -112,6 +112,7 @@ namespace NTNU.CarloMarton.VRLanguage
             }
 
             LoadState();
+            SetDefaultStateIfNotSetAlready();
         }
 
         void Update()
@@ -144,13 +145,19 @@ namespace NTNU.CarloMarton.VRLanguage
             object stateObject;
             if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("Load", out stateObject))
             {
-                string state = (string) stateObject;
-                if (state.Equals("Standard"))
-                    return;
-                else if (state.Equals("Ingenting"))
-                    EnvironmentState.DestroyAllInteractableObjectsInScene();
-                else
-                    EnvironmentState.LoadEnvironmentState(SceneManager.GetActiveScene().name, state);
+                string stateName = (string) stateObject;
+                string sceneName = SceneManagerHelper.ActiveSceneName;
+
+                if (!stateName.Equals(EnvironmentState.DEFAULT_SAVE_NAME))
+                    EnvironmentState.LoadEnvironmentState(sceneName, stateName);
+            }
+        }
+
+        private void SetDefaultStateIfNotSetAlready()
+        {
+            if (! EnvironmentState.StateExists(SceneManagerHelper.ActiveSceneName, EnvironmentState.DEFAULT_SAVE_NAME))
+            {
+                EnvironmentState.SaveEnvironmentState(SceneManagerHelper.ActiveSceneName, EnvironmentState.DEFAULT_SAVE_NAME);
             }
         }
 

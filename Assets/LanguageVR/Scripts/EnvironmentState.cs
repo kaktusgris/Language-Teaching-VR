@@ -12,6 +12,8 @@ namespace NTNU.CarloMarton.VRLanguage
 {
     public static class EnvironmentState
     {
+        public static readonly string DEFAULT_SAVE_NAME = "Standard";
+        public static readonly string EMPTY_SAVE_NAME = "Ingenting";
 
         private static readonly string statesSavePath = Application.persistentDataPath + "/EnvironmentStateSaves/";
 
@@ -32,6 +34,7 @@ namespace NTNU.CarloMarton.VRLanguage
             environmentInfo.interactables = GetNamesFromGameObjects(interactables);
             environmentInfo.positions = GetAllInteractablePositions(interactables);
             environmentInfo.rotations = GetAllInteractableRotations(interactables);
+            environmentInfo.variations = GetAllInteractableVariations(interactables);
 
             bf.Serialize(file, environmentInfo);
             file.Close();
@@ -42,6 +45,12 @@ namespace NTNU.CarloMarton.VRLanguage
 
         public static void LoadEnvironmentState(string sceneName, string saveName)
         {
+            if (saveName.Equals(EMPTY_SAVE_NAME))
+            {
+                DestroyAllInteractableObjectsInScene();
+                return;
+            }
+
             string filePath = statesSavePath + sceneName + "/" + saveName + ".dat";
             if (File.Exists(filePath))
             {
@@ -97,6 +106,11 @@ namespace NTNU.CarloMarton.VRLanguage
             }
         }
 
+        public static bool StateExists(string sceneName, string stateName)
+        {
+            return File.Exists(statesSavePath + sceneName + "/" + stateName + ".dat");
+        }
+
         private static string GetValidFileName(string path, string name, string extension)
         {
             string fileName = name;
@@ -117,8 +131,11 @@ namespace NTNU.CarloMarton.VRLanguage
                 string name = info.interactables[i];
                 Vector3 position = FloatToVector3(info.positions[i]);
                 Quaternion rotation = FloatToQuaternion(info.rotations[i]);
+                int variation = info.variations[i];
+
                 GameObject go = PhotonNetwork.Instantiate("InteractableObjects/" + name, position, rotation);
                 go.name = name;
+                go.GetComponent<EditGameObject>().SetVariation(variation);
             }
         }
 
@@ -182,6 +199,18 @@ namespace NTNU.CarloMarton.VRLanguage
             return rotations;
         }
 
+        private static List<int> GetAllInteractableVariations(List<GameObject> interactables)
+        {
+            List<int> variations = new List<int>();
+
+            foreach (GameObject interactable in interactables)
+            {
+                int variation = interactable.GetComponent<EditGameObject>().GetVariation();
+                variations.Add(variation);
+            }
+            return variations;
+        }
+
         private static Vector3 FloatToVector3(float[] floats)
         {
             return new Vector3(floats[0], floats[1], floats[2]);
@@ -199,6 +228,7 @@ namespace NTNU.CarloMarton.VRLanguage
         public List<String> interactables = new List<String>();
         public List<float[]> positions = new List<float[]>();
         public List<float[]> rotations = new List<float[]>();
+        public List<int> variations = new List<int>();
 
         public int Count()
         {
