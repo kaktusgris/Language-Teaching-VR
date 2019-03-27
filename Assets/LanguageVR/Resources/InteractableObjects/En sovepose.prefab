@@ -211,6 +211,7 @@ GameObject:
   - component: {fileID: 1866}
   - component: {fileID: 1865}
   - component: {fileID: 1864}
+  - component: {fileID: 7954867714494456669}
   m_Layer: 10
   m_Name: En sovepose
   m_TagString: InteractableObject
@@ -371,3 +372,24 @@ MonoBehaviour:
   viewIdField: 0
   InstantiationId: 5
   isRuntimeInstantiated: 0
+--- !u!114 &7954867714494456669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bc788dab4b68ca43bc2a8430c9f18e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customScales: []
+  customColors:
+  - {r: 0.7169812, g: 0, b: 0, a: 1}
+  - {r: 0.020208606, g: 0.8018868, b: 0, a: 1}
+  - {r: 0.8875774, g: 0.8962264, b: 0, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 0, g: 0, b: 0, a: 1}
+  meshRenderersToChange:
+  - {fileID: 1165}

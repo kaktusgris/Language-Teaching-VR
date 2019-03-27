@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 2856656562737154888}
   - component: {fileID: 2856656562737154895}
   - component: {fileID: 2856656562737154894}
+  - component: {fileID: 558098358183598222}
   m_Layer: 10
   m_Name: En tepotte
   m_TagString: InteractableObject
@@ -235,6 +236,48 @@ MonoBehaviour:
   viewIdField: 0
   InstantiationId: 26
   isRuntimeInstantiated: 0
+--- !u!114 &558098358183598222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2856656562737154892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bc788dab4b68ca43bc2a8430c9f18e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customScales:
+  - 0.5
+  - 1
+  - 1.5
+  - 0.5
+  - 1
+  - 1.5
+  - 0.5
+  - 1
+  - 1.5
+  - 0.5
+  - 1
+  - 1.5
+  - 0.5
+  - 1.5
+  customColors:
+  - {r: 1, g: 0.5137255, b: 0.7058824, a: 1}
+  - {r: 1, g: 0.5137255, b: 0.7058824, a: 1}
+  - {r: 1, g: 0.5137255, b: 0.7058824, a: 1}
+  - {r: 0.38039216, g: 0.54509807, b: 1, a: 1}
+  - {r: 0.38039216, g: 0.54509807, b: 1, a: 1}
+  - {r: 0.38039216, g: 0.54509807, b: 1, a: 1}
+  - {r: 1, g: 0.9411765, b: 0.3254902, a: 1}
+  - {r: 1, g: 0.9411765, b: 0.3254902, a: 1}
+  - {r: 1, g: 0.9411765, b: 0.3254902, a: 1}
+  - {r: 0.29803923, g: 1, b: 0.54901963, a: 1}
+  - {r: 0.29803923, g: 1, b: 0.54901963, a: 1}
+  - {r: 0.29803923, g: 1, b: 0.54901963, a: 1}
+  meshRenderersToChange:
+  - {fileID: 2856656562737154884}
 --- !u!1 &2856656562977989590
 GameObject:
   m_ObjectHideFlags: 0

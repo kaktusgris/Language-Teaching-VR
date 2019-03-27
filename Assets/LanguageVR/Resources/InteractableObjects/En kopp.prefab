@@ -290,6 +290,7 @@ GameObject:
   - component: {fileID: 4922154222557252159}
   - component: {fileID: 4922154222557252158}
   - component: {fileID: 4922154222557252157}
+  - component: {fileID: 5194004029176264699}
   m_Layer: 10
   m_Name: En kopp
   m_TagString: InteractableObject
@@ -453,6 +454,30 @@ MonoBehaviour:
   viewIdField: 0
   InstantiationId: 13
   isRuntimeInstantiated: 0
+--- !u!114 &5194004029176264699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4922154222557252155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bc788dab4b68ca43bc2a8430c9f18e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customScales:
+  - 1
+  - 1
+  - 0.5
+  - 1.5
+  customColors:
+  - {r: 1, g: 0.514151, b: 0.70535636, a: 1}
+  - {r: 0.3820755, g: 0.543609, b: 1, a: 1}
+  meshRenderersToChange:
+  - {fileID: 4922154221380375512}
+  - {fileID: 4922154222437287367}
+  - {fileID: 4922154221915114190}
 --- !u!1 &4922154222654129208
 GameObject:
   m_ObjectHideFlags: 0

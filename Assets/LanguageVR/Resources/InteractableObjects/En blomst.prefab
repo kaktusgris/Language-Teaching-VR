@@ -324,6 +324,7 @@ GameObject:
   - component: {fileID: 1822}
   - component: {fileID: 1821}
   - component: {fileID: 1818}
+  - component: {fileID: 8289146766389511643}
   m_Layer: 10
   m_Name: En blomst
   m_TagString: InteractableObject
@@ -514,3 +515,26 @@ MonoBehaviour:
   viewIdField: 0
   InstantiationId: 10
   isRuntimeInstantiated: 0
+--- !u!114 &8289146766389511643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bc788dab4b68ca43bc2a8430c9f18e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customScales: []
+  customColors:
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0, g: 0, b: 1, a: 1}
+  - {r: 0.993973, g: 1, b: 0, a: 1}
+  - {r: 0, g: 1, b: 0.0064702034, a: 1}
+  - {r: 1, g: 0, b: 0.87771463, a: 1}
+  - {r: 0, g: 0, b: 0, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  meshRenderersToChange:
+  - {fileID: 1160}

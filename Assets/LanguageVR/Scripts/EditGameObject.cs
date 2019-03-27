@@ -7,39 +7,55 @@ namespace NTNU.CarloMarton.VRLanguage
 	public class EditGameObject : MonoBehaviour
 	{
 		[SerializeField]
-		private List<float> customSizes;
+		private List<float> customScales = new List<float>() { { 0.5f}, { 1.5f} };
 		[SerializeField]
-		private List<Color> customColors;
-		[SerializeField]
-		private MeshRenderer materialToChange;
+        private List<Color> customColors = new List<Color>() { { Color.red }, { Color.blue } };
+		[SerializeField] [Tooltip("Will change the first material on each meshrenderer")]
+		private List<MeshRenderer> meshRenderersToChange;
 
-		private List<float> sizes;
+        private float normalisedScale;
+		private List<float> scales;
 		private List<Color> colors;
 
 		private int currentVariation = 0;
 
-		private void Start() {
-			sizes = new List<float>() { { gameObject.transform.localScale.x } };
-			colors = new List<Color>() { { materialToChange.material.color } };
-			sizes.AddRange(customSizes);
+		private void Start()
+        {
+            normalisedScale = gameObject.transform.localScale.x;
+            scales = new List<float>() { { 1f } };
+			colors = new List<Color>() { { meshRenderersToChange[0].material.color } };
+			scales.AddRange(customScales);
 			colors.AddRange(customColors);
 		}
 
-		public float GetSize() {
-			return sizes[currentVariation];
+		public float GetScale()
+        {
+            if (currentVariation < scales.Count)
+                return scales[currentVariation] * normalisedScale;
+            else
+                return normalisedScale;
 		}
 
-		public Color GetColor() {
-			return colors[currentVariation];
+		public Color GetColor()
+        {
+            if (currentVariation < colors.Count)
+                return colors[currentVariation];
+            else
+                return colors[0];
 		}
 
-		public void NextVariation() {
+		public void NextVariation()
+        {
 			currentVariation++;
-			if (currentVariation == sizes.Count)
+			if (currentVariation == System.Math.Max(scales.Count, colors.Count))
 				currentVariation = 0;
 
-			transform.localScale = new Vector3(GetSize(), GetSize(), GetSize());
-			materialToChange.material.color = GetColor();
+            transform.position += new Vector3(0, 0.1f, 0);
+			transform.localScale = new Vector3(GetScale(), GetScale(), GetScale());
+            foreach (MeshRenderer mr in meshRenderersToChange)
+            {
+                mr.material.color = GetColor();
+            }
 		}
 	}
 }

@@ -92,6 +92,8 @@ namespace NTNU.CarloMarton.VRLanguage
                 }
             }
 
+            instantiatedObject.AddComponent<EditGameObject>();
+
             ThrowableObject throwable = instantiatedObject.AddComponent<ThrowableObject>();
             //instantiatedObject.AddComponent<Interactable>(); // Comes with Throwable
             //instantiatedObject.AddComponent<VelocityEstimator>(); // Comes with throwable

@@ -122,6 +122,7 @@ GameObject:
   - component: {fileID: 3744851417768356655}
   - component: {fileID: 3744851417768356654}
   - component: {fileID: 3744851417768356649}
+  - component: {fileID: 5645828500021404590}
   m_Layer: 10
   m_Name: En lampe
   m_TagString: InteractableObject
@@ -340,3 +341,21 @@ MonoBehaviour:
   viewIdField: 0
   InstantiationId: 28
   isRuntimeInstantiated: 0
+--- !u!114 &5645828500021404590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3744851417768356651}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bc788dab4b68ca43bc2a8430c9f18e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customScales:
+  - 0.75
+  - 1.25
+  customColors: []
+  meshRenderersToChange:
+  - {fileID: 3744851417768356643}

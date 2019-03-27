@@ -21,8 +21,6 @@ namespace NTNU.CarloMarton.VRLanguage
 
         private GameObject instantiatedAvatar;
 
-        [SerializeField] private string startScene;
-
         #region Photon Callbacks
 
 

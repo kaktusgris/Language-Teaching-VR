@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 1946}
   - component: {fileID: 1945}
   - component: {fileID: 1944}
+  - component: {fileID: 783174564531152997}
   m_Layer: 10
   m_Name: En stein
   m_TagString: InteractableObject
@@ -235,6 +236,27 @@ MonoBehaviour:
   viewIdField: 0
   InstantiationId: 3
   isRuntimeInstantiated: 0
+--- !u!114 &783174564531152997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bc788dab4b68ca43bc2a8430c9f18e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customScales:
+  - 1.33
+  - 1.66
+  - 2
+  - 0.33
+  - 0.66
+  customColors: []
+  meshRenderersToChange:
+  - {fileID: 1190}
 --- !u!1 &747
 GameObject:
   m_ObjectHideFlags: 0

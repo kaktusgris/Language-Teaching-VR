@@ -122,6 +122,7 @@ GameObject:
   - component: {fileID: 1925}
   - component: {fileID: 1924}
   - component: {fileID: 1923}
+  - component: {fileID: 33959880540815792}
   m_Layer: 10
   m_Name: Et eple
   m_TagString: InteractableObject
@@ -340,3 +341,25 @@ MonoBehaviour:
   viewIdField: 0
   InstantiationId: 2
   isRuntimeInstantiated: 0
+--- !u!114 &33959880540815792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bc788dab4b68ca43bc2a8430c9f18e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customScales:
+  - 1
+  - 0.33
+  - 0.66
+  - 1.33
+  - 1.66
+  customColors:
+  - {r: 0, g: 1, b: 0, a: 1}
+  meshRenderersToChange:
+  - {fileID: 1186}
