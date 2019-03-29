@@ -369,6 +369,7 @@ MonoBehaviour:
   OwnershipTransfer: 1
   ObservedComponents:
   - {fileID: 2925921090810747411}
+  - {fileID: 3392885917850665185}
   viewIdField: 0
   InstantiationId: 6
   isRuntimeInstantiated: 0
@@ -385,12 +386,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   customScales:
-  - 0.25
-  - 0.5
-  - 0.75
   - 1.25
   - 1.5
   - 1.75
+  - 0.25
+  - 0.5
+  - 0.75
   customColors: []
   meshRenderersToChange:
   - {fileID: 2925921090025131212}

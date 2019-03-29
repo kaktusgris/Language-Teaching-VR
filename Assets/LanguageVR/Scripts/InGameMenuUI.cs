@@ -6,12 +6,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+// --------
+// Script attached to each button and other relevant element in the InGameMenu
+// --------
 public class InGameMenuUI : MonoBehaviour
 {
     private bool visible = true;
 
     [SerializeField] [Tooltip ("If this element should only be available to admin users")]
     private bool onlyAdmin = false;
+
+    [SerializeField]
+    [Tooltip("")]
+    private bool externalButton = false;
 
     [SerializeField]
     private Color normalColor = Color.black;
@@ -35,7 +43,8 @@ public class InGameMenuUI : MonoBehaviour
         else
             playerAvatar = TutorialGameManager.instance.GetPlayerAvatar();
 
-        inGameMenu = playerAvatar.GetComponent<InGameMenu>();
+        if (!externalButton)
+            inGameMenu = playerAvatar.GetComponent<InGameMenu>();
     }
 
     public Color GetNormalColor()
@@ -173,7 +182,10 @@ public class InGameMenuUI : MonoBehaviour
 		foreach (Player player in PhotonNetwork.PlayerList) {
 			player.SetCustomProperties(new Hashtable() { { "ShowObjectText", !showObjectText } });
 		}
-	}
+
+        if (!PhotonNetwork.IsConnected)
+            PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable() { { "ShowObjectText", !showObjectText } });
+    }
 
     public void OnToggleSettingsPanelButtonClicked()
     {

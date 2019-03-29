@@ -92,7 +92,7 @@ namespace NTNU.CarloMarton.VRLanguage
                 }
             }
 
-            instantiatedObject.AddComponent<EditGameObject>();
+            EditGameObject editGameObject = instantiatedObject.AddComponent<EditGameObject>();
 
             ThrowableObject throwable = instantiatedObject.AddComponent<ThrowableObject>();
             //instantiatedObject.AddComponent<Interactable>(); // Comes with Throwable
@@ -101,6 +101,7 @@ namespace NTNU.CarloMarton.VRLanguage
 
             photonView.ObservedComponents = new List<Component>();
             photonView.ObservedComponents.Add(throwable);
+            photonView.ObservedComponents.Add(editGameObject);
             photonView.OwnershipTransfer = OwnershipOption.Takeover;
             photonView.Synchronization = ViewSynchronization.UnreliableOnChange;
 

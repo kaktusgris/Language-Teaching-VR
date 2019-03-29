@@ -165,7 +165,7 @@ public class InGameMenu : MonoBehaviour
 
     public void SetStateSavedName(string stateName)
     {
-        string text = "Rom lagret som " + stateName;
+        string text = "Rom lagret som \"" + stateName + "\"";
         stateSavedPanel.GetComponentInChildren<Text>().text = text;
     }
 

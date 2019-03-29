@@ -90,6 +90,15 @@ namespace NTNU.CarloMarton.VRLanguage
             rt.sizeDelta = new Vector2(rt.rect.width, newHeight);
         }
 
+        public Sprite GetSpriteByName(string sceneName)
+        {
+            int sceneIndex = sceneNames.IndexOf(sceneName);
+            if (sceneIndex > -1)
+                return sceneScreenshots[sceneIndex];
+            else
+                return null;
+        }
+
         public void OnNextButtonClicked()
         {
             currentScene++;

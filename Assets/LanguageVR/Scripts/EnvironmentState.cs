@@ -100,7 +100,15 @@ namespace NTNU.CarloMarton.VRLanguage
         {
             foreach (GameObject go in GetAllInteractableGameObjectsInScene())
             {
-                GameManager.instance.DestroySomething(go);
+                try
+                {
+                    GameManager.instance.DestroySomething(go);
+                }
+                catch (NullReferenceException e)
+                {
+                    UnityEngine.Object.Destroy(go);
+                }
+                
                 //MonoBehaviour mb = new MonoBehaviour();
                 //mb.StartCoroutine(DestroyInteractableGameObject(go));
             }
@@ -135,7 +143,7 @@ namespace NTNU.CarloMarton.VRLanguage
 
                 GameObject go = PhotonNetwork.Instantiate("InteractableObjects/" + name, position, rotation);
                 go.name = name;
-                go.GetComponent<EditGameObject>().SetVariation(variation);
+                go.GetComponent<EditGameObject>().LoadVariation(variation);
             }
         }
 

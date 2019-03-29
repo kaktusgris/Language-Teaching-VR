@@ -370,6 +370,9 @@ namespace NTNU.CarloMarton.VRLanguage
 					return "Endre farge til " + TranslateColorToNorwegian(buttonName);
 				case "CancelButton":
 					return "Avbryt";
+                case "Backbutton":
+                    return "Tilbake";
+
 				default:
 					return "Ikke lagt til hint på knapp";
 			}

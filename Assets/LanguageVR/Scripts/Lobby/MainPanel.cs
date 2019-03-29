@@ -15,6 +15,7 @@ namespace NTNU.CarloMarton.VRLanguage
         public GameObject Voice;
 
         public string tutorialToLoadString = "Tutorial";
+        public ScenePicker scenePicker;
 
         [Header("Login Panel")]
         public GameObject LoginPanel;
@@ -50,6 +51,7 @@ namespace NTNU.CarloMarton.VRLanguage
         public Button StartGameButton;
         public GameObject PlayerListEntryPrefab;
         public Text roomNameText;
+        public Image sceneImage;
 
         [Header("Loading panel")]
         public GameObject LoadingPanel;
@@ -135,7 +137,11 @@ namespace NTNU.CarloMarton.VRLanguage
         {
             SetActivePanel(InsideRoomPanel.name);
 
+            if (PhotonNetwork.IsMasterClient)
+                PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable() { { "SceneToLoad", SceneName.text } });
+
             roomNameText.text = PhotonNetwork.CurrentRoom.Name;
+            sceneImage.sprite = scenePicker.GetSpriteByName(GetSceneToLoad());
 
             if (playerListEntries == null)
             {
@@ -240,7 +246,7 @@ namespace NTNU.CarloMarton.VRLanguage
 
         public void OnCreateRoomButtonClicked()
         {
-            string roomName = GetSceneToLoad();
+            string roomName = RoomNameInputField.text;
             roomName = (roomName.Equals(string.Empty)) ? "Room " + Random.Range(1000, 10000) : roomName;
 
             byte maxPlayers;
@@ -335,6 +341,8 @@ namespace NTNU.CarloMarton.VRLanguage
         public void OnStartGameButtonClicked()
         {
             string loadingText = "Laster inn " + GetSceneToLoad() + "...";
+            
+            this.photonView.RPC("ActivateLoadingScreen", RpcTarget.Others, loadingText);
             ActivateLoadingScreen(loadingText);
             string stateToLoad = StateFileName.text;
             PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable() { { "Load", stateToLoad } });
@@ -343,7 +351,7 @@ namespace NTNU.CarloMarton.VRLanguage
 
         public string GetSceneToLoad()
         {
-            return SceneName.text;
+            return (string) PhotonNetwork.CurrentRoom.CustomProperties["SceneToLoad"];
         }
 
         public void OnTutorialButtonClicked()
@@ -390,6 +398,7 @@ namespace NTNU.CarloMarton.VRLanguage
         }
         #endregion
 
+        [PunRPC]
         public void ActivateLoadingScreen(string loadingText)
         {
             SetActivePanel(LoadingPanel.name);

@@ -1,10 +1,11 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace NTNU.CarloMarton.VRLanguage
 {
-	public class EditGameObject : MonoBehaviour
+	public class EditGameObject : MonoBehaviour, IPunObservable
 	{
 		[SerializeField]
 		private List<float> customScales = new List<float>() { { 0.5f}, { 1.5f} };
@@ -50,7 +51,7 @@ namespace NTNU.CarloMarton.VRLanguage
         }
 
         // Must be able to run before Start
-        public void SetVariation(int newVariation)
+        public void LoadVariation(int newVariation)
         {
             if (newVariation < System.Math.Max(customScales.Count, customColors.Count) + 1)
                 currentVariation = newVariation;
@@ -85,6 +86,12 @@ namespace NTNU.CarloMarton.VRLanguage
             }
         }
 
+        public void SetVariation(int newVariation)
+        {
+            currentVariation = newVariation - 1;
+            NextVariation();
+        }
+
 		public void NextVariation()
         {
 			currentVariation++;
@@ -108,5 +115,19 @@ namespace NTNU.CarloMarton.VRLanguage
         {
             return meshRenderersToChange[0].material.color;
         }
-	}
+
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            if (stream.IsWriting)
+            {
+                stream.SendNext(currentVariation);
+            }
+            else
+            {
+                int newVariation = (int)stream.ReceiveNext();
+                if (newVariation != currentVariation)
+                    SetVariation(newVariation);
+            }
+        }
+    }
 }
