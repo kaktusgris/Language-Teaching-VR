@@ -24,7 +24,9 @@ public class InGameMenu : MonoBehaviour
     public GameObject deleteStatePanel;
     public GameObject changeColorPanel;
     public GameObject exitGamePanel;
+    public GameObject voiceRecognitionPanel;
     private GameObject defaultPanel;
+    
 
 
     [Header("Entry prefabs")]
@@ -34,6 +36,8 @@ public class InGameMenu : MonoBehaviour
     [Header("Menu elements")]
     public Image currentColorImage;
     public Text topPanelTitle;
+    public Text voiceRecognitionWordText;
+    public Slider voiceRecDurationSlider;
 
     private GameObject leftHand;
     private GameObject rightHand;
@@ -145,6 +149,7 @@ public class InGameMenu : MonoBehaviour
         changeColorPanel.SetActive(changeColorPanel.name.Equals(panelName));
         stateSavedPanel.SetActive(stateSavedPanel.name.Equals(panelName));
         deleteStatePanel.SetActive(deleteStatePanel.name.Equals(panelName));
+        voiceRecognitionPanel.SetActive(voiceRecognitionPanel.name.Equals(panelName));
     }
 
     public void SetTitleOnTopPanel(string panelName)
@@ -159,6 +164,8 @@ public class InGameMenu : MonoBehaviour
             topPanelTitle.text = "Last inn";
         else if (panelName.Equals(changeColorPanel.name))
             topPanelTitle.text = "Endre farge";
+        else if (panelName.Equals(voiceRecognitionPanel.name))
+            topPanelTitle.text = " ";
     }
 
     public void SetStateSavedName(string stateName)
@@ -224,6 +231,11 @@ public class InGameMenu : MonoBehaviour
             else if (menuButtonAction.GetStateDown(SteamVR_Input_Sources.RightHand)) {
                 FixActiveMenu(SteamVR_Input_Sources.RightHand);
             }
+        }
+
+        if (voiceRecognitionPanel.activeSelf && voiceRecDurationSlider.value > 0)
+        {
+            voiceRecDurationSlider.value -= Time.deltaTime;
         }
     }
 }
