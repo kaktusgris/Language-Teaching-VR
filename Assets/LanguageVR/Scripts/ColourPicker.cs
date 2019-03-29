@@ -27,7 +27,7 @@ namespace NTNU.CarloMarton.VRLanguage
             else
             {
                 GameObject playerAvatar;
-                if (GameManager.instance == null)
+                if (GameManager.instance != null)
                     playerAvatar = GameManager.instance.GetPlayerAvatar();
                 else
                     playerAvatar = TutorialGameManager.instance.GetPlayerAvatar();

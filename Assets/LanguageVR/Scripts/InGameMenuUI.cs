@@ -2,6 +2,8 @@
 using NTNU.CarloMarton.VRLanguage;
 using Photon.Pun;
 using Photon.Realtime;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,9 +12,10 @@ using UnityEngine.UI;
 // --------
 // Script attached to each button and other relevant element in the InGameMenu
 // --------
-public class InGameMenuUI : MonoBehaviour
+public class InGameMenuUI : MonoBehaviour, IObserver<VoiceRecognitionStatus>
 {
     private bool visible = true;
+    private VoiceRecognitionStatus value;
 
     [SerializeField] [Tooltip ("If this element should only be available to admin users")]
     private bool onlyAdmin = false;
@@ -28,6 +31,11 @@ public class InGameMenuUI : MonoBehaviour
     [SerializeField]
     private Color pressedColor = Color.green;
 
+    [Header("Voice Recognition Settings")]
+    public int voiceRecDurationInSeconds = 20;
+
+
+    private int voiceRecTimer;
     private GameObject playerAvatar;
     private InGameMenu inGameMenu;
 
@@ -108,7 +116,7 @@ public class InGameMenuUI : MonoBehaviour
     public void OnPlayAudioButtonClicked()
     {
         string objectName = transform.parent.GetComponentInChildren<Text>().text;
-        
+
         playerAvatar.GetComponent<PlayerDictionary>().PlayAudio(objectName);
     }
 
@@ -128,6 +136,25 @@ public class InGameMenuUI : MonoBehaviour
         Debug.LogFormat("Instantiated {0} at {1}", objectName, spawnPosition);
         GameObject interactableObject = PhotonNetwork.Instantiate("InteractableObjects/" + objectName, spawnPosition, Quaternion.identity);
         //interactableObject.name = objectName;
+    }
+
+    public void OnVoiceRecognitionButtonClicked()
+    {
+        string objectName = transform.parent.GetComponentInChildren<Text>().text;
+        inGameMenu.voiceRecDurationSlider.maxValue = voiceRecDurationInSeconds;
+        inGameMenu.voiceRecDurationSlider.value = voiceRecDurationInSeconds;
+        inGameMenu.SetPanelActive(inGameMenu.voiceRecognitionPanel.name);
+
+        inGameMenu.voiceRecognitionWordText.text = "Stemmegjenkjenning startet, si ordet:  " + objectName;
+
+        VoiceRecognitionScript.InitiateSpeechRecognition(voiceRecDurationInSeconds, objectName);
+        VoiceRecognitionScript.instance.Subscribe(this);
+    }
+
+    public void OnVoiceRecognitionCancelButtonClicked()
+    {
+        VoiceRecognitionScript.CancelSpeechRecognition();
+        inGameMenu.SetPanelActive(inGameMenu.dictionaryPanel.name);
     }
 
     public void OnSaveEnvironmentStateButtonClicked()
@@ -180,11 +207,11 @@ public class InGameMenuUI : MonoBehaviour
 
 		transform.GetComponentInChildren<Text>().text = showObjectText ? textHidden : textVisible;
 		foreach (Player player in PhotonNetwork.PlayerList) {
-			player.SetCustomProperties(new Hashtable() { { "ShowObjectText", !showObjectText } });
+			player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { "ShowObjectText", !showObjectText } });
 		}
 
         if (!PhotonNetwork.IsConnected)
-            PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable() { { "ShowObjectText", !showObjectText } });
+            PhotonNetwork.LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { "ShowObjectText", !showObjectText } });
     }
 
     public void OnToggleSettingsPanelButtonClicked()
@@ -226,4 +253,25 @@ public class InGameMenuUI : MonoBehaviour
             TutorialGameManager.instance.ExitTutorial();
         }
     }
+
+    public void OnCompleted()
+    {
+        if (value != null && value.Status)
+        {
+            Debug.Log("Result is: " + value.Status);
+        }
+
+        inGameMenu.SetPanelActive("DictionaryPanel");
+    }
+
+    public void OnError(Exception error)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void OnNext(VoiceRecognitionStatus value)
+    {
+        this.value = value;
+    }
+
 }
