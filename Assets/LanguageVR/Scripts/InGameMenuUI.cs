@@ -1,13 +1,15 @@
 ﻿using NTNU.CarloMarton.VRLanguage;
 using Photon.Pun;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InGameMenuUI : MonoBehaviour
+public class InGameMenuUI : MonoBehaviour, IObserver<VoiceRecognitionStatus>
 {
     private bool visible = true;
+    private VoiceRecognitionStatus value;
 
     [SerializeField] [Tooltip ("If this element should only be available to admin users")]
     private bool onlyAdmin = false;
@@ -19,6 +21,11 @@ public class InGameMenuUI : MonoBehaviour
     [SerializeField]
     private Color pressedColor = Color.green;
 
+    [Header("Voice Recognition Settings")]
+    public int voiceRecDurationInSeconds = 20;
+
+
+    private int voiceRecTimer;
     private GameObject playerAvatar;
     private InGameMenu inGameMenu;
 
@@ -108,9 +115,21 @@ public class InGameMenuUI : MonoBehaviour
     public void OnVoiceRecognitionButtonClicked()
     {
         string objectName = transform.parent.GetComponentInChildren<Text>().text;
-        
+        inGameMenu.voiceRecDurationSlider.value = voiceRecDurationInSeconds;
+        inGameMenu.SetPanelActive("VoiceRecognitionPanel");
 
+        inGameMenu.voiceRecognitionWordText.text = "Stemmegjenkjenning startet, si ordet:  " + objectName;
+
+        VoiceRecognitionScript.InitiateSpeechRecognition(voiceRecDurationInSeconds, objectName);
+        VoiceRecognitionScript.instance.Subscribe(this);
     }
+
+    public void OnVoiceRecognitionCancelButtonClicked()
+    {
+        VoiceRecognitionScript.CancelSpeechRecognition();
+        inGameMenu.SetPanelActive("DictionaryPanel");
+    }
+
     public void OnSaveEnvironmentStateButtonClicked()
     {
         //string timeNow = System.DateTime.Now.ToString("hh.mm dd.MM.yy");
@@ -191,4 +210,25 @@ public class InGameMenuUI : MonoBehaviour
             TutorialGameManager.instance.ExitTutorial();
         }
     }
+
+    public void OnCompleted()
+    {
+        if (value != null && value.Status)
+        {
+            Debug.Log("Result is: " + value.Status);
+        }
+
+        inGameMenu.SetPanelActive("DictionaryPanel");
+    }
+
+    public void OnError(Exception error)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void OnNext(VoiceRecognitionStatus value)
+    {
+        this.value = value;
+    }
+
 }

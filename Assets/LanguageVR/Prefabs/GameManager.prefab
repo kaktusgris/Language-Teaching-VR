@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4158486593147858}
   - component: {fileID: 114952266245917622}
+  - component: {fileID: 3781986714551581477}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -45,3 +46,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   avatarPrefab: {fileID: 449, guid: 1b51142c5a4db674bb164c81e77c48ba, type: 3}
   startScene: Forest
+--- !u!114 &3781986714551581477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1655586623740298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7560b6d8db392e349af4677e0bb1ba76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

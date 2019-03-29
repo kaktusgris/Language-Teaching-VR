@@ -3,26 +3,30 @@ using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using UniRx;
 using UnityEngine;
 namespace NTNU.CarloMarton.VRLanguage
 {
-    public class VoiceRecognitionScript : MonoBehaviour
+    public class VoiceRecognitionScript : MonoBehaviour, IObservable<VoiceRecognitionStatus>
     {
         private static VR_VoiceRecognition.VoiceRecognition voiceRec = new VR_VoiceRecognition.VoiceRecognition();
         private static bool voiceRec_busy = false;
         private bool voiceRec_Result = false;
-        private static IDisposable speechCoroutine;
+        private Coroutine speechCoroutine;
+        //private static IDisposable speechCoroutine;
         private static CancellationTokenSource cts;
         private static CancellationToken cts_token;
-
+        private List<IObserver<VoiceRecognitionStatus>> observers = new List<IObserver<VoiceRecognitionStatus>>();
+        private List<VoiceRecognitionStatus> status = new List<VoiceRecognitionStatus>();
 
         //-------------------------------------------------
         // Singleton instance of the VoiceRecognitionScript. Only one can exist at a time.
         //-------------------------------------------------
         private static VoiceRecognitionScript _instance;
+
         public static VoiceRecognitionScript instance
         {
             get
@@ -36,73 +40,56 @@ namespace NTNU.CarloMarton.VRLanguage
         }
 
 
-        static void InitiateSpeechRecognition(int duration_in_seconds, string inputWord)
+        public static void InitiateSpeechRecognition(int duration_in_seconds, string inputWord)
         {
             if (!voiceRec_busy)
             {
-                //_instance.StartCoroutine(_instance.WaitForSpeech(duration_in_seconds, inputWord));
-                _instance.InitiateSpeechRecognition(duration_in_seconds, inputWord, true);
+                instance.speechCoroutine = instance.StartCoroutine(instance.WaitForSpeech(duration_in_seconds, inputWord));
             }
 
         }
    
-        private void InitiateSpeechRecognition(int duration_in_seconds, string inputWord, bool spawnItem)
-        {
-            try{
-                speechCoroutine = Observable.FromCoroutine<bool>((observer) => WaitForSpeech(observer, duration_in_seconds, inputWord)).Subscribe(x =>
-                    {
-                        voiceRec_Result = x;
-                        if (voiceRec_Result && spawnItem)
-                        {
-                            SpawnInteractableObject(inputWord);
-                        }
-                        //Dispose CancellationTokenSource after it has completed
-                        cts.Dispose();
-                        voiceRec_busy = false;
-                       
-                    });
-               }
-               finally
-               {
-                    speechCoroutine.Dispose();  
-               }   
-        }
-
-        void SpawnInteractableObject(string objectName)
+        private void SpawnInteractableObject(string objectName)
         {
             Vector3 headPosition = ViveManager.Instance.head.transform.position;
-            Vector3 buttonPosition = transform.position;
+            
+            Vector3 playerDirection = ViveManager.Instance.head.transform.forward;
+            Quaternion playerRotation = ViveManager.Instance.head.transform.rotation;
+            float spawnDistance = 1;
 
-            float spawnX = (headPosition.x + buttonPosition.x) / 2f;
-            float spawnY = (headPosition.y + buttonPosition.y) / 2f;
-            float spawnZ = (headPosition.z + buttonPosition.z) / 2f;
+            Vector3 spawnPos = headPosition + playerDirection * spawnDistance;
 
-            Vector3 spawnPosition = new Vector3(spawnX, spawnY, spawnZ);
+            Debug.LogFormat("Instantiated {0} at {1}", objectName, spawnPos);
+            GameObject interactableObject = PhotonNetwork.Instantiate("InteractableObjects/" + objectName, spawnPos, Quaternion.identity);
 
-            Debug.LogFormat("Instantiated {0} at {1}", objectName, spawnPosition);
-            GameObject interactableObject = PhotonNetwork.Instantiate("InteractableObjects/" + objectName, spawnPosition, Quaternion.identity);
+            cts.Dispose();
         }
 
-        static void CancelSpeechRecognition()
+        public static void CancelSpeechRecognition()
         {
             if (voiceRec_busy)
             {
                 cts.Cancel();
                 cts.Dispose();
-                //speechCoroutine.Dispose();
+                _instance.StopCoroutine(_instance.speechCoroutine);
+                instance.observers.Clear();
+                Debug.Log("Coroutine successfully cancelled.");
                 voiceRec_busy = false;
             }
         }
 
-        IEnumerator WaitForSpeech(IObserver<bool> observer, int duration_in_seconds, string inputWord)
+        IEnumerator WaitForSpeech(int duration_in_seconds, string inputWord)
         {
-            Debug.Log("Starting up");
+            Debug.Log("Speech recognition starting up. Searching for: " + inputWord);
             voiceRec_busy = true;
 
             cts = new CancellationTokenSource();
             CancellationToken cts_token = cts.Token;
 
-            Task<bool> t = Task.Run(() => voiceRec.StartSpeechRecognition(duration_in_seconds, inputWord), cts_token);
+            //Remove integers in string and white space
+            string filteredInputWord = Regex.Replace(inputWord, @"[\d-]", string.Empty).Trim();
+
+            Task<bool> t = Task.Run(() => voiceRec.StartSpeechRecognition(duration_in_seconds, filteredInputWord), cts_token);
 
             while (!(t.IsCompleted || t.IsCanceled))
             {
@@ -118,12 +105,71 @@ namespace NTNU.CarloMarton.VRLanguage
             else
             {
                 bool result = t.Result;
-                //yield return result;
+                VoiceRecognitionStatus voiceRec_status = new VoiceRecognitionStatus(result);
+                Debug.Log(voiceRec_status);
+
+                foreach(var observer in observers)
+                {
+                    observer.OnNext(voiceRec_status);
+                    observer.OnCompleted();
+                } 
+
+                yield return result;
+
+                if (result)
+                {
+                    SpawnInteractableObject(inputWord);
+                }
                 voiceRec_busy = false;
-                observer.OnNext(result);
-                observer.OnCompleted();
             }
 
         }
+
+        public IDisposable Subscribe(IObserver<VoiceRecognitionStatus> observer)
+        {
+            // Check whether observer is already registered. If not, add it
+            if (!observers.Contains(observer))
+            {
+                observers.Add(observer);
+                // Provide observer with existing data.
+                foreach (var item in status)
+                    observer.OnNext(item);
+            }
+            return new Unsubscriber<VoiceRecognitionStatus>(observers, observer);
+        }
+
+        internal class Unsubscriber<VoiceRecognitionStatus> : IDisposable
+        {
+            private List<IObserver<VoiceRecognitionStatus>> _observers;
+            private IObserver<VoiceRecognitionStatus> _observer;
+
+            internal Unsubscriber(List<IObserver<VoiceRecognitionStatus>> observers, IObserver<VoiceRecognitionStatus> observer)
+            {
+                this._observers = observers;
+                this._observer = observer;
+            }
+
+            public void Dispose()
+            {
+                if (_observers.Contains(_observer))
+                    _observers.Remove(_observer);
+            }
+        }
     }
+
+    public class VoiceRecognitionStatus
+    {
+        private bool voiceRec_status;
+
+        internal VoiceRecognitionStatus(bool voiceRec_status)
+        {
+            this.voiceRec_status = voiceRec_status;
+        }
+
+        public bool Status
+        {
+            get { return voiceRec_status; }
+        }
+    }
+
 }
