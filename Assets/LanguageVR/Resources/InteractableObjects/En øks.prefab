@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: 1917}
   - component: {fileID: 3089379886021680232}
   m_Layer: 10
-  m_Name: "Ei \xF8ks"
+  m_Name: "En \xF8ks"
   m_TagString: InteractableObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -362,7 +362,7 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 735}
-  m_Text: "Ei \xF8ks"
+  m_Text: "En \xF8ks"
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1

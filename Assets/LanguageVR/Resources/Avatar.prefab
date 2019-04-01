@@ -2013,7 +2013,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05f2a1ff28880634bb90682638d3eb9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  randomFromList: 1
   head: {fileID: 1100}
   leftHand: {fileID: 1441}
   rightHand: {fileID: 1442}
