@@ -211,6 +211,7 @@ GameObject:
   - component: {fileID: 2925921090810747410}
   - component: {fileID: 2925921090810747411}
   - component: {fileID: 2925921090810747408}
+  - component: {fileID: 3392885917850665185}
   m_Layer: 10
   m_Name: "Et br\xF8d"
   m_TagString: InteractableObject
@@ -368,6 +369,29 @@ MonoBehaviour:
   OwnershipTransfer: 1
   ObservedComponents:
   - {fileID: 2925921090810747411}
+  - {fileID: 3392885917850665185}
   viewIdField: 0
   InstantiationId: 6
   isRuntimeInstantiated: 0
+--- !u!114 &3392885917850665185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2925921090810747414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bc788dab4b68ca43bc2a8430c9f18e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customScales:
+  - 1.25
+  - 1.5
+  - 1.75
+  - 0.25
+  - 0.5
+  - 0.75
+  customColors: []
+  meshRenderersToChange:
+  - {fileID: 2925921090025131212}

@@ -34,8 +34,8 @@ namespace NTNU.CarloMarton.VRLanguage
             string sceneName = sceneNames[currentScene];
             int numberOfStates = 2;
 
-            AddState("Standard");
-            AddState("Ingenting");
+            AddState(EnvironmentState.DEFAULT_SAVE_NAME);
+            AddState(EnvironmentState.EMPTY_SAVE_NAME);
 
             foreach (string state in EnvironmentState.GetAllSaveFileNames(sceneName))
             {
@@ -88,6 +88,15 @@ namespace NTNU.CarloMarton.VRLanguage
 
             float newHeight = numberOfStates * (entryHeight + spacing) + padding - spacing;
             rt.sizeDelta = new Vector2(rt.rect.width, newHeight);
+        }
+
+        public Sprite GetSpriteByName(string sceneName)
+        {
+            int sceneIndex = sceneNames.IndexOf(sceneName);
+            if (sceneIndex > -1)
+                return sceneScreenshots[sceneIndex];
+            else
+                return null;
         }
 
         public void OnNextButtonClicked()

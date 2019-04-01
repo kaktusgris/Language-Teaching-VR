@@ -26,7 +26,7 @@ public class InGameMenu : MonoBehaviour
     public GameObject exitGamePanel;
     public GameObject voiceRecognitionPanel;
     private GameObject defaultPanel;
-    
+
 
 
     [Header("Entry prefabs")]
@@ -36,6 +36,7 @@ public class InGameMenu : MonoBehaviour
     [Header("Menu elements")]
     public Image currentColorImage;
     public Text topPanelTitle;
+    public GameObject deleteStateButton;
     public Text voiceRecognitionWordText;
     public Slider voiceRecDurationSlider;
 
@@ -114,7 +115,8 @@ public class InGameMenu : MonoBehaviour
 
             menu.transform.localPosition = new Vector3(0, -0.25f, 0.25f);
             menu.transform.localRotation = Quaternion.Euler(60, 0, 0);
-            menu.transform.Find("TopPanel").transform.Find("DeleteObjectButton").GetComponent<InGameMenuUI>().resetDeleteObjectMode();
+            menu.transform.Find("TopPanel").transform.Find("DeleteObjectButton").GetComponent<InGameMenuUI>().ResetDeleteObjectMode();
+			menu.transform.Find("TopPanel/EditObjectButton").GetComponent<InGameMenuUI>().ResetEditObjectMode();
             menu.SetActive(true);
 
             helperUI.transform.localPosition = new Vector3(0, 0, 0.01f);
@@ -170,13 +172,32 @@ public class InGameMenu : MonoBehaviour
 
     public void SetStateSavedName(string stateName)
     {
-        string text = "Rom lagret som " + stateName;
+        string text = "Rom lagret som \"" + stateName + "\"";
         stateSavedPanel.GetComponentInChildren<Text>().text = text;
     }
 
     public void SetStateDeleteName(string stateName)
     {
-        string text = "Er du sikker på at du vil slette " + stateName + "?";
+        string text;
+        bool activeDeleteButton;
+
+        if (stateName.Equals(EnvironmentState.DEFAULT_SAVE_NAME))
+        {
+            text = "Er du sikker på at du vil slette " + stateName + "?\n Den vil automatisk lages på nytt neste gang du åpner applikasjonen.";
+            activeDeleteButton = true;
+        }
+        else if (stateName.Equals(EnvironmentState.EMPTY_SAVE_NAME))
+        {
+            text = "Kan ikke slette " + stateName + ".";
+            activeDeleteButton = false;
+        }
+        else
+        {
+            text = "Er du sikker på at du vil slette " + stateName + "?";
+            activeDeleteButton = true;
+        }
+        print(gameObject.name);
+        deleteStateButton.SetActive(activeDeleteButton);
         deleteStatePanel.GetComponentInChildren<Text>().gameObject.name = stateName;
         deleteStatePanel.GetComponentInChildren<Text>().text = text;
     }
@@ -187,7 +208,7 @@ public class InGameMenu : MonoBehaviour
         {
             LineRenderer lr = hand.GetComponent<LineRenderer>();
             MenuLaser menuLaser = hand.GetComponent<MenuLaser>();
-            menuLaser.toggleDeleteMode(false);
+            menuLaser.ToggleDeleteMode(false);
             lr.enabled = enabled;
             menuLaser.enabled = enabled;
         }

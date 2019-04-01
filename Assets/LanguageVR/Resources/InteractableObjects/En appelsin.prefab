@@ -123,6 +123,7 @@ GameObject:
   - component: {fileID: 1979}
   - component: {fileID: 1982}
   - component: {fileID: 1981}
+  - component: {fileID: 7732597519708111885}
   m_Layer: 10
   m_Name: En appelsin
   m_TagString: InteractableObject
@@ -358,6 +359,27 @@ MonoBehaviour:
   OwnershipTransfer: 1
   ObservedComponents:
   - {fileID: 1982}
+  - {fileID: 7732597519708111885}
   viewIdField: 0
   InstantiationId: 7
   isRuntimeInstantiated: 0
+--- !u!114 &7732597519708111885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bc788dab4b68ca43bc2a8430c9f18e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customScales:
+  - 1.25
+  - 1.5
+  - 0.5
+  - 0.75
+  customColors: []
+  meshRenderersToChange:
+  - {fileID: 1193}

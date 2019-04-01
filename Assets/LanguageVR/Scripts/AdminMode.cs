@@ -58,10 +58,14 @@ namespace NTNU.CarloMarton.VRLanguage
             List<string> saveFiles = EnvironmentState.GetAllSaveFileNames(SceneManagerHelper.ActiveSceneName);
             saveFiles.Sort();
 
+            inGameMenu.AddLoadStateEntry(EnvironmentState.DEFAULT_SAVE_NAME);
+            inGameMenu.AddLoadStateEntry(EnvironmentState.EMPTY_SAVE_NAME);
+
             foreach (string fileName in saveFiles)
             {
-                string nameWithoutExtension = fileName.Substring(0, fileName.Length - 4);
-                inGameMenu.AddLoadStateEntry(nameWithoutExtension);
+                string nameWithoutExtension = fileName.Substring(0, fileName.Length - ".dat".Length);
+                if (!nameWithoutExtension.Equals(EnvironmentState.DEFAULT_SAVE_NAME)) // Exclude standard file as it is manualy added to the top
+                    inGameMenu.AddLoadStateEntry(nameWithoutExtension);
             }
         }
     }

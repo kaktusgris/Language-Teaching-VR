@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4320992633511247682}
   - component: {fileID: 4320992633511247683}
   - component: {fileID: 4320992633511247804}
+  - component: {fileID: 5921713346086228761}
   m_Layer: 10
   m_Name: Et kakestykke
   m_TagString: InteractableObject
@@ -171,9 +172,32 @@ MonoBehaviour:
   OwnershipTransfer: 1
   ObservedComponents:
   - {fileID: 4320992633511247683}
+  - {fileID: 5921713346086228761}
   viewIdField: 0
   InstantiationId: 16
   isRuntimeInstantiated: 0
+--- !u!114 &5921713346086228761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4320992633511247806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bc788dab4b68ca43bc2a8430c9f18e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customScales:
+  - 1.25
+  - 1.5
+  - 1.75
+  - 0.25
+  - 0.5
+  - 0.75
+  customColors: []
+  meshRenderersToChange:
+  - {fileID: 4320992633756989534}
 --- !u!1 &4320992633756989529
 GameObject:
   m_ObjectHideFlags: 0

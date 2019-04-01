@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1956}
   - component: {fileID: 1957}
   - component: {fileID: 1959}
+  - component: {fileID: 1878505826630608847}
   m_Layer: 10
   m_Name: En kniv
   m_TagString: InteractableObject
@@ -171,9 +172,46 @@ MonoBehaviour:
   OwnershipTransfer: 1
   ObservedComponents:
   - {fileID: 1957}
+  - {fileID: 1878505826630608847}
   viewIdField: 0
   InstantiationId: 1
   isRuntimeInstantiated: 0
+--- !u!114 &1878505826630608847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bc788dab4b68ca43bc2a8430c9f18e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customScales:
+  - 0.33
+  - 0.66
+  - 1
+  - 0.33
+  - 0.66
+  - 1
+  - 0.33
+  - 0.66
+  - 1
+  - 0.33
+  - 0.66
+  customColors:
+  - {r: 0, g: 0, b: 0, a: 1}
+  - {r: 0, g: 0, b: 0, a: 1}
+  - {r: 0, g: 0, b: 0, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 0, b: 0.8683319, a: 1}
+  - {r: 1, g: 0, b: 0.87058824, a: 1}
+  - {r: 1, g: 0, b: 0.87058824, a: 1}
+  meshRenderersToChange:
+  - {fileID: 1190}
 --- !u!1 &752
 GameObject:
   m_ObjectHideFlags: 0

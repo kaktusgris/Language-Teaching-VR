@@ -123,6 +123,7 @@ GameObject:
   - component: {fileID: 444752792323859404}
   - component: {fileID: 444752792323859407}
   - component: {fileID: 444752792323859406}
+  - component: {fileID: 4376560039380881839}
   m_Layer: 10
   m_Name: En bok
   m_TagString: InteractableObject
@@ -357,6 +358,25 @@ MonoBehaviour:
   OwnershipTransfer: 1
   ObservedComponents:
   - {fileID: 444752792323859407}
+  - {fileID: 4376560039380881839}
   viewIdField: 0
   InstantiationId: 12
   isRuntimeInstantiated: 0
+--- !u!114 &4376560039380881839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 444752792323859408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bc788dab4b68ca43bc2a8430c9f18e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customScales:
+  - 0.5
+  - 1.5
+  customColors: []
+  meshRenderersToChange:
+  - {fileID: 444752792323859401}

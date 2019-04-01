@@ -26,8 +26,10 @@ namespace NTNU.CarloMarton.VRLanguage
             }
             else
             {
-                GameObject playerAvatar = GameManager.instance.GetPlayerAvatar();
-                if (playerAvatar == null)
+                GameObject playerAvatar;
+                if (GameManager.instance != null)
+                    playerAvatar = GameManager.instance.GetPlayerAvatar();
+                else
                     playerAvatar = TutorialGameManager.instance.GetPlayerAvatar();
 
                 randomColour = playerAvatar.GetComponent<RandomColour>();

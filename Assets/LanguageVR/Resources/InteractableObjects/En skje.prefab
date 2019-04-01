@@ -122,6 +122,7 @@ GameObject:
   - component: {fileID: 7186642316226803107}
   - component: {fileID: 7186642316226803108}
   - component: {fileID: 7186642316226803109}
+  - component: {fileID: 3277067405897391751}
   m_Layer: 10
   m_Name: En skje
   m_TagString: InteractableObject
@@ -337,6 +338,27 @@ MonoBehaviour:
   OwnershipTransfer: 1
   ObservedComponents:
   - {fileID: 7186642316226803108}
+  - {fileID: 3277067405897391751}
   viewIdField: 0
   InstantiationId: 25
   isRuntimeInstantiated: 0
+--- !u!114 &3277067405897391751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7186642316226803111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bc788dab4b68ca43bc2a8430c9f18e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customScales:
+  - 1.33
+  - 1.66
+  - 0.33
+  - 0.66
+  customColors: []
+  meshRenderersToChange:
+  - {fileID: 7186642316226803135}

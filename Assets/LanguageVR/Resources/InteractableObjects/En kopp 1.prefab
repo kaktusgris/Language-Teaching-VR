@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7869307996857332096}
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0, y: 0.002141758, z: -9.361923e-11}
+  m_LocalPosition: {x: 0, y: 0.002141758, z: 0}
   m_LocalScale: {x: 1.2992911, y: 1.2992911, z: 1.2992911}
   m_Children: []
   m_Father: {fileID: 7869307998364553510}
@@ -200,6 +200,7 @@ GameObject:
   - component: {fileID: 7869307998364553505}
   - component: {fileID: 7869307998364553504}
   - component: {fileID: 7869307998364553511}
+  - component: {fileID: 2018209413640632720}
   m_Layer: 10
   m_Name: En kopp 1
   m_TagString: InteractableObject
@@ -377,9 +378,33 @@ MonoBehaviour:
   OwnershipTransfer: 1
   ObservedComponents:
   - {fileID: 7869307998364553504}
+  - {fileID: 2018209413640632720}
   viewIdField: 0
   InstantiationId: 8
   isRuntimeInstantiated: 0
+--- !u!114 &2018209413640632720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7869307998364553509}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bc788dab4b68ca43bc2a8430c9f18e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customScales:
+  - 1
+  - 1
+  - 0.5
+  - 1.5
+  customColors:
+  - {r: 1, g: 0.94029063, b: 0.3254717, a: 1}
+  - {r: 0.2971698, g: 1, b: 0.5482168, a: 1}
+  meshRenderersToChange:
+  - {fileID: 7869307996857332099}
+  - {fileID: 7869307998018119460}
 --- !u!1 &7869307998898867505
 GameObject:
   m_ObjectHideFlags: 0

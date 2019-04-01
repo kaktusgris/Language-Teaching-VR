@@ -487,6 +487,7 @@ GameObject:
   - component: {fileID: 1886}
   - component: {fileID: 1887}
   - component: {fileID: 1885}
+  - component: {fileID: 3410945262166326443}
   m_Layer: 10
   m_Name: En sekk
   m_TagString: InteractableObject
@@ -652,9 +653,37 @@ MonoBehaviour:
   OwnershipTransfer: 1
   ObservedComponents:
   - {fileID: 1887}
+  - {fileID: 3410945262166326443}
   viewIdField: 0
   InstantiationId: 17
   isRuntimeInstantiated: 0
+--- !u!114 &3410945262166326443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bc788dab4b68ca43bc2a8430c9f18e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customScales:
+  - 1.25
+  - 0.5
+  - 0.75
+  customColors: []
+  meshRenderersToChange:
+  - {fileID: 1174}
+  - {fileID: 1176}
+  - {fileID: 1175}
+  - {fileID: 1172}
+  - {fileID: 1171}
+  - {fileID: 1169}
+  - {fileID: 1168}
+  - {fileID: 1177}
+  - {fileID: 1173}
 --- !u!1 &715
 GameObject:
   m_ObjectHideFlags: 0

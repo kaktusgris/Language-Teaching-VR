@@ -11,8 +11,9 @@ namespace NTNU.CarloMarton.VRLanguage
 {
     public class Tutorial : MonoBehaviour
     {
-        [SerializeField] private Text instructionText;
+        [SerializeField] private List<Text> instructionTexts;
         [SerializeField] private GameObject objectToInteractWith;
+        [SerializeField] private List<GameObject> objectsToSpawn;
 
         [Header ("Actions")]
         [SerializeField] private SteamVR_Action_Boolean grabPinchAction;
@@ -39,21 +40,32 @@ namespace NTNU.CarloMarton.VRLanguage
         [SerializeField] private string pickUpInstructions = "Plukk opp kameraet og kast det.\n -------- \nPick up the camera and throw it.";
         [SerializeField] private string openMenuInstructions = "Åpne menyen og se her for videre instruksjoner.\n -------- \nOpen the menu and look here for further instructions.";
         [SerializeField] private string playAudioInstructions = "Spill av et lydklipp ved å trykke på lydikonet.\n -------- \nPlay an audio clip by pressing the sound icon.";
+        [SerializeField] private string voiceRecInstructions = "Legg til et objekt ved bruk av stemmen ved å trykke på snakkebobleknappen. Hvis du nå sier ordet innen 15 sekund vil objektet dukke opp.\n -------- \nSpawn an object with voice commands by pressing the speach bubble button. If you then say the word within 15 seconds the object will appear.";
+
         [SerializeField] private string spawnObjectInstructions = "Legg til et nytt objekt i verden ved å trykke på plussikonet.\nEt nytt objekt av typen du trykker på vil da dukke opp i verden.";
         [SerializeField] private string deleteLaserInstructions = "Slett kameraet ved å trykke på søppelkasseikonet. Dette vil endre fargen på laseren til rød og kan nå slette ting.";
-        [SerializeField] private string deleteInstructions = "Fullfør sletting av kamera ved å peke laseren på kameraet for så å holde nede klikkeknappen i to sekunder.\nDu vil da se et vindu komme opp og etter de to sekundene vil kameraet forsvinne.\nAlle objekter som kan interageres med kan slettes.";
+        [SerializeField] private string deleteInstructions = "Fullfør sletting av kamera ved å peke laseren på kameraet for så å holde nede klikkeknappen i et sekund.\nDu vil da se et vindu komme opp og etter de to sekundene vil kameraet forsvinne.\nAlle objekter som kan interageres med kan slettes.";
+        [SerializeField] private string editLaserInstructions = "Endre utseende til objekter ved å trykke på blyandikonet. Dette vil endre fargen på laseren til blå og du kan nå endre på objekter.";
+        [SerializeField] private string editInstructions = "Fullfør endring av objekter ved å peke laseren på dem og klikke.\nAlle objekter som kan interageres med kan endres: farge, størrelse eller begge deler.\n\nKlikk på instillingsknappen i venstre hjørne for å fortsette.";
         [SerializeField] private string invisibleInstructions = "Bli usynlig ved å trykke på øyeikonet.\nSå lenge du er usynlig vil ingen andre kunne se deg, men du kan fortsatt interagere med objekter og observere.\nTrykk på knappen igjen for å bli synlig igjen.";
+        [SerializeField] private string saveInstructions = "Lagre rommet ved å klikke på lagre rom knappen i instillingervinduet.\nLagra rom er tilgjengelig på maskinen de ble lagret på så lenge de ikke blir slettet.";
+        [SerializeField] private string beginLoadInstructions = "Last inn rommet som ble lagra ved å klikke på last rom knappen i instillingervinduet.\nAlle lagrede rom er tilgjengelig i tillegg til et tomt rom og standardrommet og kan lastes inn når som helst.";
+        [SerializeField] private string loadInstructions = "Trykk på nedlastingsknappen for å laste inn rommet. Du kan også trykke på sletteknappen for å slette det lagrede rommet.";
+        [SerializeField] private string toggleObjectTextInstructions = "Trykk på tekstknappen i instillingsvinduet for å skru av og på tekst på objekter.\nPlukk opp et objekt før og etter du har trykket for å se forskjell.";
         [SerializeField] private string exitGameInstructions = "Avslutt spillet ved å trykke på krysset.\n -------- \nExit the game by pressing the cross.";
 
         private Valve.VR.InteractionSystem.Player player;
-        private bool isTeacher;
+        private int interactableObjectsInSceneAtStart;
+
+        private int tutorialStep = 0;
 
         void Start()
         {
             player = Valve.VR.InteractionSystem.Player.instance;
-            isTeacher = IsTeacher();
-
+            EnableAdditionalObjects(false);
             StartCoroutine(HintManagerCoroutine());
+            interactableObjectsInSceneAtStart = GameObject.FindGameObjectsWithTag("InteractableObject").Length;
+            SetDefaultStateIfNotSetAlready();
         }
 
         
@@ -62,19 +74,17 @@ namespace NTNU.CarloMarton.VRLanguage
         {
             int menuStep = 4;
 
-            int tutorialStep = 0;
             int interactWithMenuCheckpoint = menuStep + 1;
 
             Hand handWithLaser = GetHandWithActiveLaser();
             Hand previousHandWithLaser = null;
-            string handWithLaserName = "";
             MenuLaser menuLaser = null;
 
             while (tutorialStep != -1)
             {
                 switch (tutorialStep)
                 {
-                    #region case 0: Teleport start
+                    #region Teleport start
                     case 0:
                         ShowButtonHint(player.leftHand, teleportAction, teleportHoldHint);
                         ShowButtonHint(player.rightHand, teleportAction, teleportHoldHint);
@@ -88,7 +98,7 @@ namespace NTNU.CarloMarton.VRLanguage
                         break;
                     #endregion
 
-                    #region Case 1: Teleport end
+                    #region Teleport end
                     case 1:
                         ShowButtonHint(player.leftHand, teleportAction, teleportLetGoHint);
                         ShowButtonHint(player.rightHand, teleportAction, teleportLetGoHint);
@@ -101,7 +111,7 @@ namespace NTNU.CarloMarton.VRLanguage
                         break;
                     #endregion
 
-                    #region Case 2: Grab
+                    #region Grab
                     case 2:
                         SetInstructionsOnCanvas(pickUpInstructions);
                         foreach (Hand hand in player.hands)
@@ -126,7 +136,7 @@ namespace NTNU.CarloMarton.VRLanguage
                         break;
                     #endregion
 
-                    #region Case 3: Let go
+                    #region Let go
                     case 3:
                         foreach (Hand hand in player.hands)
                         {
@@ -147,7 +157,7 @@ namespace NTNU.CarloMarton.VRLanguage
                         break;
                     #endregion
 
-                    #region Case 4: Open menu
+                    #region Open menu
                     case 4:
                         ShowButtonHint(player.leftHand, menuAction, openMenuHint);
                         ShowButtonHint(player.rightHand, menuAction, openMenuHint);
@@ -161,7 +171,7 @@ namespace NTNU.CarloMarton.VRLanguage
                         break;
                     #endregion
 
-                    #region Case 5: Interact with menu (play audio)
+                    #region Interact with menu (play audio)
                     case 5:
                         previousHandWithLaser = handWithLaser;
                         handWithLaser = GetHandWithActiveLaser();
@@ -181,24 +191,53 @@ namespace NTNU.CarloMarton.VRLanguage
                         }
 
                         SetInstructionsOnCanvas(playAudioInstructions);
-                        ShowButtonHint(handWithLaser, interactUIAction, interactWithMenuHint);
-                        ShowButtonHint(handWithLaser, menuAction, swapMenuHint);
-                        ShowButtonHint(handWithLaser, touchpadTouchedAction, scrollHint);
-                        ShowButtonHint(handWithLaser.otherHand, menuAction, closeMenuHint);
+                        ShowButtonHintsMenuUI(handWithLaser);
 
-                        handWithLaserName = handWithLaser == player.leftHand ? "HandPrefabL" : "HandPrefabR";
-                        menuLaser = TutorialGameManager.instance.GetPlayerAvatar().transform.Find(handWithLaserName).gameObject.GetComponent<MenuLaser>();
+                        menuLaser = GetMenuLaser(handWithLaser);
 
                         if (menuLaser.IsClickingButton() != null && menuLaser.IsClickingButton().name == "PlayAudioButton")
                         {
                             HideAllHints();
-                            tutorialStep = isTeacher ? tutorialStep + 1 : -1;
+                            tutorialStep++;
                         }
                         break;
                     #endregion
 
-                    #region Case 6: Spawn new object
+                    #region Voice recognition
                     case 6:
+                        previousHandWithLaser = handWithLaser;
+                        handWithLaser = GetHandWithActiveLaser();
+
+                        // If menu is not active (the user has closed the menu)
+                        if (handWithLaser == null)
+                        {
+                            interactWithMenuCheckpoint = tutorialStep;
+                            tutorialStep = menuStep;
+                            HideAllHints();
+                            break;
+                        }
+
+                        if (handWithLaser != previousHandWithLaser)
+                        {
+                            HideAllHints();
+                        }
+
+                        SetInstructionsOnCanvas(voiceRecInstructions);
+                        ShowButtonHintsMenuUI(handWithLaser);
+
+                        menuLaser = GetMenuLaser(handWithLaser);
+
+                        // Continue if teacher. Done else
+                        if (GameObject.FindGameObjectsWithTag("InteractableObject").Length > interactableObjectsInSceneAtStart)
+                        {
+                            HideAllHints();
+                            tutorialStep = IsTeacher() ? tutorialStep + 1 : -1;
+                        }
+                        break;
+                    #endregion
+
+                    #region Spawn new object
+                    case 7:
                         previousHandWithLaser = handWithLaser;
                         handWithLaser = GetHandWithActiveLaser();
 
@@ -218,13 +257,9 @@ namespace NTNU.CarloMarton.VRLanguage
 
 
                         SetInstructionsOnCanvas(spawnObjectInstructions);
-                        ShowButtonHint(handWithLaser, interactUIAction, interactWithMenuHint);
-                        ShowButtonHint(handWithLaser, menuAction, swapMenuHint);
-                        ShowButtonHint(handWithLaser, touchpadTouchedAction, scrollHint);
-                        ShowButtonHint(handWithLaser.otherHand, menuAction, closeMenuHint);
+                        ShowButtonHintsMenuUI(handWithLaser);
 
-                        handWithLaserName = handWithLaser == player.leftHand ? "HandPrefabL" : "HandPrefabR";
-                        menuLaser = TutorialGameManager.instance.GetPlayerAvatar().transform.Find(handWithLaserName).gameObject.GetComponent<MenuLaser>();
+                        menuLaser = GetMenuLaser(handWithLaser);
 
                         if (menuLaser.IsClickingButton() != null && menuLaser.IsClickingButton().name == "AddInteractableObjectButton")
                         {
@@ -234,8 +269,8 @@ namespace NTNU.CarloMarton.VRLanguage
                         break;
                     #endregion
 
-                    #region Case 7: Activate delete laser
-                    case 7:
+                    #region Activate delete laser
+                    case 8:
                         previousHandWithLaser = handWithLaser;
                         handWithLaser = GetHandWithActiveLaser();
 
@@ -248,8 +283,10 @@ namespace NTNU.CarloMarton.VRLanguage
                             break;
                         }
 
+                        // If object is deleted: continue tutorial
                         if (objectToInteractWith == null)
                         {
+                            EnableAdditionalObjects(true);
                             tutorialStep += 2;
                             break;
                         }
@@ -260,14 +297,10 @@ namespace NTNU.CarloMarton.VRLanguage
                         }
 
                         SetInstructionsOnCanvas(deleteLaserInstructions);
-                        ShowButtonHint(handWithLaser, interactUIAction, interactWithMenuHint);
-                        ShowButtonHint(handWithLaser, menuAction, swapMenuHint);
-                        ShowButtonHint(handWithLaser, touchpadTouchedAction, scrollHint);
-                        ShowButtonHint(handWithLaser.otherHand, menuAction, closeMenuHint);
+                        ShowButtonHintsMenuUI(handWithLaser);
 
 
-                        handWithLaserName = handWithLaser == player.leftHand ? "HandPrefabL" : "HandPrefabR";
-                        menuLaser = TutorialGameManager.instance.GetPlayerAvatar().transform.Find(handWithLaserName).gameObject.GetComponent<MenuLaser>();
+                        menuLaser = GetMenuLaser(handWithLaser);
 
                         if (menuLaser.IsClickingButton() != null && menuLaser.IsClickingButton().name == "DeleteObjectButton")
                         {
@@ -277,10 +310,12 @@ namespace NTNU.CarloMarton.VRLanguage
                         break;
                     #endregion
 
-                    #region Case 8: Delete object
-                    case 8:
+                    #region Delete object
+                    case 9:
+                        // If object is deleted: continue tutorial
                         if (objectToInteractWith == null)
                         {
+                            EnableAdditionalObjects(true);
                             tutorialStep++;
                             break;
                         }
@@ -291,7 +326,7 @@ namespace NTNU.CarloMarton.VRLanguage
                         // If menu is not active (the user has closed the menu)
                         if (handWithLaser == null)
                         {
-                            interactWithMenuCheckpoint = tutorialStep;
+                            interactWithMenuCheckpoint = tutorialStep - 1;
                             tutorialStep = menuStep;
                             HideAllHints();
                             break;
@@ -303,13 +338,9 @@ namespace NTNU.CarloMarton.VRLanguage
                         }
 
                         SetInstructionsOnCanvas(deleteInstructions);
-                        ShowButtonHint(handWithLaser, interactUIAction, deleteHint);
-                        ShowButtonHint(handWithLaser, menuAction, swapMenuHint);
-                        ShowButtonHint(handWithLaser, touchpadTouchedAction, scrollHint);
-                        ShowButtonHint(handWithLaser.otherHand, menuAction, closeMenuHint);
+                        ShowButtonHintsMenuUI(handWithLaser);
 
-                        handWithLaserName = handWithLaser == player.leftHand ? "HandPrefabL" : "HandPrefabR";
-                        menuLaser = TutorialGameManager.instance.GetPlayerAvatar().transform.Find(handWithLaserName).gameObject.GetComponent<MenuLaser>();
+                        menuLaser = GetMenuLaser(handWithLaser);
 
                         if (menuLaser.IsClickingButton() != null && menuLaser.IsClickingButton().name == "DeleteObjectButton")
                         {
@@ -319,8 +350,210 @@ namespace NTNU.CarloMarton.VRLanguage
                         break;
                     #endregion
 
-                    #region Case 9: Invisibility
-                    case 9:
+                    #region Activate edit laser
+                    case 10:
+                        previousHandWithLaser = handWithLaser;
+                        handWithLaser = GetHandWithActiveLaser();
+
+                        // If menu is not active (the user has closed the menu)
+                        if (handWithLaser == null)
+                        {
+                            interactWithMenuCheckpoint = tutorialStep;
+                            tutorialStep = menuStep;
+                            HideAllHints();
+                            break;
+                        }
+
+                        if (handWithLaser != previousHandWithLaser)
+                        {
+                            HideAllHints();
+                        }
+
+                        SetInstructionsOnCanvas(editLaserInstructions);
+                        ShowButtonHintsMenuUI(handWithLaser);
+
+
+                        menuLaser = GetMenuLaser(handWithLaser);
+
+                        if (menuLaser.IsClickingButton() != null && menuLaser.IsClickingButton().name == "EditObjectButton")
+                        {
+                            HideAllHints();
+                            tutorialStep++;
+                        }
+                        break;
+                    #endregion
+
+                    #region Edit object
+                    case 11:
+                        previousHandWithLaser = handWithLaser;
+                        handWithLaser = GetHandWithActiveLaser();
+
+                        // If menu is not active (the user has closed the menu)
+                        if (handWithLaser == null)
+                        {
+                            interactWithMenuCheckpoint = tutorialStep - 1;
+                            tutorialStep = menuStep;
+                            HideAllHints();
+                            break;
+                        }
+
+                        if (handWithLaser != previousHandWithLaser)
+                        {
+                            HideAllHints();
+                        }
+
+                        SetInstructionsOnCanvas(editInstructions);
+                        ShowButtonHintsMenuUI(handWithLaser);
+
+                        menuLaser = GetMenuLaser(handWithLaser);
+
+                        if (menuLaser.IsClickingButton() != null && menuLaser.IsClickingButton().name == "SettingsButton")
+                        {
+                            HideAllHints();
+                            tutorialStep++;
+                        }
+                        break;
+                    #endregion
+
+                    #region Save state
+                    case 12:
+                        previousHandWithLaser = handWithLaser;
+                        handWithLaser = GetHandWithActiveLaser();
+
+                        // If menu is not active (the user has closed the menu)
+                        if (handWithLaser == null)
+                        {
+                            interactWithMenuCheckpoint = tutorialStep;
+                            tutorialStep = menuStep;
+                            HideAllHints();
+                            break;
+                        }
+
+                        if (handWithLaser != previousHandWithLaser)
+                        {
+                            HideAllHints();
+                        }
+
+                        SetInstructionsOnCanvas(saveInstructions);
+                        ShowButtonHintsMenuUI(handWithLaser);
+
+                        if (menuLaser == null)
+                        {
+                            menuLaser = GetMenuLaser(handWithLaser);
+                        }
+
+                        if (menuLaser.IsClickingButton() != null && menuLaser.IsClickingButton().name == "SaveStateButton")
+                        {
+                            tutorialStep++;
+                        }
+                        break;
+                    #endregion
+
+                    #region Open load state panel
+                    case 13:
+                        previousHandWithLaser = handWithLaser;
+                        handWithLaser = GetHandWithActiveLaser();
+
+                        // If menu is not active (the user has closed the menu)
+                        if (handWithLaser == null)
+                        {
+                            interactWithMenuCheckpoint = tutorialStep;
+                            tutorialStep = menuStep;
+                            HideAllHints();
+                            break;
+                        }
+
+                        if (handWithLaser != previousHandWithLaser)
+                        {
+                            HideAllHints();
+                        }
+
+                        SetInstructionsOnCanvas(beginLoadInstructions);
+                        ShowButtonHintsMenuUI(handWithLaser);
+
+                        if (menuLaser == null)
+                        {
+                            menuLaser = GetMenuLaser(handWithLaser);
+                        }
+
+                        if (menuLaser.IsClickingButton() != null && menuLaser.IsClickingButton().name == "LoadStateButton")
+                        {
+                            tutorialStep++;
+                        }
+                        break;
+                    #endregion
+
+                    #region Load/Delete state
+                    case 14:
+                        previousHandWithLaser = handWithLaser;
+                        handWithLaser = GetHandWithActiveLaser();
+
+                        // If menu is not active (the user has closed the menu)
+                        if (handWithLaser == null)
+                        {
+                            interactWithMenuCheckpoint = tutorialStep - 1;
+                            tutorialStep = menuStep;
+                            HideAllHints();
+                            break;
+                        }
+
+                        if (handWithLaser != previousHandWithLaser)
+                        {
+                            HideAllHints();
+                        }
+
+                        SetInstructionsOnCanvas(loadInstructions);
+                        ShowButtonHintsMenuUI(handWithLaser);
+
+                        if (menuLaser == null)
+                        {
+                            menuLaser = GetMenuLaser(handWithLaser);
+                        }
+
+                        if (menuLaser.IsClickingButton() != null && (menuLaser.IsClickingButton().name == "LoadStateButton" || menuLaser.IsClickingButton().name == "DeleteStateButton"))
+                        {
+                            tutorialStep++;
+                        }
+                        break;
+                    #endregion
+
+                    #region Toggle text visibility
+                    case 15:
+                        previousHandWithLaser = handWithLaser;
+                        handWithLaser = GetHandWithActiveLaser();
+
+                        // If menu is not active (the user has closed the menu)
+                        if (handWithLaser == null)
+                        {
+                            interactWithMenuCheckpoint = tutorialStep;
+                            tutorialStep = menuStep;
+                            HideAllHints();
+                            break;
+                        }
+
+                        if (handWithLaser != previousHandWithLaser)
+                        {
+                            HideAllHints();
+                        }
+
+                        SetInstructionsOnCanvas(toggleObjectTextInstructions);
+                        ShowButtonHintsMenuUI(handWithLaser);
+
+
+                        if (menuLaser == null)
+                        {
+                            menuLaser = GetMenuLaser(handWithLaser);
+                        }
+
+                        if (menuLaser.IsClickingButton() != null && menuLaser.IsClickingButton().name == "ToggleTextButton")
+                        {
+                            tutorialStep++;
+                        }
+                        break;
+                    #endregion
+
+                    #region Invisibility
+                    case 16:
                         previousHandWithLaser = handWithLaser;
                         handWithLaser = GetHandWithActiveLaser();
 
@@ -339,16 +572,12 @@ namespace NTNU.CarloMarton.VRLanguage
                         }
 
                         SetInstructionsOnCanvas(invisibleInstructions);
-                        ShowButtonHint(handWithLaser, interactUIAction, interactWithMenuHint);
-                        ShowButtonHint(handWithLaser, menuAction, swapMenuHint);
-                        ShowButtonHint(handWithLaser, touchpadTouchedAction, scrollHint);
-                        ShowButtonHint(handWithLaser.otherHand, menuAction, closeMenuHint);
+                        ShowButtonHintsMenuUI(handWithLaser);
 
 
                         if (menuLaser == null)
                         {
-                            handWithLaserName = handWithLaser == player.leftHand ? "HandPrefabL" : "HandPrefabR";
-                            menuLaser = TutorialGameManager.instance.GetPlayerAvatar().transform.Find(handWithLaserName).gameObject.GetComponent<MenuLaser>();
+                            menuLaser = GetMenuLaser(handWithLaser);
                         }
 
                         if (menuLaser.IsClickingButton() != null && menuLaser.IsClickingButton().name == "InvisibilityButton")
@@ -362,6 +591,12 @@ namespace NTNU.CarloMarton.VRLanguage
             }
             HideAllHints();
             SetInstructionsOnCanvas(exitGameInstructions);
+        }
+
+        private void EnableAdditionalObjects(bool toEnable)
+        {
+            foreach (GameObject go in objectsToSpawn)
+                go.SetActive(toEnable);
         }
 
         private void SetInstructionsOnCanvas(string instructions)
@@ -387,7 +622,23 @@ namespace NTNU.CarloMarton.VRLanguage
                     text += c;
                 }
             }
-            instructionText.text = text;
+
+            foreach (Text instructionText in instructionTexts)
+                instructionText.text = text;
+        }
+
+        private MenuLaser GetMenuLaser(Hand laserHand)
+        {
+            string handWithLaserName = laserHand == player.leftHand ? "HandPrefabL" : "HandPrefabR";
+            return TutorialGameManager.instance.GetPlayerAvatar().transform.Find(handWithLaserName).gameObject.GetComponent<MenuLaser>();
+        }
+
+        private void ShowButtonHintsMenuUI(Hand laserHand)
+        {
+            ShowButtonHint(laserHand, interactUIAction, deleteHint);
+            ShowButtonHint(laserHand, menuAction, swapMenuHint);
+            ShowButtonHint(laserHand, touchpadTouchedAction, scrollHint);
+            ShowButtonHint(laserHand.otherHand, menuAction, closeMenuHint);
         }
 
         private void ShowButtonHint(Hand hand, SteamVR_Action_Boolean action, string text)
@@ -449,7 +700,6 @@ namespace NTNU.CarloMarton.VRLanguage
             return false;
         }
 
-
         private bool IsTeacher()
         {
             object isTeacherObject;
@@ -460,6 +710,19 @@ namespace NTNU.CarloMarton.VRLanguage
             }
             Debug.LogFormat("Admin mode not set already so set to {0} instead", false);
             return false;
+        }
+
+        private void SetDefaultStateIfNotSetAlready()
+        {
+            if (!EnvironmentState.StateExists(SceneManagerHelper.ActiveSceneName, EnvironmentState.DEFAULT_SAVE_NAME))
+            {
+                EnvironmentState.SaveEnvironmentState(SceneManagerHelper.ActiveSceneName, EnvironmentState.DEFAULT_SAVE_NAME);
+            }
+        }
+
+        public void OnBackButtonClicked()
+        {
+            tutorialStep--;
         }
     }
 }

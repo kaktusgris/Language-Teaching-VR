@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 3507822898118439103}
   - component: {fileID: 3507822898118439102}
   - component: {fileID: 3507822898118439101}
+  - component: {fileID: 3293938694416302981}
   m_Layer: 10
   m_Name: Et bord
   m_TagString: InteractableObject
@@ -232,9 +233,28 @@ MonoBehaviour:
   OwnershipTransfer: 1
   ObservedComponents:
   - {fileID: 3507822898118439102}
+  - {fileID: 3293938694416302981}
   viewIdField: 0
   InstantiationId: 29
   isRuntimeInstantiated: 0
+--- !u!114 &3293938694416302981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3507822898118439107}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bc788dab4b68ca43bc2a8430c9f18e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customScales:
+  - 0.75
+  - 1.25
+  customColors: []
+  meshRenderersToChange:
+  - {fileID: 3507822898118439099}
 --- !u!1 &3507822898756066076
 GameObject:
   m_ObjectHideFlags: 0

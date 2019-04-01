@@ -8,9 +8,6 @@ public class RandomColour : MonoBehaviour, IPunObservable {
 
     public Color colour { get; set; }
 
-    [Tooltip ("Select if the random colour should be totally random or chosen from a list of colours (wich will result in different colours for each user)")]
-    [SerializeField] private bool randomFromList = true;
-
     [SerializeField] private Renderer head;
     [SerializeField] private Renderer leftHand;
     [SerializeField] private Renderer rightHand;
@@ -135,34 +132,22 @@ public class RandomColour : MonoBehaviour, IPunObservable {
         return new Color(r, g, b);
     }
 
-    public static string ColorToString(Color color)
-    {
-        return color.r + "," + color.g + "," + color.b + "," + color.a;
-    }
-
-    public static Color StringToColor(string colorString)
-    {
-        try
-        {
-            string[] colors = colorString.Split(',');
-            return new Color(float.Parse(colors[0]), float.Parse(colors[1]), float.Parse(colors[2]), float.Parse(colors[3]));
-        }
-        catch
-        {
-            return Color.white;
-        }
-    }
-
     // Updates the head's colour to other users
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
         {
-            stream.SendNext(ColorToString(this.colour));
+            stream.SendNext(this.colour.r);
+            stream.SendNext(this.colour.g);
+            stream.SendNext(this.colour.b);
         }
         else
         {
-            Color newColor = StringToColor((string)stream.ReceiveNext());
+            float r = (float)stream.ReceiveNext();
+            float g = (float)stream.ReceiveNext();
+            float b = (float)stream.ReceiveNext();
+            Color newColor = new Color(r, g, b, 1);
+
             UpdateColourOnMaterial(this.headMaterial, newColor);
             UpdateColourOnMaterial(this.leftHandMaterial, newColor);
             UpdateColourOnMaterial(this.rightHandMaterial, newColor);

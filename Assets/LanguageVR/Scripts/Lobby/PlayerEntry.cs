@@ -32,6 +32,7 @@ namespace NTNU.CarloMarton.VRLanguage
             {
                 PlayerReadyButton.gameObject.SetActive(false);
                 DropdownImage.gameObject.SetActive(false);
+				PlayerColorImage.GetComponent<Button>().enabled = false;
             }
             else
             {

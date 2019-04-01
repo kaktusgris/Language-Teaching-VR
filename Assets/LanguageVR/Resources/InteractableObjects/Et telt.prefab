@@ -122,6 +122,7 @@ GameObject:
   - component: {fileID: 2023}
   - component: {fileID: 2024}
   - component: {fileID: 2025}
+  - component: {fileID: 177103666084923998}
   m_Layer: 10
   m_Name: Et telt
   m_TagString: InteractableObject
@@ -338,6 +339,25 @@ MonoBehaviour:
   OwnershipTransfer: 1
   ObservedComponents:
   - {fileID: 2024}
+  - {fileID: 177103666084923998}
   viewIdField: 0
   InstantiationId: 8
   isRuntimeInstantiated: 0
+--- !u!114 &177103666084923998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bc788dab4b68ca43bc2a8430c9f18e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customScales:
+  - 0.25
+  - 0.5
+  customColors: []
+  meshRenderersToChange:
+  - {fileID: 1196}

@@ -1,11 +1,17 @@
-﻿using NTNU.CarloMarton.VRLanguage;
+﻿using ExitGames.Client.Photon;
+using NTNU.CarloMarton.VRLanguage;
 using Photon.Pun;
+using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+// --------
+// Script attached to each button and other relevant element in the InGameMenu
+// --------
 public class InGameMenuUI : MonoBehaviour, IObserver<VoiceRecognitionStatus>
 {
     private bool visible = true;
@@ -13,6 +19,10 @@ public class InGameMenuUI : MonoBehaviour, IObserver<VoiceRecognitionStatus>
 
     [SerializeField] [Tooltip ("If this element should only be available to admin users")]
     private bool onlyAdmin = false;
+
+    [SerializeField]
+    [Tooltip("")]
+    private bool externalButton = false;
 
     [SerializeField]
     private Color normalColor = Color.black;
@@ -41,7 +51,8 @@ public class InGameMenuUI : MonoBehaviour, IObserver<VoiceRecognitionStatus>
         else
             playerAvatar = TutorialGameManager.instance.GetPlayerAvatar();
 
-        inGameMenu = playerAvatar.GetComponent<InGameMenu>();
+        if (!externalButton)
+            inGameMenu = playerAvatar.GetComponent<InGameMenu>();
     }
 
     public Color GetNormalColor()
@@ -68,7 +79,7 @@ public class InGameMenuUI : MonoBehaviour, IObserver<VoiceRecognitionStatus>
         playerAvatar.GetComponent<PlayerManager>().SetVisibility(visible);
     }
 
-
+	// Add ResetEditObjectMode to same button to run on EditObjectButton
     public void OnDeleteObjectToggleClicked()
     {
         visible = !visible;
@@ -76,21 +87,36 @@ public class InGameMenuUI : MonoBehaviour, IObserver<VoiceRecognitionStatus>
         transform.Find("DeleteActiveImage").gameObject.SetActive(!visible);
 
         MenuLaser menuLaser = playerAvatar.GetComponent<InGameMenu>().GetLaserHand().GetComponent<MenuLaser>();
-        menuLaser.toggleDeleteMode(!visible);
-    }
+        menuLaser.ToggleDeleteMode(!visible);
+	}
 
-    public void resetDeleteObjectMode()
-    {
-        if (transform.Find("DeleteActiveImage").gameObject.activeSelf)
-        {
-            OnDeleteObjectToggleClicked();
-        }
-    }
+	// Add ResetDeleteObjectMode to same button to run on DeleteObjectButton
+	public void OnEditObjectToggleClicked()
+	{
+		visible = !visible;
+		transform.GetChild(0).GetComponent<Image>().color = visible ? new Color(93f/255f, 93f/255f, 93f/255f) : Color.blue;
+
+		MenuLaser menuLaser = playerAvatar.GetComponent<InGameMenu>().GetLaserHand().GetComponent<MenuLaser>();
+		menuLaser.ToggleEditMode(!visible);
+	}
+
+	public void ResetEditObjectMode()
+	{
+		visible = true;
+		transform.GetChild(0).GetComponent<Image>().color = new Color(93f / 255f, 93f / 255f, 93f / 255f);
+	}
+
+	public void ResetDeleteObjectMode()
+	{
+		visible = true;
+		transform.Find("DeleteDefaultImage").gameObject.SetActive(true);
+		transform.Find("DeleteActiveImage").gameObject.SetActive(false);
+	}
 
     public void OnPlayAudioButtonClicked()
     {
         string objectName = transform.parent.GetComponentInChildren<Text>().text;
-        
+
         playerAvatar.GetComponent<PlayerDictionary>().PlayAudio(objectName);
     }
 
@@ -115,8 +141,9 @@ public class InGameMenuUI : MonoBehaviour, IObserver<VoiceRecognitionStatus>
     public void OnVoiceRecognitionButtonClicked()
     {
         string objectName = transform.parent.GetComponentInChildren<Text>().text;
+        inGameMenu.voiceRecDurationSlider.maxValue = voiceRecDurationInSeconds;
         inGameMenu.voiceRecDurationSlider.value = voiceRecDurationInSeconds;
-        inGameMenu.SetPanelActive("VoiceRecognitionPanel");
+        inGameMenu.SetPanelActive(inGameMenu.voiceRecognitionPanel.name);
 
         inGameMenu.voiceRecognitionWordText.text = "Stemmegjenkjenning startet, si ordet:  " + objectName;
 
@@ -127,7 +154,7 @@ public class InGameMenuUI : MonoBehaviour, IObserver<VoiceRecognitionStatus>
     public void OnVoiceRecognitionCancelButtonClicked()
     {
         VoiceRecognitionScript.CancelSpeechRecognition();
-        inGameMenu.SetPanelActive("DictionaryPanel");
+        inGameMenu.SetPanelActive(inGameMenu.dictionaryPanel.name);
     }
 
     public void OnSaveEnvironmentStateButtonClicked()
@@ -169,6 +196,22 @@ public class InGameMenuUI : MonoBehaviour, IObserver<VoiceRecognitionStatus>
         inGameMenu.SetEntryToBeDeleted(transform.parent.gameObject);
         inGameMenu.SetStateDeleteName(stateName);
         inGameMenu.TogglePanel(inGameMenu.deleteStatePanel);
+    }
+
+	public void OnToggleObjectTextButtonClicked()
+	{
+		string textVisible = "Skru av objekttekst";
+		string textHidden = "Skru på objekttekst";
+
+		bool showObjectText = (bool)PhotonNetwork.LocalPlayer.CustomProperties["ShowObjectText"];
+
+		transform.GetComponentInChildren<Text>().text = showObjectText ? textHidden : textVisible;
+		foreach (Player player in PhotonNetwork.PlayerList) {
+			player.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { "ShowObjectText", !showObjectText } });
+		}
+
+        if (!PhotonNetwork.IsConnected)
+            PhotonNetwork.LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { "ShowObjectText", !showObjectText } });
     }
 
     public void OnToggleSettingsPanelButtonClicked()
