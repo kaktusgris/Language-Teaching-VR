@@ -305,7 +305,7 @@ namespace NTNU.CarloMarton.VRLanguage
 			float currentPosY = scrollContent.GetComponent<RectTransform>().localPosition.y;
 			float threshold = 0f;
 			float yDirection = GetTouchDirection().y;
-			float moveSpeed = 5f;
+			float moveSpeed = 20f;
 
 			float contentHeight = CalculateHeightOfContent(scrollContent);
 			float mainPanelHeight = scrollContent.GetComponent<RectTransform>().rect.height;
@@ -349,6 +349,8 @@ namespace NTNU.CarloMarton.VRLanguage
 					return "Skru av/på objekttekst";
 				case "ChangeColourButton":
 					return "Endre farge på avatar";
+                case "ActivateVoiceRecognitionButton":
+                    return "Start stemmegjennkjenning";
 				case "Navy":
 				case "Blue":
 				case "Aqua":
@@ -426,9 +428,11 @@ namespace NTNU.CarloMarton.VRLanguage
 		private float CalculateHeightOfContent(RectTransform scrollContent)
 		{
 			float childHeight = scrollContent.GetChild(0).GetComponent<RectTransform>().rect.height;
-			float paddingBottom = scrollContent.GetComponent<VerticalLayoutGroup>().padding.bottom;
+            float spacing = scrollContent.GetComponent<VerticalLayoutGroup>().spacing;
+            float paddingBottom = scrollContent.GetComponent<VerticalLayoutGroup>().padding.bottom;
 			float paddingTop = scrollContent.GetComponent<VerticalLayoutGroup>().padding.top;
-			return scrollContent.childCount * (childHeight) + paddingBottom + paddingTop;
+
+			return scrollContent.childCount * (childHeight + spacing) + paddingBottom + paddingTop;
 		}
 
 		private void SetButtonColor(Button button, Color color)

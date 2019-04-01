@@ -113,6 +113,8 @@ namespace NTNU.CarloMarton.VRLanguage
 
         private Color GetDefaultColor()
         {
+            if (meshRenderersToChange.Count == 0)
+                return Color.white;
             return meshRenderersToChange[0].material.color;
         }
 
