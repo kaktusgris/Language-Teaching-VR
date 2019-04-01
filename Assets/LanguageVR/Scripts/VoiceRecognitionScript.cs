@@ -1,12 +1,10 @@
-﻿using NTNU.CarloMarton.VRLanguage;
-using Photon.Pun;
+﻿using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using UniRx;
 using UnityEngine;
 namespace NTNU.CarloMarton.VRLanguage
 {
@@ -16,7 +14,6 @@ namespace NTNU.CarloMarton.VRLanguage
         private static bool voiceRec_busy = false;
         private bool voiceRec_Result = false;
         private Coroutine speechCoroutine;
-        //private static IDisposable speechCoroutine;
         private static CancellationTokenSource cts;
         private static CancellationToken cts_token;
         private List<IObserver<VoiceRecognitionStatus>> observers = new List<IObserver<VoiceRecognitionStatus>>();
