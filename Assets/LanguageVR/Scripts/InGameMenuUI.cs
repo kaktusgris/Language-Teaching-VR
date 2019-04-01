@@ -5,6 +5,7 @@ using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -145,7 +146,7 @@ public class InGameMenuUI : MonoBehaviour, IObserver<VoiceRecognitionStatus>
         inGameMenu.voiceRecDurationSlider.value = voiceRecDurationInSeconds;
         inGameMenu.SetPanelActive(inGameMenu.voiceRecognitionPanel.name);
 
-        inGameMenu.voiceRecognitionWordText.text = "Stemmegjenkjenning startet, si ordet:  " + objectName;
+        inGameMenu.voiceRecognitionWordText.text = "Stemmegjenkjenning startet, si ordet:  " + Regex.Replace(objectName, @"[\d-]", string.Empty).Trim();
 
         VoiceRecognitionScript.InitiateSpeechRecognition(voiceRecDurationInSeconds, objectName);
         VoiceRecognitionScript.instance.Subscribe(this);

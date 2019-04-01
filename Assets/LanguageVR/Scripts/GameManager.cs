@@ -111,8 +111,8 @@ namespace NTNU.CarloMarton.VRLanguage
                 GameObject.FindGameObjectWithTag("Voice").GetComponent<Photon.Voice.PUN.PhotonVoiceNetwork>().SpeakerPrefab = instantiatedAvatar;
             }
 
-            LoadState();
             SetDefaultStateIfNotSetAlready();
+            LoadState();
         }
 
         void Update()

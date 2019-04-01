@@ -247,7 +247,7 @@ namespace NTNU.CarloMarton.VRLanguage
         public void OnCreateRoomButtonClicked()
         {
             string roomName = RoomNameInputField.text;
-            roomName = (roomName.Equals(string.Empty)) ? "Room " + Random.Range(1000, 10000) : roomName;
+            roomName = (roomName.Equals(string.Empty)) ? "Rom " + Random.Range(1000, 10000) : roomName;
 
             byte maxPlayers;
             byte.TryParse(MaxPlayersInputField.text, out maxPlayers);
@@ -280,7 +280,12 @@ namespace NTNU.CarloMarton.VRLanguage
         {
             SetActivePanel(JoinRandomRoomPanel.name);
 
-            PhotonNetwork.JoinRandomRoom();
+
+            if (PhotonNetwork.CountOfRooms > 0)
+                PhotonNetwork.JoinRandomRoom();
+            else
+                CreateRandomRoom();
+
         }
 
         public void OnLeaveGameButtonClicked()
@@ -341,7 +346,7 @@ namespace NTNU.CarloMarton.VRLanguage
         public void OnStartGameButtonClicked()
         {
             string loadingText = "Laster inn " + GetSceneToLoad() + "...";
-            
+
             this.photonView.RPC("ActivateLoadingScreen", RpcTarget.Others, loadingText);
             ActivateLoadingScreen(loadingText);
             string stateToLoad = StateFileName.text;
@@ -349,10 +354,6 @@ namespace NTNU.CarloMarton.VRLanguage
             PhotonNetwork.LoadLevel(GetSceneToLoad());
         }
 
-        public string GetSceneToLoad()
-        {
-            return (string) PhotonNetwork.CurrentRoom.CustomProperties["SceneToLoad"];
-        }
 
         public void OnTutorialButtonClicked()
         {
@@ -398,11 +399,37 @@ namespace NTNU.CarloMarton.VRLanguage
         }
         #endregion
 
+        private void CreateRandomRoom()
+        {
+            string roomName = "Room " + Random.Range(1000, 10000);
+            byte maxPlayers = (byte)8;
+
+            RoomOptions options = new RoomOptions { MaxPlayers = maxPlayers };
+
+            PhotonNetwork.CreateRoom(roomName, options, null);
+        }
+
         [PunRPC]
         public void ActivateLoadingScreen(string loadingText)
         {
             SetActivePanel(LoadingPanel.name);
             LoadingText.text = loadingText;
+        }
+
+        public string GetSceneToLoad()
+        {
+            string sceneToLoad = (string)PhotonNetwork.CurrentRoom.CustomProperties["SceneToLoad"];
+
+            if (sceneToLoad.Equals("text"))
+            {
+                List<string> sceneNames = CreateRoomPanel.GetComponentInChildren<ScenePicker>().sceneNames;
+                string actualSceneToLoad = sceneNames[Random.Range(0, sceneNames.Count)];
+                PhotonNetwork.CurrentRoom.SetCustomProperties(new Hashtable() { { "SceneToLoad", actualSceneToLoad } });
+
+                return actualSceneToLoad;
+            }
+            return sceneToLoad;
+
         }
 
         private bool CheckPlayersReady()
@@ -505,6 +532,7 @@ namespace NTNU.CarloMarton.VRLanguage
             StateFileName.text = stateToLoad;
             PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable() { { "Load", stateToLoad } });
         }
+
 
         public void Exit()
         {

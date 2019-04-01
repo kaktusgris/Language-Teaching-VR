@@ -355,8 +355,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   customScales:
+  - 1.27
   - 0.75
-  - 1.25
   customColors: []
   meshRenderersToChange:
   - {fileID: 3744851417768356643}
