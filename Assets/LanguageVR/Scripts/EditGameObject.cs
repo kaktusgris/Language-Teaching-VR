@@ -14,7 +14,7 @@ namespace NTNU.CarloMarton.VRLanguage
 		[SerializeField] [Tooltip("Will change the first material on each meshrenderer")]
 		private List<MeshRenderer> meshRenderersToChange;
 
-        private float normalisedScale;
+        private Vector3 normalisedScale;
 		private List<float> scales;
 		private List<Color> colors;
 
@@ -29,12 +29,15 @@ namespace NTNU.CarloMarton.VRLanguage
 			colors.AddRange(customColors);
 		}
 
-		public float GetScale()
+		public Vector3 GetScale()
         {
+            print(scales[0]);
+            print(normalisedScale);
+            print(scales[0] * normalisedScale);
             if (currentVariation < scales.Count)
                 return scales[currentVariation] * normalisedScale;
             else
-                return normalisedScale;
+                return scales[0] * normalisedScale;
 		}
 
 		public Color GetColor()
@@ -58,7 +61,7 @@ namespace NTNU.CarloMarton.VRLanguage
 
             transform.position += new Vector3(0, 0.1f, 0);
 
-            float scale;
+            Vector3 scale;
             Color color;
 
             if (currentVariation == 0)
@@ -69,7 +72,7 @@ namespace NTNU.CarloMarton.VRLanguage
             else
             {
                 if (currentVariation - 1 < customScales.Count)
-                    scale = customScales[currentVariation - 1];
+                    scale = GetDefaultScale() * customScales[currentVariation - 1];
                 else
                     scale = GetDefaultScale();
                 if (currentVariation - 1 < customColors.Count)
@@ -78,7 +81,7 @@ namespace NTNU.CarloMarton.VRLanguage
                     color = GetDefaultColor();
             }
 
-            transform.localScale = new Vector3(scale, scale, scale);
+            transform.localScale = scale;
 
             foreach (MeshRenderer mr in meshRenderersToChange)
             {
@@ -99,16 +102,21 @@ namespace NTNU.CarloMarton.VRLanguage
 				currentVariation = 0;
 
             transform.position += new Vector3(0, 0.1f, 0);
-			transform.localScale = new Vector3(GetScale(), GetScale(), GetScale());
+            transform.localScale = GetScale();
+            print(transform.localScale);
             foreach (MeshRenderer mr in meshRenderersToChange)
             {
                 mr.material.color = GetColor();
             }
 		}
 
-        private float GetDefaultScale()
+        private Vector3 GetDefaultScale()
         {
-            return gameObject.transform.localScale.x;
+            float x = transform.localScale.x;
+            float y = transform.localScale.y;
+            float z = transform.localScale.z;
+            print("Default scale " + gameObject.name + ": " + new Vector3(x,y,z));
+            return new Vector3(x, y, z);
         }
 
         private Color GetDefaultColor()

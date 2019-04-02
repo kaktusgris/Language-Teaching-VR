@@ -316,7 +316,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eade8640ec66ea3448167fc732c8088d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioClip: {fileID: 8300000, guid: b0debaef6b556e142a86a77401becef3, type: 3}
+  audioClip: {fileID: 8300000, guid: 378b6fa23d79f8340ac571127ecb67b7, type: 3}
 --- !u!23 &1184
 MeshRenderer:
   m_ObjectHideFlags: 0

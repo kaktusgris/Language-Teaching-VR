@@ -5,6 +5,7 @@
       "app_key": "application.generated.unity.languageteachingvr.exe",
       "launch_type": "url",
       "url": "steam://launch/",
+      "action_manifest_path": "D:\\CarloMarton\\Language-Teaching-VR\\actions.json",
       "strings": {
         "en_us": {
           "name": "Language Teaching VR [Testing]"
