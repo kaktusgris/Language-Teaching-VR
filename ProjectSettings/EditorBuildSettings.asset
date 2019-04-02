@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: "Assets/LanguageVR/Scenes/Kaf\xE9.unity"
     guid: 95390c5ca91e1174bbeec5d603649cdc
+  - enabled: 1
+    path: Assets/LanguageVR/Scenes/Tutorial.unity
+    guid: 38039a62d27b85741a9eeb98a0a2b1f8
   m_configObjects: {}

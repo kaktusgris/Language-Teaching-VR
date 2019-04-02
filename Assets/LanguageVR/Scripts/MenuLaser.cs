@@ -297,7 +297,7 @@ namespace NTNU.CarloMarton.VRLanguage
 				return;
 
 			ego.NextVariation();
-			clickedObject.transform.localScale += new Vector3(0.1f, 0.1f, 0.1f);
+			//clickedObject.transform.localScale += new Vector3(0.1f, 0.1f, 0.1f);
 		}
 
 		private void ScrollScrollContent(RectTransform scrollContent)
