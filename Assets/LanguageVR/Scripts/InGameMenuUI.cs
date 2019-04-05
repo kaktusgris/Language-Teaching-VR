@@ -177,6 +177,14 @@ public class InGameMenuUI : MonoBehaviour, IObserver<VoiceRecognitionStatus>
 
     public void OnLoadEnvironmentStateButtonClicked()
     {
+        try
+        {
+            gameObject.GetComponent<AudioSource>().Play();
+        }
+        catch (MissingComponentException e)
+        {
+            Debug.LogError("Missing audio source component on button");
+        }
         string sceneName = SceneManagerHelper.ActiveSceneName;
         string stateName = transform.parent.GetComponentInChildren<Text>().text;
         EnvironmentState.LoadEnvironmentState(sceneName, stateName);
