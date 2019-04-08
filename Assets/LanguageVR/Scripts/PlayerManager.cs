@@ -18,6 +18,7 @@ namespace NTNU.CarloMarton.VRLanguage
     {
 
         public GameObject voiceIndicator;
+        public TeleportAnimation teleportAnimation;
         public string[] scenesToHaveVisibleControllers;
 
         private bool voiceDetected = false;
@@ -111,6 +112,7 @@ namespace NTNU.CarloMarton.VRLanguage
         {
             this.visible = visible;
             SetCollisionOnHead(visible);
+            teleportAnimation.SetVisible(visible);
         }
 
         // Toggle the meshrenders of the avatar, except it's voice indicator as that is handled differently
