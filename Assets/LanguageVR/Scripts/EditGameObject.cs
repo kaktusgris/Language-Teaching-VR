@@ -115,7 +115,6 @@ namespace NTNU.CarloMarton.VRLanguage
             float x = transform.localScale.x;
             float y = transform.localScale.y;
             float z = transform.localScale.z;
-            print("Default scale " + gameObject.name + ": " + new Vector3(x,y,z));
             return new Vector3(x, y, z);
         }
 

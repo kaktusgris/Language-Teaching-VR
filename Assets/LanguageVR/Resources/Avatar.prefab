@@ -1947,6 +1947,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   voiceIndicator: {fileID: 481}
+  teleportAnimation: {fileID: 4471862662830880310}
   scenesToHaveVisibleControllers:
   - Tutorial
 --- !u!114 &1708
@@ -8898,11 +8899,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 839}
     m_Modifications:
-    - target: {fileID: 5867508117546287855, guid: 511c8a9ceba805e488c7f1424d45b71f,
-        type: 3}
-      propertyPath: m_Name
-      value: NameTag
-      objectReference: {fileID: 0}
     - target: {fileID: 160848718579316042, guid: 511c8a9ceba805e488c7f1424d45b71f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -8962,6 +8958,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.x
       value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5867508117546287855, guid: 511c8a9ceba805e488c7f1424d45b71f,
+        type: 3}
+      propertyPath: m_Name
+      value: NameTag
       objectReference: {fileID: 0}
     - target: {fileID: 7233488918214291323, guid: 511c8a9ceba805e488c7f1424d45b71f,
         type: 3}

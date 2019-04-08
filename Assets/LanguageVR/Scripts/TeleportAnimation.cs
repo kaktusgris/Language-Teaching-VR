@@ -11,7 +11,8 @@ namespace NTNU.CarloMarton.VRLanguage
         public SteamVR_Action_Boolean teleportAction;
         public ParticleSystem animationObject;
 
-        private bool visible = false;
+        private bool toPlay = false;
+        private bool visible = true;
         private Vector3 oldPosition = new Vector3();
         private Vector3 position;
         private Coroutine animationCoroutine;
@@ -46,7 +47,7 @@ namespace NTNU.CarloMarton.VRLanguage
                 animationObject.Stop();
             else
             {
-                if (visible)
+                if (toPlay && visible)
                     animationObject.Play();
                 else
                     animationObject.Stop();
@@ -55,7 +56,7 @@ namespace NTNU.CarloMarton.VRLanguage
 
         private IEnumerator Animate(Vector3 start, Vector3 end)
         {
-            visible = true;
+            toPlay = true;
 
             Vector3 position = start;
             float maxDistanceDelta = 0.25f;
@@ -66,18 +67,25 @@ namespace NTNU.CarloMarton.VRLanguage
                 transform.position = position;
                 yield return null;
             }
-            visible = false;
+            toPlay = false;
+        }
+
+        public void SetVisible(bool visible)
+        {
+            this.visible = visible;
         }
 
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
             if (stream.IsWriting)
             {
+                stream.SendNext(toPlay);
                 stream.SendNext(visible);
                 UpdateActive();
             }
             else
             {
+                toPlay = (bool)stream.ReceiveNext();
                 visible = (bool)stream.ReceiveNext();
                 UpdateActive();
             }
